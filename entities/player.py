@@ -62,6 +62,7 @@ class Player(Entity):
         self.daily_work_count = 0; self.work_step = 0; self.bullets_fired_today = 0
         self.day_count = 0; self.exhausted = False; self.hidden_in_solid = False
         self.emotions = {}; self.move_state = "WALK"; self.device_battery = 100.0; self.infinite_stamina_buff = False; self.powerbank_uses = 0
+        self.z_level = 0 # [추가]
 
     def change_role(self, new_role, sub_role=None):
         if new_role in ["FARMER", "MINER", "FISHER"]:
@@ -115,7 +116,7 @@ class Player(Entity):
                 return "Battery Empty!"
         return "Device unavailable for this role."
 
-    def update(self, phase, npcs, is_blackout, weather_type='CLEAR'):
+    def update(self, dt, phase, npcs, is_blackout, weather_type='CLEAR'):
         self.current_phase_ref = phase
         self.weather = weather_type 
         if not self.alive: return []
@@ -128,7 +129,7 @@ class Player(Entity):
         
         is_moving = self._handle_movement_input()
         
-        sound_events = self._update_devices_and_battery(now)
+        sound_events = self._update_devices_and_battery(now, dt)
         
         self._update_stamina(is_moving)
         
@@ -137,8 +138,8 @@ class Player(Entity):
         self._update_special_states(now)
 
         # Interaction Input
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_e]:
+        input_h = self.game.input_handler
+        if input_h.is_key_pressed(pygame.K_e):
             if not self.e_key_pressed: 
                 self.e_key_pressed = True
                 self.interaction_hold_timer = now
@@ -212,10 +213,10 @@ class Player(Entity):
         return self.logic_inventory.buy_item(item_key)
 
     # [Internal Helpers - Kept in Player as they modify simple state directly or are small]
-    def _update_devices_and_battery(self, now):
+    def _update_devices_and_battery(self, now, dt):
         sound_events = []
         if self.device_on:
-            self.device_battery -= 0.05
+            self.device_battery -= 3.0 * dt # 초당 3.0% 감소
             if self.device_battery <= 0: self.device_battery, self.device_on = 0, False; self.add_popup("Battery Depleted!", (255, 50, 50))
             if self.role in ["CITIZEN", "DOCTOR"] and now % 2000 < 50: sound_events.append(("BEEP", self.rect.centerx, self.rect.centery, 4 * TILE_SIZE))
         return sound_events

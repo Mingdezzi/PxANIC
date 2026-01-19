@@ -284,29 +284,38 @@ class PlayState(BaseState):
     def draw(self, screen):
         screen.fill(COLORS['BG'])
         if not self.camera: return
-        canvas = self.lighting.draw(screen, self.camera)
-        canvas.fill(COLORS['BG'])
+        
+        # 모든 맵 타일과 엔티티를 MapRenderer가 깊이 정렬하여 그림
+        # MapRenderer의 draw 메서드 시그니처 변경에 맞춰 인자 전달
+        all_entities = [self.player] + self.npcs # 플레이어와 NPC를 함께 렌더러에 전달
+        
+        # 현재 플레이어의 Z-Level을 MapRenderer에 전달
+        player_current_z = self.player.z_level if self.player and hasattr(self.player, 'z_level') else 0
+
         if self.map_renderer:
             vis = self.visible_tiles if self.player.role != "SPECTATOR" else None
-            self.map_renderer.draw(canvas, self.camera, 0, visible_tiles=vis, tile_alphas=self.tile_alphas)
+            self.map_renderer.draw(screen, self.camera, 0, all_entities, player_current_z, visible_tiles=vis, tile_alphas=self.tile_alphas)
         
-        for n in self.npcs:
-            if (int(n.rect.centerx//TILE_SIZE), int(n.rect.centery//TILE_SIZE)) in self.visible_tiles or self.player.role == "SPECTATOR":
-                n.draw(canvas, self.camera.x, self.camera.y, self.player.role, self.current_phase, self.player.device_on)
-        if not self.player.is_dead: CharacterRenderer.draw_entity(canvas, self.player, self.camera.x, self.camera.y, self.player.role, self.current_phase, self.player.device_on)
-        for fx in self.world.effects: fx.draw(canvas, self.camera.x, self.camera.y)
-        for i in self.world.indicators: i.draw(canvas, self.player.rect, self.camera.x, self.camera.y)
+        # Lighting Manager는 이제 MapRenderer가 그린 위에 마스크를 씌움
         if self.player.role != "SPECTATOR": self.lighting.apply_lighting(self.camera)
+
+        # 이펙트 및 지시자 (엔티티와 별개로 그려짐)
+        for fx in self.world.effects: fx.draw(screen, self.camera.x, self.camera.y)
+        for i in self.world.indicators: i.draw(screen, self.player.rect, self.camera.x, self.camera.y)
 
         # [Work Target Indicator - Highlight] - DRAWN ON CANVAS
         self.found_visible_work_target = False
         if self.work_target_tid and self.player.alive:
+            # [수정] Z축을 고려하여 타일 캐시에서 검색
             target_positions = self.world.map_manager.tile_cache.get(self.work_target_tid, [])
             if target_positions:
                 visible_targets_for_highlight = []
-                for (tx, ty) in target_positions:
-                    canvas_tx = tx - self.camera.x
-                    canvas_ty = ty - self.camera.y
+                for (tx_world, ty_world, tz) in target_positions:
+                    # 현재 플레이어의 층과 같은 타일만 하이라이트
+                    if tz != player_current_z: continue
+
+                    canvas_tx = tx_world - self.camera.x
+                    canvas_ty = ty_world - self.camera.y - (tz * BLOCK_HEIGHT)
                     if -TILE_SIZE < canvas_tx < self.camera.width and -TILE_SIZE < canvas_ty < self.camera.height:
                         visible_targets_for_highlight.append((canvas_tx, canvas_ty))
                 
@@ -316,17 +325,18 @@ class PlayState(BaseState):
                     if pulse > 1.0: pulse = 2.0 - pulse
                     glow_val = int(100 + 155 * pulse)
                     for (stx, sty) in visible_targets_for_highlight:
-                        pygame.draw.rect(canvas, (glow_val, glow_val, 0), (stx, sty, TILE_SIZE, TILE_SIZE), 2)
+                        pygame.draw.rect(screen, (glow_val, glow_val, 0), (stx, sty, TILE_SIZE, TILE_SIZE), 2)
 
         # --- FINAL SCALING: CANVAS -> SCREEN ---
-        screen.blit(pygame.transform.scale(canvas, (self.game.screen_width, self.game.screen_height)), (0, 0))
-        
+        # MapRenderer에서 직접 screen에 그리기 때문에 별도 스케일링 필요 없음
+        # screen.blit(pygame.transform.scale(canvas, (self.game.screen_width, self.game.screen_height)), (0, 0))
+
         # [Minigame] Draw on SCREEN space to be always in the center
         if self.player.minigame.active:
             mx = self.game.screen_width // 2
             my = (self.game.screen_height // 2) - (self.player.minigame.height // 2)
             self.player.minigame.draw(screen, mx, my)
-        
+
         # --- DRAW SCREEN-SPACE UI (Weather, Pinpoint, etc.) ---
         if self.weather == 'RAIN':
             for p in self.weather_particles: pygame.draw.line(screen, (150, 150, 255, 150), (p[0], p[1]), (p[0]-2, p[1]+10))
@@ -335,36 +345,39 @@ class PlayState(BaseState):
 
         # [Work Target Indicator - Pinpoint Arrow] - DRAWN ON SCREEN
         if self.work_target_tid and self.player.alive and not self.found_visible_work_target:
-            target_positions = self.world.map_manager.tile_cache.get(self.work_target_tid, [])
+            # [수정] Z축을 고려하여 타일 캐시에서 검색
+            target_positions_all_z = self.world.map_manager.tile_cache.get(self.work_target_tid, [])
+            target_positions = [(tx, ty, tz) for tx, ty, tz in target_positions_all_z if tz == player_current_z]
+
             if target_positions:
                 nearest_pos = None
                 min_dist_sq = float('inf')
                 # World Coords
                 px_world, py_world = self.player.rect.centerx, self.player.rect.centery
                 
-                for (tx, ty) in target_positions:
+                for (tx, ty, tz) in target_positions:
                     cx, cy = tx + TILE_SIZE//2, ty + TILE_SIZE//2
                     dist_sq = (px_world - cx)**2 + (py_world - cy)**2
                     if dist_sq < min_dist_sq:
                         min_dist_sq = dist_sq
-                        nearest_pos = (tx, ty)
+                        nearest_pos = (tx, ty, tz) # Z도 함께 저장
                 
                 if nearest_pos:
-                    tx_world, ty_world = nearest_pos
+                    tx_world, ty_world, tz_world = nearest_pos
                     sw, sh = self.game.screen_width, self.game.screen_height
                     zoom = self.camera.zoom_level
                     
                     # Player Screen Position
                     px = (self.player.rect.centerx - self.camera.x) * zoom
-                    py = (self.player.rect.centery - self.camera.y) * zoom
+                    py = (self.player.rect.centery - self.camera.y - (player_current_z * BLOCK_HEIGHT)) * zoom # [수정] 플레이어 Y도 Z-Level 반영
                     
-                    # Target World Center
+                    # Target World Center (Z-Level 반영)
                     target_cx = tx_world + TILE_SIZE//2
-                    target_cy = ty_world + TILE_SIZE//2
+                    target_cy = ty_world + TILE_SIZE//2 - (tz_world * BLOCK_HEIGHT) # [수정] 타겟 Y도 Z-Level 반영
                     
                     # Vector from Player to Target (World Space)
                     dx_world = target_cx - self.player.rect.centerx
-                    dy_world = target_cy - self.player.rect.centery
+                    dy_world = target_cy - (self.player.rect.centery - (player_current_z * BLOCK_HEIGHT)) # [수정] Y좌표 기준 일치
                     angle = math.atan2(dy_world, dx_world)
                     
                     # Normalized Direction

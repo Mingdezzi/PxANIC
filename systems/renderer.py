@@ -1,5 +1,5 @@
 import pygame
-from settings import *
+from settings import TILE_SIZE, BLOCK_HEIGHT, INDOOR_ZONES, CUSTOM_COLORS # BLOCK_HEIGHT 추가
 from colors import *
 from world.tiles import get_texture, get_tile_category
 
@@ -35,8 +35,9 @@ class CharacterRenderer:
     @staticmethod
     def draw_entity(screen, entity, camera_x, camera_y, viewer_role="PLAYER", current_phase="DAY", viewer_device_on=False):
         if not entity.alive: return
+        # [수정] Z-Level 반영하여 Y좌표 보정
         draw_x = entity.rect.x - camera_x
-        draw_y = entity.rect.y - camera_y
+        draw_y = entity.rect.y - camera_y - (entity.z_level * BLOCK_HEIGHT)
         screen_w, screen_h = screen.get_width(), screen.get_height()
         if not (-50 < draw_x < screen_w + 50 and -50 < draw_y < screen_h + 50): return
 
@@ -94,7 +95,7 @@ class CharacterRenderer:
         name_color = (230, 230, 230)
         if entity.role == "POLICE" and viewer_role in ["POLICE", "SPECTATOR"]: name_color = (100, 180, 255)
         elif entity.role == "MAFIA" and viewer_role in ["MAFIA", "SPECTATOR"]: name_color = (255, 100, 100)
-        text_cache_key = (id(entity), entity.name, name_color)
+        text_cache_key = (entity.uid, entity.name, name_color, entity.z_level) # [수정] Z-Level 추가
         if text_cache_key in CharacterRenderer._name_surface_cache: name_surf = CharacterRenderer._name_surface_cache[text_cache_key]
         else: name_surf = CharacterRenderer.NAME_FONT.render(entity.name, True, name_color); CharacterRenderer._name_surface_cache[text_cache_key] = name_surf
         screen.blit(name_surf, (draw_x + (TILE_SIZE // 2) - (name_surf.get_width() // 2), draw_y - 14))
@@ -104,8 +105,9 @@ class MapRenderer:
 
     def __init__(self, map_manager):
         self.map_manager = map_manager
-        self._floor_cache = {} # {(cx, cy): Surface}
-        self._wall_cache = {}  # {(cx, cy): Surface}
+        # 3D 캐시: {(z, cx, cy): Surface}
+        self._floor_cache = {}
+        self._wall_cache = {}
         self.map_width_tiles = map_manager.width
         self.map_height_tiles = map_manager.height
 
@@ -113,125 +115,107 @@ class MapRenderer:
         self._floor_cache.clear()
         self._wall_cache.clear()
 
-    def _render_floor_chunk(self, cx, cy):
+    def _render_chunk(self, z, cx, cy, layer_name):
         surf = pygame.Surface((self.CHUNK_SIZE * TILE_SIZE, self.CHUNK_SIZE * TILE_SIZE), pygame.SRCALPHA)
         start_col = cx * self.CHUNK_SIZE
         start_row = cy * self.CHUNK_SIZE
         end_col = min(start_col + self.CHUNK_SIZE, self.map_width_tiles)
         end_row = min(start_row + self.CHUNK_SIZE, self.map_height_tiles)
-        floors = self.map_manager.map_data['floor']
+        
+        if z >= len(self.map_manager.layers): return surf
+        layer_data = self.map_manager.layers[z][layer_name]
         
         for r in range(start_row, end_row):
             for c in range(start_col, end_col):
                 draw_x = (c - start_col) * TILE_SIZE
                 draw_y = (r - start_row) * TILE_SIZE
-                tile_data = floors[r][c]
-                tid = tile_data[0] if isinstance(tile_data, (tuple, list)) else tile_data
-                rot = tile_data[1] if isinstance(tile_data, (tuple, list)) else 0
+                tid, rot = layer_data[r][c]
                 if tid != 0:
                     img = get_texture(tid, rot)
                     surf.blit(img, (draw_x, draw_y))
         return surf
 
-    def _render_wall_chunk(self, cx, cy):
-        surf = pygame.Surface((self.CHUNK_SIZE * TILE_SIZE, self.CHUNK_SIZE * TILE_SIZE), pygame.SRCALPHA)
-        start_col = cx * self.CHUNK_SIZE
-        start_row = cy * self.CHUNK_SIZE
-        end_col = min(start_col + self.CHUNK_SIZE, self.map_width_tiles)
-        end_row = min(start_row + self.CHUNK_SIZE, self.map_height_tiles)
-        walls = self.map_manager.map_data['wall']
-        
-        for r in range(start_row, end_row):
-            for c in range(start_col, end_col):
-                draw_x = (c - start_col) * TILE_SIZE
-                draw_y = (r - start_row) * TILE_SIZE
-                tile_data = walls[r][c]
-                tid = tile_data[0] if isinstance(tile_data, (tuple, list)) else tile_data
-                rot = tile_data[1] if isinstance(tile_data, (tuple, list)) else 0
-                if tid != 0:
-                    img = get_texture(tid, rot)
-                    surf.blit(img, (draw_x, draw_y))
-        return surf
-
-    def draw(self, screen, camera, dt, visible_tiles=None, tile_alphas=None):
+    def draw(self, screen, camera, dt, entities, player_z_level=0, visible_tiles=None, tile_alphas=None):
         if tile_alphas is None: tile_alphas = {}
-        
-        # 1. Calculate Visible Chunks
-        start_chunk_x = int(max(0, camera.x // (self.CHUNK_SIZE * TILE_SIZE)))
-        start_chunk_y = int(max(0, camera.y // (self.CHUNK_SIZE * TILE_SIZE)))
-        end_chunk_x = int(min((self.map_width_tiles // self.CHUNK_SIZE) + 1, (camera.x + camera.width / camera.zoom_level) // (self.CHUNK_SIZE * TILE_SIZE) + 1))
-        end_chunk_y = int(min((self.map_height_tiles // self.CHUNK_SIZE) + 1, (camera.y + camera.height / camera.zoom_level) // (self.CHUNK_SIZE * TILE_SIZE) + 1))
 
-        # 2. Draw Floors (Background)
-        for cy in range(start_chunk_y, end_chunk_y + 1):
-            for cx in range(start_chunk_x, end_chunk_x + 1):
-                chunk_key = (cx, cy)
-                if chunk_key not in self._floor_cache:
-                    self._floor_cache[chunk_key] = self._render_floor_chunk(cx, cy)
-                
-                chunk_surf = self._floor_cache[chunk_key]
-                dest_x = (cx * self.CHUNK_SIZE * TILE_SIZE) - camera.x
-                dest_y = (cy * self.CHUNK_SIZE * TILE_SIZE) - camera.y
-                screen.blit(chunk_surf, (dest_x, dest_y))
+        all_render_items = [] # 모든 맵 타일과 엔티티를 담을 리스트
 
-        # Calculate Tile Range for Dynamic Rendering
-        vw, vh = camera.width / camera.zoom_level, camera.height / camera.zoom_level
-        start_col = int(max(0, camera.x // TILE_SIZE))
-        start_row = int(max(0, camera.y // TILE_SIZE))
-        end_col = int(min(self.map_manager.width, (camera.x + vw) // TILE_SIZE + 2))
-        end_row = int(min(self.map_manager.height, (camera.y + vh) // TILE_SIZE + 2))
-        zones = self.map_manager.zone_map
+        # 1. 맵 타일 데이터 수집 (모든 층)
+        # 보이는 화면 범위 계산
+        cam_world_x_start = camera.x
+        cam_world_y_start = camera.y
+        cam_world_x_end = camera.x + camera.width / camera.zoom_level
+        cam_world_y_end = camera.y + camera.height / camera.zoom_level
 
-        # 5. Draw Objects (Non-Door objects first)
-        objects = self.map_manager.map_data['object']
-        door_list = [] # To render doors after masking
-        
-        for r in range(start_row, end_row):
-            for c in range(start_col, end_col):
-                tile_data = objects[r][c]
-                tid = tile_data[0] if isinstance(tile_data, (tuple, list)) else tile_data
-                rot = tile_data[1] if isinstance(tile_data, (tuple, list)) else 0
-                if tid != 0:
-                    if get_tile_category(tid) == 5:
-                        # Store door info to draw later
-                        door_list.append((c, r, tid, rot))
-                    else:
-                        # Draw regular object before mask
-                        draw_x = c * TILE_SIZE - camera.x
-                        draw_y = r * TILE_SIZE - camera.y
-                        img = get_texture(tid, rot)
-                        screen.blit(img, (draw_x, draw_y))
+        start_tile_x = int(max(0, cam_world_x_start // TILE_SIZE))
+        start_tile_y = int(max(0, cam_world_y_start // TILE_SIZE))
+        end_tile_x = int(min(self.map_manager.width, cam_world_x_end // TILE_SIZE + 2))
+        end_tile_y = int(min(self.map_manager.height, cam_world_y_end // TILE_SIZE + 2))
 
-        # 6. Apply Indoor Masking (Over floors and regular objects)
-        for r in range(start_row, end_row):
-            for c in range(start_col, end_col):
-                if zones[r][c] in INDOOR_ZONES:
-                    draw_alpha = 255
-                    if visible_tiles is not None:
-                        draw_alpha = tile_alphas.get((c, r), 0)
-                    
-                    if draw_alpha < 255:
-                        draw_x = c * TILE_SIZE - camera.x
-                        draw_y = r * TILE_SIZE - camera.y
-                        black_surf = pygame.Surface((TILE_SIZE, TILE_SIZE), pygame.SRCALPHA)
-                        black_surf.fill((0, 0, 0, 255 - draw_alpha))
-                        screen.blit(black_surf, (draw_x, draw_y))
+        for z in range(len(self.map_manager.layers)): # 모든 층을 순회
+            is_current_or_below = (z <= player_z_level) # 플레이어 층 이하만 그림
+            if not is_current_or_below: continue # 위층은 그리지 않음
+
+            alpha_factor = 255 if (z == player_z_level) else 150 # 현재 층은 불투명, 아래층은 반투명
+            
+            for r in range(start_tile_y, end_tile_y):
+                for c in range(start_tile_x, end_tile_x):
+                    # 2.5D 투영 좌표 계산
+                    draw_base_x = c * TILE_SIZE
+                    draw_base_y = r * TILE_SIZE - (z * BLOCK_HEIGHT) 
+
+                    # Floor
+                    tid_f, rot_f = self.map_manager.get_tile_full(c, r, z, 'floor')
+                    if tid_f != 0:
+                        img_f = get_texture(tid_f, rot_f)
+                        all_render_items.append((draw_base_y, img_f, (draw_base_x - camera.x, draw_base_y - camera.y), alpha_factor))
                         
-        # 7. Draw Walls (Cached) - Always Top of mask
-        for cy in range(start_chunk_y, end_chunk_y + 1):
-            for cx in range(start_chunk_x, end_chunk_x + 1):
-                chunk_key = (cx, cy)
-                if chunk_key not in self._wall_cache:
-                    self._wall_cache[chunk_key] = self._render_wall_chunk(cx, cy)
-                
-                chunk_surf = self._wall_cache[chunk_key]
-                dest_x = (cx * self.CHUNK_SIZE * TILE_SIZE) - camera.x
-                dest_y = (cy * self.CHUNK_SIZE * TILE_SIZE) - camera.y
-                screen.blit(chunk_surf, (dest_x, dest_y))
+                        # Zone Overlay
+                        zid = self.map_manager.zone_map[r][c]
+                        if zid != 0 and zid in ZONES:
+                            zone_color = ZONES[zid]['color']
+                            zone_surf = pygame.Surface((TILE_SIZE, TILE_SIZE), pygame.SRCALPHA)
+                            zone_surf.fill(zone_color)
+                            all_render_items.append((draw_base_y + 0.1, zone_surf, (draw_base_x - camera.x, draw_base_y - camera.y), alpha_factor)) # 약간 위에 그려지도록
 
-        # 8. Draw Doors (After mask and walls) - Always Visible
-        for dc, dr, dtid, drot in door_list:
-            draw_x = dc * TILE_SIZE - camera.x
-            draw_y = dr * TILE_SIZE - camera.y
-            img = get_texture(dtid, drot)
-            screen.blit(img, (draw_x, draw_y))
+                    # Objects (Non-Doors first)
+                    tid_o, rot_o = self.map_manager.get_tile_full(c, r, z, 'object')
+                    if tid_o != 0 and get_tile_category(tid_o) != 5:
+                        img_o = get_texture(tid_o, rot_o)
+                        all_render_items.append((draw_base_y + TILE_SIZE, img_o, (draw_base_x - camera.x, draw_base_y - camera.y), alpha_factor)) # 오브젝트는 Y Sorting을 위해 +TILE_SIZE
+
+                    # Walls
+                    tid_w, rot_w = self.map_manager.get_tile_full(c, r, z, 'wall')
+                    if tid_w != 0:
+                        img_w = get_texture(tid_w, rot_w)
+                        all_render_items.append((draw_base_y + TILE_SIZE, img_w, (draw_base_x - camera.x, draw_base_y - camera.y), alpha_factor)) # 벽도 Y Sorting을 위해 +TILE_SIZE
+
+        # 2. 엔티티 데이터 수집
+        for entity in entities:
+            if entity.alive:
+                # 엔티티도 맵 타일과 같은 기준으로 Y좌표 보정
+                entity_draw_y = entity.rect.y - (entity.z_level * BLOCK_HEIGHT)
+                # CharacterRenderer를 직접 호출하지 않고, 필요한 정보만 저장
+                all_render_items.append((entity_draw_y + TILE_SIZE, 'ENTITY', entity)) # Y Sorting을 위해 +TILE_SIZE
+
+        # 3. 깊이 정렬 (Y-Sorting)
+        all_render_items.sort(key=lambda item: item[0])
+
+        # 4. 정렬된 순서대로 그리기
+        for item in all_render_items:
+            sort_key, item_type, data = item[0], item[1], item[2]
+            alpha_factor = item[3] if len(item) > 3 else 255
+            
+            if item_type == 'ENTITY':
+                CharacterRenderer.draw_entity(screen, data, camera.x, camera.y, player_z_level, "DAY", False) # phase와 device_on은 임시값
+            else: # Map Tile (img, pos, alpha)
+                img, pos = data, item[2]
+                if alpha_factor < 255: 
+                    img = img.copy()
+                    img.set_alpha(alpha_factor)
+                screen.blit(img, pos)
+
+        # 5. 문 (오브젝트 중 문은 가장 마지막에 그려져야 함 -> 깊이 정렬이 깨질 수 있으므로 별도 처리)
+        # 하지만 Y-Sorting에 포함시키면 더 자연스러움. 여기서는 Y-Sorting에 포함된 것으로 가정하고 별도 루프 제거.
+        # 만약 문이 다른 오브젝트와 겹쳐서 이상하게 그려진다면, 문의 Z값이 더 높거나
+        # 특별한 정렬 규칙이 필요할 수 있음. (일단은 Y-Sorting에 포함)
