@@ -31,10 +31,27 @@ class GameWorld:
         self.spatial_grid = SpatialGrid(self.map_manager.width, self.map_manager.height, cell_size=10)
 
     def find_safe_spawn(self):
-        c = self.map_manager.get_spawn_points(zone_id=1)
-        if c:
-            return random.choice(c)
-        return (self.map_manager.spawn_x, self.map_manager.spawn_y)
+        candidates = self.map_manager.get_spawn_points(zone_id=1)
+        if not candidates: return (self.map_manager.spawn_x, self.map_manager.spawn_y)
+        
+        # [개선] 겹치지 않는 스폰 위치 찾기 (최대 10회 시도)
+        for _ in range(10):
+            pos = random.choice(candidates)
+            # 해당 위치에 다른 엔티티가 있는지 확인
+            is_occupied = False
+            spawn_rect = pygame.Rect(pos[0], pos[1], TILE_SIZE, TILE_SIZE)
+            
+            for ent in self.npcs:
+                if ent.rect.colliderect(spawn_rect):
+                    is_occupied = True; break
+            if self.player and self.player.rect.colliderect(spawn_rect):
+                is_occupied = True
+                
+            if not is_occupied:
+                return pos
+        
+        # 실패 시 아무 곳이나 반환
+        return random.choice(candidates)
 
     def register_entity(self, entity):
         if not hasattr(entity, 'uid') or entity.uid is None:

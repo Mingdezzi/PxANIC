@@ -44,31 +44,3 @@ class ResourceManager:
 
     def get_font(self, name):
         return self.fonts.get(name, self.fonts['default'])
-
-    # [최적화] 이미지 로드 및 캐싱 메서드 추가
-    def get_image(self, path, use_alpha=True):
-        """이미지를 로드하고 디스플레이 포맷에 맞춰 최적화(convert)하여 반환"""
-        if path in self.images:
-            return self.images[path]
-        
-        try:
-            if not os.path.exists(path):
-                self.logger.error("RESOURCE", f"Image not found: {path}")
-                return None
-                
-            img = pygame.image.load(path)
-            # [핵심] 로드 직후 포맷 변환 (블리팅 속도 5~10배 향상)
-            if use_alpha:
-                img = img.convert_alpha()
-            else:
-                img = img.convert()
-                
-            self.images[path] = img
-            return img
-        except Exception as e:
-            self.logger.error("RESOURCE", f"Failed to load image: {path} / {e}")
-            return None
-            
-    def clear_cache(self):
-        self.images.clear()
-        # 폰트는 유지하거나 필요시 재생성

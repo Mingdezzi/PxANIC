@@ -2,7 +2,7 @@ import socket
 import threading
 import json
 import time
-from settings import NETWORK_PORT, BUFFER_SIZE, DEFAULT_PHASE_DURATIONS
+from settings import NETWORK_PORT, DEFAULT_PHASE_DURATIONS
 
 class GameServer:
     def __init__(self):
@@ -19,10 +19,12 @@ class GameServer:
         
         # Time Management
         self.phases = ["DAWN", "MORNING", "NOON", "AFTERNOON", "EVENING", "NIGHT"]
-        self.current_phase_idx = 0
+        # [수정] 게임 시작 시 바로 업무를 시작하도록 MORNING(1)부터 시작
+        self.current_phase_idx = 1 
         self.day_count = 1
-        self.state_timer = DEFAULT_PHASE_DURATIONS[self.phases[0]]
+        self.state_timer = DEFAULT_PHASE_DURATIONS[self.phases[self.current_phase_idx]]
         self.last_tick = time.time()
+        self.last_sync_time = 0 # [추가] 패킷 폭주 방지용 타이머
 
     def start(self):
         try:
@@ -63,16 +65,35 @@ class GameServer:
             self.state_timer -= dt
             if self.state_timer <= 0:
                 self._advance_phase()
-                
-            if int(now) % 1 == 0:
-                self.broadcast({"type": "TIME_SYNC", "phase_idx": self.current_phase_idx, "timer": self.state_timer, "day": self.day_count})
+            
+            # [수정] 정확히 1초 간격으로만 전송 (폭주 방지)
+            if now - self.last_sync_time >= 1.0:
+                self.last_sync_time = now
+                packet = {
+                    "type": "TIME_SYNC", 
+                    "phase_idx": self.current_phase_idx, 
+                    "timer": self.state_timer, 
+                    "day": self.day_count,
+                    "roles": {pid: p['role'] for pid, p in self.players.items()}
+                }
+                self.broadcast(packet)
+                # [DEBUG] 로그 간소화 (10초마다)
+                if int(now) % 10 == 0:
+                    print(f"[SERVER_DEBUG] Sending Roles: {len(self.players)} players")
 
     def _advance_phase(self):
         self.current_phase_idx = (self.current_phase_idx + 1) % len(self.phases)
         new_phase = self.phases[self.current_phase_idx]
         if new_phase == "DAWN": self.day_count += 1 # Day increases at DAWN
         self.state_timer = DEFAULT_PHASE_DURATIONS.get(new_phase, 30)
-        self.broadcast({"type": "TIME_SYNC", "phase_idx": self.current_phase_idx, "timer": self.state_timer, "day": self.day_count})
+        # [개선] 페이즈 변경 시에도 역할 정보 포함
+        self.broadcast({
+            "type": "TIME_SYNC", 
+            "phase_idx": self.current_phase_idx, 
+            "timer": self.state_timer, 
+            "day": self.day_count,
+            "roles": {pid: p['role'] for pid, p in self.players.items()}
+        })
 
     def handle_client(self, sock, pid):
         self.send_to(sock, {"type": "WELCOME", "my_id": pid})
@@ -119,27 +140,43 @@ class GameServer:
                 self.players[tid]['group'] = data.get('group'); self.broadcast_player_list()
         elif ptype == 'ADD_BOT':
             bid = self.next_id; self.next_id += 1
+            new_role = 'RANDOM'
+            
+            # [수정] 게임 중 추가된 봇에게 즉시 직업 할당
+            if self.game_started:
+                import random
+                available_roles = ["FARMER", "MINER", "FISHER", "POLICE", "MAFIA", "DOCTOR"]
+                new_role = random.choice(available_roles)
+                print(f"[SERVER] Late join Bot assigned: {new_role}")
+
             self.players[bid] = {
-                'id': bid, 'name': data.get('name'), 'role': 'RANDOM',
+                'id': bid, 'name': data.get('name'), 'role': new_role,
                 'group': data.get('group'), 'type': 'BOT', 'x': -1000, 'y': -1000, 'alive': True
             }
             self.broadcast_player_list()
+            
+            # 게임 중이면 역할 정보 업데이트를 위해 TIME_SYNC나 UPDATE_ROLE 유도 필요
+            # 다음 TIME_SYNC에서 roles가 전송되므로 자동 해결됨
         elif ptype == 'REMOVE_BOT':
             target_id = data.get('target_id')
             if target_id in self.players and self.players[target_id].get('type') == 'BOT':
                 del self.players[target_id]
                 self.broadcast_player_list()
         elif ptype == 'START_GAME':
-            if pid == 0:
-                # [Game Start Logic] Assign Random Roles
+            # [수정] 권한 체크 완화 및 직업 할당 로깅 강화
+            if not self.game_started:
                 import random
                 available_roles = ["FARMER", "MINER", "FISHER", "POLICE", "MAFIA", "DOCTOR"]
                 
+                print(f"\n--- [SERVER] GAME STARTING: Assigning Roles ---")
                 for p in self.players.values():
-                    if p['role'] == 'RANDOM':
+                    if p['role'] == 'RANDOM' or p['role'] == 'CITIZEN':
                         p['role'] = random.choice(available_roles)
+                    print(f" > Assigned: {p['name']} (ID:{p['id']}) -> {p['role']}")
+                print(f"-----------------------------------------------\n")
                 
-                self.game_started = True; self.last_tick = time.time()
+                self.game_started = True
+                self.last_tick = time.time()
                 self.broadcast({"type": "GAME_START", "players": self.players})
         elif ptype == 'MOVE':
             mid = data.get('id', pid) # Can be bot ID sent by host

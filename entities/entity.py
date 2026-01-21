@@ -68,7 +68,6 @@ class Entity:
         self.device_on = False
         self.device_battery = 100.0
         self.powerbank_uses = 0
-        self.z_level = 0 # [추가] 현재 위치한 층 (0: 1층, 1: 2층 ...)
 
 
         self.popups = []
@@ -126,12 +125,6 @@ class Entity:
             self.alive = False
             return "DIED"
         return "HIT"
-
-    def heal(self, amount):
-        if self.alive and self.hp < self.max_hp:
-            self.hp = min(self.max_hp, self.hp + amount)
-            return True
-        return False
 
     def try_spend_ap(self, amount, allow_health_cost=True):
         if self.ap >= amount:
@@ -224,15 +217,15 @@ class Entity:
                 is_blocking = False
                 
                 # [핵심 최적화] 복잡한 타일 조회 대신 캐시된 불리언 값(True/False)만 확인
-                if collision_cache and self.z_level < len(collision_cache):
-                    if collision_cache[self.z_level][y][x]:
+                if collision_cache:
+                    if collision_cache[y][x]:
                         is_blocking = True
                 else:
                     # 백업 로직
                     tids_to_check = []
                     if self.map_manager:
                         for layer in ['wall', 'object']:
-                            val = self.map_manager.get_tile_full(x, y, self.z_level, layer)
+                            val = self.map_manager.get_tile_full(x, y, layer)
                             if val[0] != 0: tids_to_check.append(val[0])
                     else: tids_to_check.append(self.map_data[y][x])
 

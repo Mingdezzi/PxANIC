@@ -3,7 +3,6 @@ import pygame
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 TILE_SIZE = 32
-BLOCK_HEIGHT = 32 # 타일 높이 상수 추가
 FPS = 60
 
 # [최적화] 전역 폰트 캐시 저장소 추가
@@ -159,17 +158,6 @@ MINIGAME_MAP = {
 }
 
 BED_TILES = [8321211, 9322009]
-
-# [추가] 타일 상태 변환 매핑 (DOOR_INTERACTION_MAP)
-# Key: 현재 TID, Value: 변환될 TID
-DOOR_INTERACTION_MAP = {
-    # 닫힘 -> 열림
-    9001000: 9001001,
-    # 열림 -> 닫힘
-    9001001: 9001000,
-    # 잠김 -> 열림 (해제 성공 시)
-    9001002: 9001001
-}
 
 # Hiding logic is now handled dynamically based on Tile ID structure (5th digit E)
 # E=1: Passive Hide, E=2: Active Hide

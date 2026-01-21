@@ -1,0 +1,691 @@
+2026-01-21 12:50:46,164 - [INFO] - [DATA] Loaded 17 items.
+2026-01-21 12:50:46,164 - [INFO] - [DATA] Loaded 110 tiles.
+2026-01-21 12:50:46,164 - [INFO] - [DATA] Loaded 5 roles.
+2026-01-21 12:50:46,581 - [INFO] - [SYSTEM] Game Engine Initializing...
+2026-01-21 12:50:46,693 - [INFO] - [SYSTEM] Engine Loop Started
+2026-01-21 12:50:52,051 - [INFO] - [PLAY] Entering PlayState...
+2026-01-21 12:50:52,093 - [INFO] - [PLAYER] Initialized at (1504, 1696) Role: CITIZEN
+2026-01-21 12:50:52,093 - [INFO] - [PLAYER] Role changed to SPECTATOR (None)
+2026-01-21 12:50:52,141 - [INFO] - [NET] Auto-connecting to local server...
+2026-01-21 12:50:52,143 - [INFO] - [NET] Connected! Initializing Spectator Mode...
+2026-01-21 12:50:52,417 - [INFO] - [SYNC] Removed entity 1 (Not in server)
+2026-01-21 12:50:52,422 - [INFO] - [SYNC] Removed entity 2 (Not in server)
+2026-01-21 12:50:52,427 - [INFO] - [SYNC] Removed entity 3 (Not in server)
+2026-01-21 12:50:52,432 - [INFO] - [SYNC] Removed entity 4 (Not in server)
+2026-01-21 12:50:52,438 - [INFO] - [SYNC] Removed entity 5 (Not in server)
+2026-01-21 12:50:52,444 - [INFO] - [SYNC] Removed entity 6 (Not in server)
+2026-01-21 12:50:52,449 - [INFO] - [SYNC] Removed entity 7 (Not in server)
+2026-01-21 12:50:52,455 - [INFO] - [SYNC] Removed entity 8 (Not in server)
+2026-01-21 12:50:52,461 - [INFO] - [SYNC] Removed entity 9 (Not in server)
+2026-01-21 12:50:52,467 - [INFO] - [SYNC] Removed entity 10 (Not in server)
+2026-01-21 12:50:52,472 - [INFO] - [SYNC] Removed entity 11 (Not in server)
+2026-01-21 12:50:52,477 - [INFO] - [SYNC] Removed entity 12 (Not in server)
+2026-01-21 12:50:52,481 - [INFO] - [SYNC] Removed entity 13 (Not in server)
+2026-01-21 12:50:52,487 - [INFO] - [SYNC] Removed entity 14 (Not in server)
+2026-01-21 12:50:52,489 - [INFO] - [SYNC] Removed entity 15 (Not in server)
+2026-01-21 12:50:52,489 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,489 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,489 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,489 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,489 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,489 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,489 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,490 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,490 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,490 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,490 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,490 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,490 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,490 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,491 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,491 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,492 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,492 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,492 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,492 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,493 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,493 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,494 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,495 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,495 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,495 - [INFO] - [SYNC] Added entity 7 (Bot 7)
+2026-01-21 12:50:52,495 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,495 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,495 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,495 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,495 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,496 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,496 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,496 - [INFO] - [SYNC] Added entity 7 (Bot 7)
+2026-01-21 12:50:52,497 - [INFO] - [SYNC] Added entity 8 (Bot 8)
+2026-01-21 12:50:52,497 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,497 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,497 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,497 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,497 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,499 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,499 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,499 - [INFO] - [SYNC] Added entity 7 (Bot 7)
+2026-01-21 12:50:52,499 - [INFO] - [SYNC] Added entity 8 (Bot 8)
+2026-01-21 12:50:52,499 - [INFO] - [SYNC] Added entity 9 (Bot 9)
+2026-01-21 12:50:52,501 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,501 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,501 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,501 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,501 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,501 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,501 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,502 - [INFO] - [SYNC] Added entity 7 (Bot 7)
+2026-01-21 12:50:52,502 - [INFO] - [SYNC] Added entity 8 (Bot 8)
+2026-01-21 12:50:52,502 - [INFO] - [SYNC] Added entity 9 (Bot 9)
+2026-01-21 12:50:52,503 - [INFO] - [SYNC] Added entity 10 (Bot 10)
+2026-01-21 12:50:52,503 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,503 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,503 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,503 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,504 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,504 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 7 (Bot 7)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 8 (Bot 8)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 9 (Bot 9)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 10 (Bot 10)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 11 (Bot 11)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,505 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,508 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,508 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,508 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,509 - [INFO] - [SYNC] Added entity 7 (Bot 7)
+2026-01-21 12:50:52,509 - [INFO] - [SYNC] Added entity 8 (Bot 8)
+2026-01-21 12:50:52,509 - [INFO] - [SYNC] Added entity 9 (Bot 9)
+2026-01-21 12:50:52,509 - [INFO] - [SYNC] Added entity 10 (Bot 10)
+2026-01-21 12:50:52,509 - [INFO] - [SYNC] Added entity 11 (Bot 11)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 12 (Bot 12)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 7 (Bot 7)
+2026-01-21 12:50:52,510 - [INFO] - [SYNC] Added entity 8 (Bot 8)
+2026-01-21 12:50:52,511 - [INFO] - [SYNC] Added entity 9 (Bot 9)
+2026-01-21 12:50:52,511 - [INFO] - [SYNC] Added entity 10 (Bot 10)
+2026-01-21 12:50:52,511 - [INFO] - [SYNC] Added entity 11 (Bot 11)
+2026-01-21 12:50:52,511 - [INFO] - [SYNC] Added entity 12 (Bot 12)
+2026-01-21 12:50:52,511 - [INFO] - [SYNC] Added entity 13 (Bot 13)
+2026-01-21 12:50:52,511 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,511 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,511 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,512 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,512 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,512 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,512 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,512 - [INFO] - [SYNC] Added entity 7 (Bot 7)
+2026-01-21 12:50:52,512 - [INFO] - [SYNC] Added entity 8 (Bot 8)
+2026-01-21 12:50:52,512 - [INFO] - [SYNC] Added entity 9 (Bot 9)
+2026-01-21 12:50:52,512 - [INFO] - [SYNC] Added entity 10 (Bot 10)
+2026-01-21 12:50:52,512 - [INFO] - [SYNC] Added entity 11 (Bot 11)
+2026-01-21 12:50:52,513 - [INFO] - [SYNC] Added entity 12 (Bot 12)
+2026-01-21 12:50:52,513 - [INFO] - [SYNC] Added entity 13 (Bot 13)
+2026-01-21 12:50:52,513 - [INFO] - [SYNC] Added entity 14 (Bot 14)
+2026-01-21 12:50:52,513 - [INFO] - [SYNC] Added entity 0 (Player 1)
+2026-01-21 12:50:52,513 - [INFO] - [SYNC] Added entity 1 (Bot 1)
+2026-01-21 12:50:52,513 - [INFO] - [SYNC] Added entity 2 (Bot 2)
+2026-01-21 12:50:52,514 - [INFO] - [SYNC] Added entity 3 (Bot 3)
+2026-01-21 12:50:52,514 - [INFO] - [SYNC] Added entity 4 (Bot 4)
+2026-01-21 12:50:52,514 - [INFO] - [SYNC] Added entity 5 (Bot 5)
+2026-01-21 12:50:52,514 - [INFO] - [SYNC] Added entity 6 (Bot 6)
+2026-01-21 12:50:52,514 - [INFO] - [SYNC] Added entity 7 (Bot 7)
+2026-01-21 12:50:52,515 - [INFO] - [SYNC] Added entity 8 (Bot 8)
+2026-01-21 12:50:52,515 - [INFO] - [SYNC] Added entity 9 (Bot 9)
+2026-01-21 12:50:52,515 - [INFO] - [SYNC] Added entity 10 (Bot 10)
+2026-01-21 12:50:52,515 - [INFO] - [SYNC] Added entity 11 (Bot 11)
+2026-01-21 12:50:52,515 - [INFO] - [SYNC] Added entity 12 (Bot 12)
+2026-01-21 12:50:52,515 - [INFO] - [SYNC] Added entity 13 (Bot 13)
+2026-01-21 12:50:52,516 - [INFO] - [SYNC] Added entity 14 (Bot 14)
+2026-01-21 12:50:52,517 - [INFO] - [SYNC] Added entity 15 (Bot 15)
+2026-01-21 12:50:52,588 - [INFO] - [NET] GAME_START: Syncing 16 entities.
+2026-01-21 12:50:52,592 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:52,593 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:52,593 - [INFO] - [SYNC_SUCCESS] Synced Player 1: MINER
+2026-01-21 12:50:52,593 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: RANDOM -> FISHER
+2026-01-21 12:50:52,593 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:52,602 - [INFO] - [SYNC_SUCCESS] Synced Bot 1: FISHER
+2026-01-21 12:50:52,602 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: RANDOM -> MINER
+2026-01-21 12:50:52,603 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:52,603 - [INFO] - [SYNC_SUCCESS] Synced Bot 2: MINER
+2026-01-21 12:50:52,603 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: RANDOM -> FARMER
+2026-01-21 12:50:52,603 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:52,603 - [INFO] - [SYNC_SUCCESS] Synced Bot 3: FARMER
+2026-01-21 12:50:52,603 - [INFO] - [BOT_AI] [Bot 4] Synchronizing role: RANDOM -> POLICE
+2026-01-21 12:50:52,603 - [INFO] - [BOT_AI] [Bot 4] AI Tree rebuilt for POLICE(None)
+2026-01-21 12:50:52,608 - [INFO] - [SYNC_SUCCESS] Synced Bot 4: POLICE
+2026-01-21 12:50:52,613 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: RANDOM -> FISHER
+2026-01-21 12:50:52,613 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:52,613 - [INFO] - [SYNC_SUCCESS] Synced Bot 5: FISHER
+2026-01-21 12:50:52,613 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: RANDOM -> MINER
+2026-01-21 12:50:52,613 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:52,613 - [INFO] - [SYNC_SUCCESS] Synced Bot 6: MINER
+2026-01-21 12:50:52,613 - [INFO] - [BOT_AI] [Bot 7] Synchronizing role: RANDOM -> POLICE
+2026-01-21 12:50:52,615 - [INFO] - [BOT_AI] [Bot 7] AI Tree rebuilt for POLICE(None)
+2026-01-21 12:50:52,620 - [INFO] - [SYNC_SUCCESS] Synced Bot 7: POLICE
+2026-01-21 12:50:52,620 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: RANDOM -> FARMER
+2026-01-21 12:50:52,620 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:52,626 - [INFO] - [SYNC_SUCCESS] Synced Bot 8: FARMER
+2026-01-21 12:50:52,628 - [INFO] - [BOT_AI] [Bot 9] Synchronizing role: RANDOM -> MAFIA
+2026-01-21 12:50:52,628 - [INFO] - [BOT_AI] [Bot 9] AI Tree rebuilt for MAFIA(None)
+2026-01-21 12:50:52,629 - [INFO] - [SYNC_SUCCESS] Synced Bot 9: MAFIA
+2026-01-21 12:50:52,629 - [INFO] - [BOT_AI] [Bot 10] Synchronizing role: RANDOM -> MAFIA
+2026-01-21 12:50:52,629 - [INFO] - [BOT_AI] [Bot 10] AI Tree rebuilt for MAFIA(None)
+2026-01-21 12:50:52,629 - [INFO] - [SYNC_SUCCESS] Synced Bot 10: MAFIA
+2026-01-21 12:50:52,629 - [INFO] - [BOT_AI] [Bot 11] Synchronizing role: RANDOM -> DOCTOR
+2026-01-21 12:50:52,634 - [INFO] - [BOT_AI] [Bot 11] AI Tree rebuilt for DOCTOR(None)
+2026-01-21 12:50:52,634 - [INFO] - [SYNC_SUCCESS] Synced Bot 11: DOCTOR
+2026-01-21 12:50:52,634 - [INFO] - [BOT_AI] [Bot 12] Synchronizing role: RANDOM -> MAFIA
+2026-01-21 12:50:52,635 - [INFO] - [BOT_AI] [Bot 12] AI Tree rebuilt for MAFIA(None)
+2026-01-21 12:50:52,641 - [INFO] - [SYNC_SUCCESS] Synced Bot 12: MAFIA
+2026-01-21 12:50:52,644 - [INFO] - [BOT_AI] [Bot 13] Synchronizing role: RANDOM -> MAFIA
+2026-01-21 12:50:52,644 - [INFO] - [BOT_AI] [Bot 13] AI Tree rebuilt for MAFIA(None)
+2026-01-21 12:50:52,644 - [INFO] - [SYNC_SUCCESS] Synced Bot 13: MAFIA
+2026-01-21 12:50:52,645 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: RANDOM -> FISHER
+2026-01-21 12:50:52,645 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:52,651 - [INFO] - [SYNC_SUCCESS] Synced Bot 14: FISHER
+2026-01-21 12:50:52,651 - [INFO] - [BOT_AI] [Bot 15] Synchronizing role: RANDOM -> DOCTOR
+2026-01-21 12:50:52,651 - [INFO] - [BOT_AI] [Bot 15] AI Tree rebuilt for DOCTOR(None)
+2026-01-21 12:50:52,651 - [INFO] - [SYNC_SUCCESS] Synced Bot 15: DOCTOR
+2026-01-21 12:50:52,652 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:52,658 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:52,664 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:50:52,664 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:52,664 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:52,664 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:50:52,664 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:52,664 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:52,664 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:50:52,664 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:52,664 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:52,664 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:50:52,669 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:52,670 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:52,670 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:50:52,670 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:52,670 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:52,675 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:50:52,679 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:52,679 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:52,679 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:50:52,679 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:52,679 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:52,680 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:50:53,458 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:53,463 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:53,463 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:50:53,464 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:53,464 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:53,464 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:50:53,464 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:53,464 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:53,464 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:50:53,469 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:53,469 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:53,469 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:50:53,469 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:53,475 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:53,480 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:50:53,481 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:53,481 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:53,482 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:50:53,482 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:53,482 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:53,482 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:50:53,482 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:53,482 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:53,488 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:50:54,451 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:54,457 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:54,457 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:50:54,462 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:54,468 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:54,473 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:50:54,478 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:54,484 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:54,489 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:50:54,495 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:54,497 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:54,497 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:50:54,497 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:54,497 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:54,497 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:50:54,497 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:54,497 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:54,498 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:50:54,498 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:54,498 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:54,498 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:50:54,498 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:54,498 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:54,498 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:50:55,468 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:55,473 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:55,479 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:55,482 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:55,482 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:55,482 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:55,482 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:55,482 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:55,483 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:50:55,483 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:55,483 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:55,484 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:50:55,484 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:55,489 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:55,489 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:50:56,468 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:56,473 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:56,478 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:56,482 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:56,482 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:56,482 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:56,482 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:56,482 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:56,483 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:50:56,483 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:56,483 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:56,483 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:50:56,488 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:56,488 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:56,488 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:50:57,461 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:57,466 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:57,471 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:50:57,473 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:57,474 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:57,474 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:50:57,474 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:57,474 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:57,474 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:50:57,474 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:57,474 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:57,474 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:50:57,474 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:57,475 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:57,481 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:50:57,481 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:57,481 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:57,487 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:50:57,492 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:57,497 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:57,499 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:50:57,499 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:57,499 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:57,499 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:50:58,481 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:58,486 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:58,492 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:50:58,495 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:58,495 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:58,495 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:50:58,495 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:58,496 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:58,496 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:50:58,496 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:58,496 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:58,496 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:50:58,496 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:58,496 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:58,496 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:50:58,496 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:58,496 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:58,498 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:50:58,502 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:58,502 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:58,502 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:50:58,503 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:58,508 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:58,514 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:50:59,487 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:59,493 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:59,498 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:50:59,503 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:59,503 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:59,503 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:50:59,503 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:59,503 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:59,503 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:50:59,503 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:59,504 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:59,504 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:50:59,504 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:59,504 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:59,504 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:50:59,504 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:50:59,504 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:50:59,504 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:50:59,504 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:50:59,504 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:50:59,504 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:50:59,510 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:50:59,510 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:50:59,511 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:00,486 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:00,491 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:00,497 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:00,499 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:00,499 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:00,500 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:00,500 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:00,500 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:00,500 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:00,500 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:00,500 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:00,500 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:00,500 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:00,500 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:00,500 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:00,500 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:00,500 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:00,505 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:00,505 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:00,505 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:00,512 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:00,517 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:00,522 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:00,525 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:01,478 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:01,483 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:01,488 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:01,492 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:01,492 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:01,492 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:01,492 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:01,492 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:01,492 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:01,493 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:01,498 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:01,498 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:01,498 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:01,498 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:01,498 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:01,503 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:01,509 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:01,515 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:01,519 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:01,519 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:01,519 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:01,519 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:01,519 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:01,519 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:02,486 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:02,491 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:02,497 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:02,500 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:02,500 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:02,500 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:02,500 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:02,500 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:02,501 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:02,501 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:02,501 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:02,501 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:02,501 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:02,501 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:02,501 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:02,501 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:02,501 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:02,501 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:02,501 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:02,507 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:02,507 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:02,507 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:02,508 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:02,508 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:03,482 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:03,487 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:03,492 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:03,496 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:03,496 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:03,496 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:03,496 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:03,496 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:03,497 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:03,497 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:03,497 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:03,497 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:03,497 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:03,497 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:03,498 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:03,502 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:03,503 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:03,503 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:03,503 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:03,503 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:03,508 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:03,513 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:03,519 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:03,522 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:04,495 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:04,501 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:04,506 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:04,511 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:04,512 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:04,512 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:04,512 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:04,512 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:04,512 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:04,512 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:04,512 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:04,512 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:04,512 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:04,512 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:04,512 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:04,512 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:04,513 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:04,513 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:04,519 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:04,519 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:04,519 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:04,519 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:04,519 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:04,519 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:05,501 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:05,506 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:05,511 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:05,517 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:05,522 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:05,527 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:05,532 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:05,532 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:05,538 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:05,544 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:05,547 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:05,547 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:05,547 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:05,547 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:05,547 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:05,547 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:05,547 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:05,547 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:05,547 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:05,547 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:05,548 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:05,548 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:05,548 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:05,548 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:06,492 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:06,498 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:06,503 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:06,504 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:06,504 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:06,504 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:06,504 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:06,504 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:06,504 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:06,504 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:06,504 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:06,504 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:06,504 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:06,506 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:06,512 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:06,513 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:06,513 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:06,513 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:06,513 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:06,513 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:06,518 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:06,524 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:06,531 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:06,531 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:07,494 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:07,499 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:07,504 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:07,505 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:07,505 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:07,505 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:07,505 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:07,505 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:07,505 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:07,505 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:07,505 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:07,505 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:07,506 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:07,507 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:07,507 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:07,507 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:07,512 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:07,512 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:07,512 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:07,512 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:07,512 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:07,512 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:07,518 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:07,523 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:08,497 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:08,502 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:08,507 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:08,512 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:08,513 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:08,513 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:08,513 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:08,513 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:08,513 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:08,513 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:08,513 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:08,513 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:08,513 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:08,513 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:08,519 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:08,519 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:08,519 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:08,519 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:08,524 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:08,530 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:08,536 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:08,538 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:08,538 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:08,538 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:09,498 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:09,503 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:09,508 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:09,514 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:09,514 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:09,514 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:09,514 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:09,514 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:09,514 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:09,514 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:09,514 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:09,514 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:09,515 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:09,515 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:09,516 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:09,521 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:09,522 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:09,522 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:09,522 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:09,522 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:09,527 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:09,532 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:09,537 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:09,542 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:10,524 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:10,529 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:10,534 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:10,537 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:10,538 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:10,538 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:10,538 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:10,538 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:10,538 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:10,538 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:10,538 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:10,538 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:10,538 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:10,538 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:10,538 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:10,544 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:10,544 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:10,544 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:10,544 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:10,549 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:10,555 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:10,561 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:10,566 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:10,566 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:11,515 - [INFO] - [BOT_AI] [Player 1] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:11,520 - [INFO] - [BOT_AI] [Player 1] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:11,527 - [INFO] - [REALTIME_SYNC] Entity Player 1 -> MINER
+2026-01-21 12:51:11,527 - [INFO] - [BOT_AI] [Bot 1] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:11,527 - [INFO] - [BOT_AI] [Bot 1] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:11,527 - [INFO] - [REALTIME_SYNC] Entity Bot 1 -> FISHER
+2026-01-21 12:51:11,528 - [INFO] - [BOT_AI] [Bot 2] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:11,528 - [INFO] - [BOT_AI] [Bot 2] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:11,528 - [INFO] - [REALTIME_SYNC] Entity Bot 2 -> MINER
+2026-01-21 12:51:11,528 - [INFO] - [BOT_AI] [Bot 3] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:11,528 - [INFO] - [BOT_AI] [Bot 3] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:11,528 - [INFO] - [REALTIME_SYNC] Entity Bot 3 -> FARMER
+2026-01-21 12:51:11,528 - [INFO] - [BOT_AI] [Bot 5] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:11,528 - [INFO] - [BOT_AI] [Bot 5] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:11,528 - [INFO] - [REALTIME_SYNC] Entity Bot 5 -> FISHER
+2026-01-21 12:51:11,528 - [INFO] - [BOT_AI] [Bot 6] Synchronizing role: CITIZEN -> MINER
+2026-01-21 12:51:11,528 - [INFO] - [BOT_AI] [Bot 6] AI Tree rebuilt for CITIZEN(MINER)
+2026-01-21 12:51:11,528 - [INFO] - [REALTIME_SYNC] Entity Bot 6 -> MINER
+2026-01-21 12:51:11,528 - [INFO] - [BOT_AI] [Bot 8] Synchronizing role: CITIZEN -> FARMER
+2026-01-21 12:51:11,529 - [INFO] - [BOT_AI] [Bot 8] AI Tree rebuilt for CITIZEN(FARMER)
+2026-01-21 12:51:11,529 - [INFO] - [REALTIME_SYNC] Entity Bot 8 -> FARMER
+2026-01-21 12:51:11,530 - [INFO] - [BOT_AI] [Bot 14] Synchronizing role: CITIZEN -> FISHER
+2026-01-21 12:51:11,535 - [INFO] - [BOT_AI] [Bot 14] AI Tree rebuilt for CITIZEN(FISHER)
+2026-01-21 12:51:11,535 - [INFO] - [REALTIME_SYNC] Entity Bot 14 -> FISHER
+2026-01-21 12:51:12,284 - [INFO] - [SYSTEM] Engine Shutting Down
