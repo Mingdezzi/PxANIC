@@ -56,6 +56,10 @@ def cleanup_disk_cache():
     except Exception as e:
         print(f"[System] Cache Cleanup Error: {e}")
 
+def clear_memory_cache():
+    """메모리(RAM) 캐시 비우기 - 맵 변경 시 호출 권장"""
+    TEXTURE_CACHE.clear()
+
 # 모듈 로드 시 한 번 실행하여 디스크 용량 관리
 cleanup_disk_cache()
 
@@ -146,6 +150,16 @@ def draw_brick_base(surf, color):
         for x in range(off - 16, 32, 16):
             r_obj = pygame.Rect(x + 1, y + 1, 14, 6)
             draw_pixel_bevel(surf, r_obj, color, blend(color, P['WHITE'], 0.15), blend(color, P['BLACK'], 0.3))
+
+def draw_grass_detailed(surf, base_col):
+    fill(surf, base_col)
+    light, shadow = P['GRASS_LIGHT'], P['GRASS_SHADOW']
+    for _ in range(15):
+        cx, cy = random.randint(2, 28), random.randint(2, 28)
+        line(surf, shadow, (cx, cy), (cx, cy+3), 1)
+        pixel(surf, light, (cx-1, cy-1))
+        pixel(surf, light, (cx+1, cy-1))
+        pixel(surf, light, (cx, cy))
 
 def draw_10001(s):
     draw_pro_noise(s, P['DIRT_BASE'], 25)

@@ -67,6 +67,8 @@ class GameLogger:
         
     def debug(self, category, message):
         self.log('DEBUG', category, message)
-        
-    def warning(self, category, message):
-        self.log('WARNING', category, message)
+
+    def shutdown(self):
+        self.running = False
+        if self.worker_thread.is_alive():
+            self.worker_thread.join(timeout=1.0)

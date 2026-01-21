@@ -78,3 +78,6 @@ class SoundManager:
         except Exception as e:
             print(f"[SoundManager] BGM Error ({bgm_path}): {e}")
 
+    def stop_music(self):
+        pygame.mixer.music.stop()
+        self.current_bgm = None

@@ -125,95 +125,26 @@ class PopupManager(UIWidget):
         screen.blit(close_txt, (center_x - close_txt.get_width()//2, paper_rect.bottom - 40))
 
     def draw_spectator_ui(self, screen, w, h):
-        # 1. 상단 제어바 (PHASE SKIP)
-        self.skip_btn_rect = pygame.Rect(w - 140, 10, 130, 35)
-        pygame.draw.rect(screen, (150, 50, 50), self.skip_btn_rect, border_radius=6)
-        pygame.draw.rect(screen, (200, 70, 70), self.skip_btn_rect, 2, border_radius=6)
-        txt = self.font_small.render("PHASE SKIP", True, (255, 255, 255))
+        self.skip_btn_rect = pygame.Rect(w - 300, 110, 100, 40)
+        pygame.draw.rect(screen, (150, 50, 50), self.skip_btn_rect, border_radius=8)
+        txt = self.font_small.render("SKIP PHASE", True, (255, 255, 255))
         screen.blit(txt, (self.skip_btn_rect.centerx - txt.get_width()//2, self.skip_btn_rect.centery - txt.get_height()//2))
         
-        # 2. 엔티티 상세 대시보드 (영역 고정)
-        top_margin = 110
-        bottom_limit = h - 260 
-        sidebar_w = 270
-        sidebar_h = max(100, bottom_limit - top_margin)
-        sidebar_x = w - sidebar_w - 10
-        sidebar_y = top_margin
-        
-        # 영역 배경 (반투명 어둡게)
-        bg_panel = pygame.Surface((sidebar_w, sidebar_h), pygame.SRCALPHA)
-        bg_panel.fill((20, 20, 25, 180)) 
-        screen.blit(bg_panel, (sidebar_x, sidebar_y))
-        pygame.draw.rect(screen, (60, 60, 70), (sidebar_x, sidebar_y, sidebar_w, sidebar_h), 1)
-        
-        # 리스트 렌더링 영역 제한
-        old_clip = screen.get_clip()
-        screen.set_clip(pygame.Rect(sidebar_x, sidebar_y, sidebar_w, sidebar_h))
-        
         self.entity_rects = []
-        curr_y = sidebar_y + 10 - self.spectator_scroll_y
+        start_y = 160 - self.spectator_scroll_y
+        right_panel_x = w - 180
         
-        all_entities = [self.game.player] + self.game.npcs
-        pov_target = getattr(self.game, 'pov_target', None)
-        
-        for ent in all_entities:
-            if not ent.alive or ent.role == "SPECTATOR": continue
-            
-            card_h = 75 
-            r = pygame.Rect(sidebar_x + 5, curr_y, sidebar_w - 10, card_h)
-            
-            # POV 대상 강조
-            is_pov = (pov_target == ent)
-            bg_col = (60, 60, 80) if is_pov else (40, 40, 45)
-            border_col = (255, 215, 0) if is_pov else (70, 70, 80)
-            
-            role_col = (100, 255, 100)
-            if ent.role == "MAFIA": role_col = (255, 70, 70)
-            elif ent.role == "POLICE": role_col = (70, 150, 255)
-            elif ent.role == "DOCTOR": role_col = (240, 240, 250)
-            
-            pygame.draw.rect(screen, bg_col, r, border_radius=6)
-            pygame.draw.rect(screen, border_col, r, 2 if is_pov else 1, border_radius=6)
-            
-            # 이름 및 직업
-            name_txt = self.font_main.render(ent.name, True, (255, 255, 255))
-            
-            # [수정] 직업 표기 로직 강화 (RANDOM 방지)
-            display_role = ent.role
-            if ent.role == "CITIZEN" and getattr(ent, 'sub_role', None):
-                display_role = f"{ent.sub_role}"
-            elif ent.role == "RANDOM":
-                display_role = "Assigning..." # 아직 서버 패킷 대기 중
-                
-            role_txt = self.font_small.render(display_role, True, role_col)
-            screen.blit(name_txt, (r.left + 10, r.top + 5))
-            screen.blit(role_txt, (r.right - role_txt.get_width() - 10, r.top + 8))
-            
-            # HP/AP 바
-            bar_w = r.width - 20
-            pygame.draw.rect(screen, (60, 20, 20), (r.left + 10, r.top + 32, bar_w, 5))
-            pygame.draw.rect(screen, (255, 50, 50), (r.left + 10, r.top + 32, bar_w * (ent.hp/ent.max_hp), 5))
-            pygame.draw.rect(screen, (20, 40, 20), (r.left + 10, r.top + 40, bar_w, 5))
-            pygame.draw.rect(screen, (50, 255, 50), (r.left + 10, r.top + 40, bar_w * (ent.ap/ent.max_ap), 5))
-            
-            # 하단 정보
-            coin_txt = self.font_small.render(f"{ent.coins}G", True, (255, 215, 0))
-            status_str = "IDLE"
-            if ent.is_hiding: status_str = "HIDING"
-            elif getattr(ent, 'is_working', False): status_str = "WORKING"
-            elif getattr(ent, 'chase_target', None): status_str = "CHASING"
-            elif ent.is_moving: status_str = "MOVING"
-            status_txt = self.font_small.render(status_str, True, (200, 200, 200))
-            
-            screen.blit(coin_txt, (r.left + 10, r.top + 52))
-            screen.blit(status_txt, (r.right - status_txt.get_width() - 10, r.top + 52))
-
-            self.entity_rects.append((r, ent))
-            curr_y += card_h + 8
-            
-        screen.set_clip(old_clip) 
-
-
+        for npc in self.game.npcs:
+            if not npc.alive: continue
+            r = pygame.Rect(right_panel_x, start_y, 160, 30)
+            if 0 < start_y < h:
+                col = (100, 255, 100) if npc.role == "CITIZEN" else ((255, 100, 100) if npc.role == "MAFIA" else (200, 200, 255))
+                pygame.draw.rect(screen, (50, 50, 50), r, border_radius=4)
+                pygame.draw.rect(screen, col, (r.left, r.top, 5, r.height), border_top_left_radius=4, border_bottom_left_radius=4)
+                name_txt = self.font_small.render(f"{npc.name} ({npc.role})", True, (200, 200, 200))
+                screen.blit(name_txt, (r.left + 10, r.centery - name_txt.get_height()//2))
+                self.entity_rects.append((r, npc))
+            start_y += 35
 
     def draw(self, screen):
         pass # Placeholder

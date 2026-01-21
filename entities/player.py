@@ -50,6 +50,19 @@ class Player(Entity):
     @is_dead.setter
     def is_dead(self, value): self.alive = not value
 
+    def reset(self):
+        self.pos_x = self.start_x; self.pos_y = self.start_y
+        self.rect.x = int(self.pos_x); self.rect.y = int(self.pos_y)
+        self.hp, self.ap, self.coins = self.max_hp, self.max_ap, 0
+        self.alive = True; self.is_hiding = False; self.hiding_type = 0
+        self.bullets.clear(); self.inventory = {k: 0 for k in ITEMS.keys()}; self.inventory['BATTERY'] = 1
+        for k in self.buffs: self.buffs[k] = False
+        self.flashlight_on, self.device_on, self.minigame.active = False, False, False
+        self.breath_gauge = 100; self.ability_used = False
+        self.daily_work_count = 0; self.work_step = 0; self.bullets_fired_today = 0
+        self.day_count = 0; self.exhausted = False; self.hidden_in_solid = False
+        self.emotions = {}; self.move_state = "WALK"; self.device_battery = 100.0; self.infinite_stamina_buff = False; self.powerbank_uses = 0
+
     def change_role(self, new_role, sub_role=None):
         if new_role in ["FARMER", "MINER", "FISHER"]:
             self.role = "CITIZEN"
@@ -174,7 +187,7 @@ class Player(Entity):
     def _update_special_states(self, now):
         self.logic_status.update_special_states(now)
 
-    def get_vision_radius(self, vision_factor, is_blackout, weather_type='CLEAR'):
+    def get_vision_radius(self, vision_factor, is_blackout, weather_type='CLEAR', remaining_time=60, total_duration=60):
         return self.logic_status.get_vision_radius(vision_factor, is_blackout, weather_type)
 
     def interact_tile(self, gx, gy, npcs, mode='short'):
@@ -206,6 +219,9 @@ class Player(Entity):
             if self.device_battery <= 0: self.device_battery, self.device_on = 0, False; self.add_popup("Battery Depleted!", (255, 50, 50))
             if self.role in ["CITIZEN", "DOCTOR"] and now % 2000 < 50: sound_events.append(("BEEP", self.rect.centerx, self.rect.centery, 4 * TILE_SIZE))
         return sound_events
+
+    def heal_full(self): 
+        self.hp, self.ap, self.ability_used = self.max_hp, self.max_ap, False
 
     # [Callback Wrappers needed for Minigame lambdas which expect methods on self]
     def fail_penalty(self): self.try_spend_ap(2)

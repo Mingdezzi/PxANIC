@@ -20,6 +20,11 @@ class CharacterRenderer:
     _name_surface_cache = {}
 
     @classmethod
+    def clear_cache(cls):
+        cls._sprite_cache.clear()
+        cls._name_surface_cache.clear()
+
+    @classmethod
     def _get_cache_key(cls, entity, is_highlighted):
         skin_idx = entity.custom.get('skin', 0)
         cloth_idx = entity.custom.get('clothes', 0)
@@ -30,9 +35,6 @@ class CharacterRenderer:
     @staticmethod
     def draw_entity(screen, entity, camera_x, camera_y, viewer_role="PLAYER", current_phase="DAY", viewer_device_on=False):
         if not entity.alive: return
-        # [수정] 관전자는 맵에 그리지 않음 (E-SPORTS 중계용)
-        if entity.role == "SPECTATOR": return
-
         draw_x = entity.rect.x - camera_x
         draw_y = entity.rect.y - camera_y
         screen_w, screen_h = screen.get_width(), screen.get_height()
@@ -45,10 +47,8 @@ class CharacterRenderer:
 
         if entity.is_hiding and not is_highlighted:
             is_visible = False
-            # [수정] 관전자는 은신 중인 캐릭터를 반투명하게 볼 수 있음
-            if viewer_role == "SPECTATOR": is_visible, alpha = True, 120
-            elif getattr(entity, 'is_player', False) or entity.name == "Player 1": is_visible, alpha = True, 120
-            
+            if getattr(entity, 'is_player', False) or entity.name == "Player 1": is_visible, alpha = True, 120
+            elif viewer_role == "SPECTATOR": is_visible, alpha = True, 120
             if not is_visible: return
 
         cache_key = CharacterRenderer._get_cache_key(entity, is_highlighted)
@@ -108,6 +108,10 @@ class MapRenderer:
         self._wall_cache = {}  # {(cx, cy): Surface}
         self.map_width_tiles = map_manager.width
         self.map_height_tiles = map_manager.height
+
+    def invalidate_cache(self):
+        self._floor_cache.clear()
+        self._wall_cache.clear()
 
     def _render_floor_chunk(self, cx, cy):
         surf = pygame.Surface((self.CHUNK_SIZE * TILE_SIZE, self.CHUNK_SIZE * TILE_SIZE), pygame.SRCALPHA)

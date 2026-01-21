@@ -59,5 +59,11 @@ class DataManager:
         except Exception as e:
             self.logger.error("DATA", f"Failed to load roles: {e}")
 
+    def get_item(self, key):
+        return self.items.get(key)
+
     def get_tile(self, tid):
         return self.tiles.get(tid)
+
+    def get_role(self, role_name):
+        return self.roles.get(role_name)

@@ -7,9 +7,8 @@ class TimeSystem:
         self.game = game
         self.day_count = 1
         self.phases = ["DAWN", "MORNING", "NOON", "AFTERNOON", "EVENING", "NIGHT"]
-        # [수정] 서버와 동일하게 MORNING(1)부터 시작하여 초기 AI 동작 불일치 방지
-        self.current_phase_idx = 1
-        self.current_phase = self.phases[1]
+        self.current_phase_idx = 0
+        self.current_phase = self.phases[0]
         self.state_timer = 30
         
         self.weather = random.choices(WEATHER_TYPES, weights=WEATHER_PROBS, k=1)[0]

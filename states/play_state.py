@@ -47,7 +47,6 @@ class PlayState(BaseState):
         self.candidate_rects = []
         self.heartbeat_timer = 0
         self.last_sent_pos = (0, 0)
-        self.pov_target = None # [추가] 관전자 POV 추적 대상
         
         # [Work Navigation]
         self.work_target_tid = None
@@ -105,34 +104,6 @@ class PlayState(BaseState):
         elif self.weather == 'FOG': self.ui.show_alert("Dense Fog...", (150, 150, 150)); self.sound_system.sound_manager.play_sfx("ALERT")
         elif self.weather == 'SNOW': self.ui.show_alert("It's Snowing...", (200, 200, 255)); self.sound_system.sound_manager.play_sfx("ALERT")
 
-        # [AUTO CONNECT & START] 네트워크 미연결 시 자동 연결 시도
-        if not hasattr(self.game, 'network'):
-            from systems.network import NetworkManager
-            self.game.network = NetworkManager()
-            
-        if not self.game.network.connected:
-            self.logger.info("NET", "Auto-connecting to local server...")
-            if self.game.network.connect():
-                self.logger.info("NET", "Connected! Initializing Spectator Mode...")
-                # 관전자 모드로 자동 설정 및 봇 추가
-                # 잠시 대기 후 요청 (서버 처리 시간 고려)
-                import time
-                time.sleep(0.1)
-                
-                # [수정] 봇 15마리 대량 추가 요청
-                for i in range(1, 16):
-                    self.game.network.send_add_bot(f"Bot {i}", "PLAYER")
-                    time.sleep(0.01) # 패킷 씹힘 방지 미세 딜레이
-                
-                self.game.network.send_start_game()
-            else:
-                self.logger.error("NET", "Failed to connect to server.")
-
-        # [AUTO START] 이미 연결된 경우 바로 시작 요청
-        elif self.game.network.connected:
-            self.logger.info("NET", "Sending START_GAME request...")
-            self.game.network.send_start_game()
-
     def on_phase_change(self, old_phase, new_phase):
         if old_phase == "AFTERNOON": self.show_vote_ui = False; self._process_voting_results()
 
@@ -152,77 +123,7 @@ class PlayState(BaseState):
                 if e.get('type') == 'MOVE' and e.get('id') in self.world.entities_by_id:
                     ent = self.world.entities_by_id[e['id']]
                     if isinstance(ent, Dummy): ent.sync_state(e['x'], e['y'], 100, 100, 'CITIZEN', e['is_moving'], e['facing'])
-                elif e.get('type') == 'TIME_SYNC': 
-                    self.time_system.sync_time(e['phase_idx'], e['timer'], e['day'])
-                    # [추가] 실시간 역할 동기화 (지속적)
-                    roles_data = e.get('roles', {})
-                    id_map = {str(k): v for k, v in self.world.entities_by_id.items()}
-                    for pid_str, new_role in roles_data.items():
-                        if pid_str in id_map:
-                            ent = id_map[pid_str]
-                            
-                            # [수정] 무한 초기화 방지: 현재 역할과 새 역할 정밀 비교
-                            current_role_check = ent.role
-                            if ent.role == "CITIZEN" and getattr(ent, 'sub_role', None):
-                                current_role_check = ent.sub_role
-                                
-                            if current_role_check != new_role and new_role != "RANDOM":
-                                ent.change_role(new_role)
-                                self.logger.info("REALTIME_SYNC", f"Entity {ent.name} -> {new_role}")
-
-                elif e.get('type') == 'PLAYER_LIST':
-                    # [동기화] 서버의 참가자 리스트와 월드 엔티티 동기화
-                    participants = e.get('participants', [])
-                    self.game.shared_data['participants'] = participants
-                    
-                    current_ids = set(self.world.entities_by_id.keys())
-                    server_ids = set(str(p['id']) for p in participants)
-                    
-                    # 1. 없는 엔티티 제거
-                    for uid in list(current_ids): # list()로 복사하여 순회 중 삭제 허용
-                        if str(uid) not in server_ids and uid != self.player.uid:
-                            ent = self.world.entities_by_id[uid]
-                            ent.alive = False
-                            if ent in self.world.npcs: self.world.npcs.remove(ent)
-                            del self.world.entities_by_id[uid]
-                            self.logger.info("SYNC", f"Removed entity {uid} (Not in server)")
-
-                    # 2. 새로운 엔티티 추가
-                    for p in participants:
-                        pid = p['id']
-                        if str(pid) not in current_ids and pid != self.game.network.my_id:
-                            from entities.npc import Dummy
-                            name = p.get('name', f"Entity {pid}")
-                            role = p.get('role', 'CITIZEN')
-                            sx, sy = self.world.find_safe_spawn()
-                            new_npc = Dummy(sx, sy, None, self.world.map_manager.width, self.world.map_manager.height, name=name, role=role, zone_map=self.world.map_manager.zone_map, map_manager=self.world.map_manager)
-                            new_npc.uid = pid
-                            new_npc.is_master = False 
-                            self.world.register_entity(new_npc)
-                            self.world.npcs.append(new_npc)
-                            self.logger.info("SYNC", f"Added entity {pid} ({name})")
-
-                elif e.get('type') == 'GAME_START':
-                    # [핵심 수정] ID 및 이름 기반 이중 매칭 동기화
-                    player_data = e.get('players', {})
-                    print(f"\n[DEBUG_NET] GAME_START Data: {player_data}\n") 
-                    self.logger.info("NET", f"GAME_START: Syncing {len(player_data)} entities.")
-                    
-                    id_map = {str(k): v for k, v in self.world.entities_by_id.items()}
-                    name_map = {v.name: v for v in self.world.entities_by_id.values()}
-                    
-                    for pid_str, data in player_data.items():
-                        target_ent = None
-                        if pid_str in id_map: target_ent = id_map[pid_str]
-                        elif data.get('name') in name_map: target_ent = name_map[data.get('name')]
-                            
-                        if target_ent:
-                            new_role = data.get('role', 'CITIZEN')
-                            target_ent.change_role(new_role)
-                            self.logger.info("SYNC_SUCCESS", f"Synced {target_ent.name}: {new_role}")
-                        else:
-                            self.logger.warning("SYNC_FAIL", f"No entity found for PID {pid_str} / Name {data.get('name')}")
-
+                elif e.get('type') == 'TIME_SYNC': self.time_system.sync_time(e['phase_idx'], e['timer'], e['day'])
         if self.player.alive:
             curr_pos = (int(self.player.pos_x), int(self.player.pos_y))
             if curr_pos != self.last_sent_pos and hasattr(self.game, 'network') and self.game.network.connected:
@@ -281,26 +182,20 @@ class PlayState(BaseState):
                         if zid in ZONES and zid != 1: self.time_system.mafia_last_seen_zone = ZONES[zid]['name']
         for n in self.npcs:
             if not n.is_stunned(): self._handle_npc_action(n.update(self.current_phase, self.player, self.npcs, self.world.is_mafia_frozen, self.world.noise_list, self.day_count, self.world.bloody_footsteps), n, 0)
-        
-        # [수정] 카메라 및 FOV 업데이트 (POV 시스템 반영)
+        if self.player.role == "SPECTATOR": self._update_spectator_camera()
+        else: self.camera.update(self.player.rect.centerx, self.player.rect.centery)
+
+        # FOV & Rendering Prep
         if self.player.role == "SPECTATOR":
-            if self.pov_target:
-                # 1인칭 POV 모드: 타겟 고정 및 타겟의 시야 재현
-                self.camera.update(self.pov_target.rect.centerx, self.pov_target.rect.centery)
-                rad = self.pov_target.get_vision_radius(self.lighting.current_vision_factor, self.world.is_blackout, self.weather) if hasattr(self.pov_target, 'get_vision_radius') else 10
-                direction = getattr(self.pov_target, 'facing_dir', None) if (getattr(self.pov_target, 'flashlight_on', False) and self.current_phase in ['EVENING', 'NIGHT', 'DAWN']) else None
-                self.visible_tiles = self.fov.cast_rays(self.pov_target.rect.centerx, self.pov_target.rect.centery, rad, direction, 60)
-            else:
-                # 전지적 시점: 자유 이동 및 넓은 시야
-                self._update_spectator_camera()
-                rad = 100 
-                self.visible_tiles = self.fov.cast_rays(self.camera.x + self.camera.width//2, self.camera.y + self.camera.height//2, rad, None, 60)
+            rad = 100 # Unlimited vision for spectator
+            direction = None
         else:
-            self.camera.update(self.player.rect.centerx, self.player.rect.centery)
             rad = self.player.get_vision_radius(self.lighting.current_vision_factor, self.world.is_blackout, self.weather)
-            direction = self.player.facing_dir if (self.player.role == "POLICE" and self.player.flashlight_on and self.current_phase in ['EVENING', 'NIGHT', 'DAWN']) else None
-            self.visible_tiles = self.fov.cast_rays(self.player.rect.centerx, self.player.rect.centery, rad, direction, 60)
+            direction = None
+            if self.player.role == "POLICE" and self.player.flashlight_on and self.current_phase in ['EVENING', 'NIGHT', 'DAWN']:
+                direction = self.player.facing_dir
         
+        self.visible_tiles = self.fov.cast_rays(self.player.rect.centerx, self.player.rect.centery, rad, direction, 60)
         for tile in self.visible_tiles: self.tile_alphas[tile] = min(255, self.tile_alphas.get(tile, 0) + 15)
         for tile in list(self.tile_alphas.keys()):
             if tile not in self.visible_tiles:
@@ -312,10 +207,10 @@ class PlayState(BaseState):
         cam_dx, cam_dy = 0, 0
         cam_speed = 15
 
-        if keys[pygame.K_a]: cam_dx = -cam_speed
-        if keys[pygame.K_d]: cam_dx = cam_speed
-        if keys[pygame.K_w]: cam_dy = -cam_speed
-        if keys[pygame.K_s]: cam_dy = cam_speed
+        if keys[pygame.K_LEFT]: cam_dx = -cam_speed
+        if keys[pygame.K_RIGHT]: cam_dx = cam_speed
+        if keys[pygame.K_UP]: cam_dy = -cam_speed
+        if keys[pygame.K_DOWN]: cam_dy = cam_speed
 
         if cam_dx != 0 or cam_dy != 0:
             self.ui.spectator_follow_target = None
@@ -343,6 +238,9 @@ class PlayState(BaseState):
         angle = math.atan2(target_pos[1]-shooter.rect.centery, target_pos[0]-shooter.rect.centerx) if target_pos else math.atan2(shooter.facing_dir[1], shooter.facing_dir[0])
         self.player.bullets.append(Bullet(shooter.rect.centerx, shooter.rect.centery, angle, is_enemy=(shooter.role != "PLAYER")))
         self.world.effects.append(VisualSound(shooter.rect.centerx, shooter.rect.centery, "BANG!", (255, 200, 50), 2.0))
+
+    def trigger_sabotage(self): self.execute_sabotage()
+    def trigger_siren(self): self.execute_siren()
 
     def _handle_npc_action(self, action, n, now):
         if action == "USE_SIREN": self.execute_siren()
@@ -393,35 +291,9 @@ class PlayState(BaseState):
             self.map_renderer.draw(canvas, self.camera, 0, visible_tiles=vis, tile_alphas=self.tile_alphas)
         
         for n in self.npcs:
-            if n.role == "SPECTATOR": continue # 관전자는 맵에 그리지 않음
             if (int(n.rect.centerx//TILE_SIZE), int(n.rect.centery//TILE_SIZE)) in self.visible_tiles or self.player.role == "SPECTATOR":
                 n.draw(canvas, self.camera.x, self.camera.y, self.player.role, self.current_phase, self.player.device_on)
-        
-        if not self.player.is_dead and self.player.role != "SPECTATOR": 
-            CharacterRenderer.draw_entity(canvas, self.player, self.camera.x, self.camera.y, self.player.role, self.current_phase, self.player.device_on)
-        
-        # [추가] 관전자 전용 월드 오버레이 (E-SPORTS 중계용)
-        if self.player.role == "SPECTATOR":
-            for ent in [self.player] + self.npcs:
-                if not ent.alive or ent.role == "SPECTATOR": continue
-                
-                # 머리 위 위치 계산
-                rx = ent.rect.centerx - self.camera.x
-                ry = ent.rect.top - self.camera.y - 10
-                
-                status_text = ""
-                status_col = (255, 255, 255)
-                
-                if ent.is_hiding: status_text = "HIDING"; status_col = (150, 100, 255)
-                elif getattr(ent, 'is_working', False): status_text = "WORKING"; status_col = (255, 255, 0)
-                elif getattr(ent, 'chase_target', None): status_text = "CHASING"; status_col = (255, 50, 50)
-                elif ent.is_stunned(): status_text = "STUNNED"; status_col = (200, 200, 200)
-                
-                if status_text:
-                    s_font = pygame.font.SysFont("arial", 10, bold=True)
-                    txt = s_font.render(status_text, True, status_col)
-                    canvas.blit(txt, (rx - txt.get_width()//2, ry - 5))
-
+        if not self.player.is_dead: CharacterRenderer.draw_entity(canvas, self.player, self.camera.x, self.camera.y, self.player.role, self.current_phase, self.player.device_on)
         for fx in self.world.effects: fx.draw(canvas, self.camera.x, self.camera.y)
         for i in self.world.indicators: i.draw(canvas, self.player.rect, self.camera.x, self.camera.y)
         if self.player.role != "SPECTATOR": self.lighting.apply_lighting(self.camera)
@@ -619,29 +491,25 @@ class PlayState(BaseState):
                             self.player.add_popup(f"Voted for {target.name}", (100, 255, 100))
 
                 if self.player.role == "SPECTATOR":
-                    # 1. 사이드바 리스트 클릭 처리
+                    # 2. Click Entity list in UI
                     for rect, ent in self.ui.entity_rects:
-                        if rect.collidepoint(event.pos):
-                            if self.pov_target == ent:
-                                self.pov_target = None # 해제
-                            else:
-                                self.pov_target = ent # 1인칭 POV 시작
-                            return
+                        if rect.collidepoint(event.pos): self.ui.spectator_follow_target = ent; break
                     
-                    # 2. Skip Phase 버튼 처리
+                    # 3. Skip Phase Button
                     if hasattr(self.ui, 'skip_btn_rect') and self.ui.skip_btn_rect.collidepoint(event.pos):
                         self.time_system.state_timer = 0
-                        return
                     
-                    # 3. 월드 상의 엔티티 직접 클릭 처리
+                    # 4. Click Entity in World
                     mx, my = event.pos
                     world_mx = mx / self.zoom_level + self.camera.x
                     world_my = my / self.zoom_level + self.camera.y
-                    click_rect = pygame.Rect(world_mx - 15, world_my - 15, 30, 30)
+                    
+                    click_rect = pygame.Rect(world_mx - 10, world_my - 10, 20, 20)
                     for ent in [self.player] + self.npcs:
-                        if ent.alive and click_rect.colliderect(ent.rect) and ent.role != "SPECTATOR":
-                            self.pov_target = ent if self.pov_target != ent else None
-                            return
+                        if ent.alive and click_rect.colliderect(ent.rect):
+                            self.ui.spectator_follow_target = ent
+                            self.player.add_popup(f"Following {ent.name}", (100, 100, 255))
+                            break
         if event.type == pygame.MOUSEWHEEL and self.player.role == "SPECTATOR":
             if pygame.mouse.get_pos()[0] > self.game.screen_width - 300: self.ui.spectator_scroll_y = max(0, self.ui.spectator_scroll_y - event.y * 20)
             else: self.zoom_level = max(0.2, min(4.0, self.zoom_level + (0.2 if event.y > 0 else -0.2))); self.camera.set_zoom(self.zoom_level)

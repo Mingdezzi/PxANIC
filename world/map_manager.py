@@ -20,29 +20,8 @@ class MapManager:
         self.tile_cache = {}
         self.tile_cooldowns = {}
         self.open_doors = {}
-        self.reserved_tiles = {} # {(gx, gy): entity_ref}
         
         self.name_to_tid = {data['name']: tid for tid, data in TILE_DATA.items()}
-
-    def is_tile_reserved(self, gx, gy, requester=None):
-        """해당 타일이 다른 봇에 의해 예약되었는지 확인"""
-        reserver = self.reserved_tiles.get((gx, gy))
-        if reserver is None: return False
-        return reserver != requester
-
-    def reserve_tile(self, gx, gy, entity):
-        """타일을 예약"""
-        self.reserved_tiles[(gx, gy)] = entity
-
-    def release_tile(self, gx, gy, entity=None):
-        """타일 예약을 해제 (본인이 예약한 경우에만)"""
-        if (gx, gy) in self.reserved_tiles:
-            if entity is None or self.reserved_tiles[(gx, gy)] == entity:
-                del self.reserved_tiles[(gx, gy)]
-
-    def clear_all_reservations(self):
-        """모든 예약 초기화 (페이즈 변경 시 등)"""
-        self.reserved_tiles.clear()
 
     def get_tile(self, gx, gy, layer='floor'):
         # [최적화] 범위 검사 후 직접 접근 (isinstance 제거)
@@ -288,3 +267,21 @@ class MapManager:
 
     def set_tile_cooldown(self, gx, gy, duration_ms=3000):
         self.tile_cooldowns[(gx, gy)] = pygame.time.get_ticks() + duration_ms
+
+    def find_nearest_tile(self, tids, start_x, start_y):
+        """Find the nearest tile among tids from start_x, start_y using cache."""
+        best_pos = None
+        min_dist_sq = float('inf')
+        
+        if not isinstance(tids, list): tids = [tids]
+        
+        for tid in tids:
+            if tid in self.tile_cache:
+                for (tx, ty) in self.tile_cache[tid]:
+                    # 타일 중심 좌표
+                    cx, cy = tx + TILE_SIZE//2, ty + TILE_SIZE//2
+                    dist_sq = (start_x - cx)**2 + (start_y - cy)**2
+                    if dist_sq < min_dist_sq:
+                        min_dist_sq = dist_sq
+                        best_pos = (tx, ty) # Return top-left
+        return best_pos

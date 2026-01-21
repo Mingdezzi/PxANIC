@@ -8,7 +8,6 @@ from world.tiles import check_collision, get_tile_function, BED_TILES, HIDEABLE_
 from systems.logger import GameLogger
 from colors import *
 from .entity import Entity
-from .work_logic import WorkLogic
 from systems.renderer import CharacterRenderer
 from systems.behavior_tree import BTNode, Composite, Selector, Sequence, Action, Condition, BTState
 
@@ -88,42 +87,15 @@ class Dummy(Entity):
         # [Optimization] AI Tick Rate
         self.ai_timer = random.randint(0, 10) # Stagger updates
 
-    def change_role(self, new_role):
-        """[Sync] 서버 데이터에 맞춰 역할을 변경하고 AI 트리를 재생성합니다."""
-        self.logger.info("BOT_AI", f"[{self.name}] Synchronizing role: {self.role} -> {new_role}")
-        
-        if new_role in ["FARMER", "MINER", "FISHER"]:
-            self.role = "CITIZEN"
-            self.sub_role = new_role
-        else:
-            self.role = new_role
-            if self.role == "CITIZEN" and not self.sub_role: 
-                self.sub_role = random.choice(["FARMER", "MINER", "FISHER"])
-            else: 
-                self.sub_role = None
-        
-        # 상태 초기화
-        self.is_working = False
-        self.path = []
-        self.current_path_target = None
-        self.work_tile_pos = None
-        self.active_work_tile = None
-        
-        # 역할이 바뀌었으므로 AI 트리 재생성
-        self.tree = self._build_behavior_tree()
-        self.logger.info("BOT_AI", f"[{self.name}] AI Tree rebuilt for {self.role}({self.sub_role})")
-
     def add_popup(self, text, color=(255, 255, 255)):
         self.popups.append({'text': text, 'color': color, 'timer': pygame.time.get_ticks() + 1500})
+
+    def add_suspicion(self, target_name, amount):
+        self.suspicion_meter[target_name] = self.suspicion_meter.get(target_name, 0) + amount
 
     def morning_process(self):
         if not self.alive: return
         self.morph_active = False
-        
-        # [추가] 아침이 되면 점유하고 있던 타일 예약 해제
-        if self.map_manager and hasattr(self, 'active_work_tile') and self.active_work_tile:
-            self.map_manager.release_tile(self.active_work_tile[0], self.active_work_tile[1], self)
-
         gx, gy = int(self.rect.centerx // TILE_SIZE), int(self.rect.centery // TILE_SIZE)
         is_indoors = False
         if 0 <= gx < self.map_width and 0 <= gy < self.map_height:
@@ -140,7 +112,6 @@ class Dummy(Entity):
         self.failed_targets = {}; self.investigate_pos, self.chase_target = None, None
         self.suspicion_meter = {k: max(0, v - 30) for k, v in self.suspicion_meter.items()}
         self.device_battery = min(100, self.device_battery + 20)
-        self.active_work_tile = None
 
 
     def _build_behavior_tree(self):
@@ -149,10 +120,10 @@ class Dummy(Entity):
 
         if self.role == "POLICE":
             return Selector([
-                survival_seq, # 경찰도 위험하면 피해야 함
+                shopping_seq,
                 Sequence([Condition(self.police_scan_targets), Action(self.police_chase_attack)]),
                 Sequence([Condition(self.has_last_seen_pos), Action(self.police_investigate_last_pos)]),
-                shopping_seq,
+                Sequence([Condition(self.has_investigate_pos), Action(self.police_investigate_noise)]),
                 Action(self.do_patrol)
             ])
         elif self.role == "MAFIA":
@@ -160,45 +131,17 @@ class Dummy(Entity):
                 Sequence([Condition(self.mafia_scan_targets), Action(self.mafia_kill)]),
                 Sequence([Condition(self.can_sabotage), Action(self.mafia_sabotage)]),
                 shopping_seq,
-                Action(self.do_wander)
+                Action(self.do_work_fake)
             ])
-        else: # Citizen, Doctor, or RANDOM
+        else:
             return Selector([
                 survival_seq,
                 shopping_seq,
                 Sequence([Condition(self.is_work_time), Action(self.do_work)]),
                 Sequence([Condition(self.is_night_time), Action(self.do_go_home)]),
-                Action(self.do_visit_interest_point) # [추가] 할 일 없을 때 시설 방문
+                Action(self.do_wander)
             ])
 
-    def do_visit_interest_point(self, entity, bb):
-        """할 일 없을 때 의미 있는 장소(자판기 등)를 방문"""
-        if self.path or self.is_pathfinding: return BTState.RUNNING
-        
-        # 관심 지점들 (자판기, 벤치 등)
-        interest_tids = [VENDING_MACHINE_TID, 8320202, 7320005] # Vending, Sofa, Fountain
-        
-        # [수정] 가장 가까운 곳이 아니라 랜덤한 관심 지점 선택 (쏠림 방지)
-        candidates = []
-        if self.map_manager:
-            for tid in interest_tids:
-                if tid in self.map_manager.tile_cache:
-                    candidates.extend(self.map_manager.tile_cache[tid])
-        
-        if candidates:
-            target = random.choice(candidates)
-            self.logger.debug("BOT_IDLE", f"[{self.name}] Visiting interest point: {target}")
-            self.set_destination(target[0], target[1], "Visiting Facility")
-            return BTState.SUCCESS
-        
-        return self.do_wander(entity, bb)
-
-    def do_wander(self, entity, bb):
-        """정처 없이 배회 (최후의 수단)"""
-        if not self.path and not self.is_pathfinding: 
-            self.logger.debug("BOT_IDLE", f"[{self.name}] Wandering...")
-            self.random_move()
-        return BTState.RUNNING
 
     def police_scan_targets(self, entity, bb):
         # [수정] 낮 시간 추격 금지
@@ -206,20 +149,6 @@ class Dummy(Entity):
         if current_phase not in ['NIGHT', 'DAWN']:
             self.chase_target = None
             return False
-
-        if self.chase_target and self.chase_target.alive and not self.chase_target.is_hiding:
-            if self.has_line_of_sight(self.chase_target): return True
-        
-        # [핵심 수정] "마피아인가?"(신상조회) -> "빌런의 모습인가?"(외형관찰) 로 변경
-        for t in bb.get('targets', []):
-            if t != self and t.alive:
-                is_villain_look = t.is_visible_villain(current_phase)
-                
-                if (is_villain_look and self.has_line_of_sight(t)) or (self.suspicion_meter.get(t.name, 0) >= 100):
-                    if self.has_line_of_sight(t) and not t.is_hiding:
-                        self.chase_target = t; self.last_seen_pos = (t.rect.centerx, t.rect.centery)
-                        return True
-        return False
 
         if self.chase_target and self.chase_target.alive and not self.chase_target.is_hiding:
             if self.has_line_of_sight(self.chase_target): return True
@@ -269,7 +198,7 @@ class Dummy(Entity):
     def check_needs_shopping(self, entity, bb):
         return (self.hp < 5 or self.ap < 4) and self.coins >= 3 and not self.is_hiding
 
-    def is_work_time(self, entity, bb): return bb.get('phase') in ['MORNING', 'NOON', 'AFTERNOON'] and self.daily_work_count < DAILY_QUOTA
+    def is_work_time(self, entity, bb): return bb.get('phase') in ['MORNING', 'DAY'] and self.daily_work_count < DAILY_QUOTA
     def is_night_time(self, entity, bb): return bb.get('phase') in ['EVENING', 'NIGHT']
     def can_sabotage(self, entity, bb): return self.role == "MAFIA" and bb.get('phase') == 'NIGHT' and not self.ability_used and self.ap >= 5
 
@@ -321,96 +250,29 @@ class Dummy(Entity):
 
     def do_work(self, entity, bb):
         now = pygame.time.get_ticks()
-        day_count = bb.get('day_count', 1)
-        player = bb.get('player')
-        
-        job_key = "DOCTOR" if self.role == "DOCTOR" else self.sub_role
-        if not job_key: 
-            if now % 5000 < 20:
-                self.logger.warning("BOT_WORK", f"[{self.name}] Cannot work: Role is {self.role}, SubRole is {self.sub_role}")
-            return BTState.FAILURE 
-
         if self.is_working:
             if now >= self.work_finish_timer:
-                if self.active_work_tile:
-                    gx, gy = self.active_work_tile
-                    WorkLogic.complete_work(self, gx, gy, day_count)
-                    self.logger.info("BOT_WORK", f"[{self.name}] Completed work at ({gx}, {gy})")
-                    # 작업 완료 후 예약 해제
-                    self.map_manager.release_tile(gx, gy, self)
-                
-                self.is_working = False; self.work_tile_pos = None; self.active_work_tile = None
-                return BTState.SUCCESS
+                self.ap -= 1; self.coins += 1; self.daily_work_count += 1
+                self.is_working = False; self.work_tile_pos = None; return BTState.SUCCESS
             return BTState.RUNNING
         
         job_key = "DOCTOR" if self.role == "DOCTOR" else self.sub_role
-        if not job_key: return BTState.FAILURE 
+        if not job_key: return BTState.FAILURE # [Fix] Prevent KeyError
         
         if not self.work_tile_pos:
-            target_tid = WorkLogic.get_work_target_tid(self.role, self.sub_role, day_count)
+            target_tid = WORK_SEQ[job_key][(bb.get('day_count', 1) - 1) % 3]
             candidates = self.map_manager.tile_cache.get(target_tid, []) if self.map_manager else []
             if candidates:
-                # [수정] 동일 타일 중복 방지: 무작위로 섞어서 하나씩 검사
-                random.shuffle(candidates)
-                selected_pos = None
-                
-                for raw_px, raw_py in candidates:
-                    gx, gy = raw_px // TILE_SIZE, raw_py // TILE_SIZE
-                    
-                    # 1. 다른 봇이 이미 예약했는지 확인
-                    if self.map_manager.is_tile_reserved(gx, gy, self):
-                        continue
-                        
-                    # 2. 플레이어가 그 타일에 있는지 확인
-                    if player and player.alive:
-                        pgx, pgy = int(player.rect.centerx // TILE_SIZE), int(player.rect.centery // TILE_SIZE)
-                        if pgx == gx and pgy == gy:
-                            continue
-                    
-                    # 3. 적절한 이웃 칸 찾기 (이동 가능한 곳)
-                    valid_pos = self.get_valid_neighbor(gx, gy)
-                    if valid_pos:
-                        selected_pos = (gx, gy, valid_pos)
-                        break
-                
-                if selected_pos:
-                    gx, gy, v_pos = selected_pos
-                    self.work_tile_pos = v_pos
-                    self.active_work_tile = (gx, gy)
-                    self.map_manager.reserve_tile(gx, gy, self) # 타일 예약
-                    self.logger.info("BOT_WORK", f"[{self.name}] Reserved Work Tile ({gx}, {gy}) for TID {target_tid}")
-                    self.set_destination(v_pos[0], v_pos[1], "Work Start")
-                else: 
-                    self.logger.debug("BOT_WORK", f"[{self.name}] No available work tiles for TID {target_tid} (All reserved or blocked)")
-                    return BTState.FAILURE
-            else: 
-                # [추가] 맵에 해당 타일이 아예 없는 경우
-                if now % 5000 < 50:
-                    self.logger.warning("BOT_WORK", f"[{self.name}] Map missing target TID {target_tid} for {self.role}/{self.sub_role}")
-                return BTState.FAILURE
-            
+                raw_px, raw_py = random.choice(candidates); valid_pos = self.get_valid_neighbor(raw_px // TILE_SIZE, raw_py // TILE_SIZE)
+                if valid_pos: self.work_tile_pos = valid_pos; self.set_destination(valid_pos[0], valid_pos[1], "Work Start")
+                else: return BTState.FAILURE
+            else: return BTState.FAILURE
         dist = math.sqrt((self.rect.centerx - self.work_tile_pos[0])**2 + (self.rect.centery - self.work_tile_pos[1])**2)
         if dist < TILE_SIZE * 0.8:
-            # [수정] 도착했을 때 플레이어가 거기 있다면 포기하고 다시 찾기
-            if player and player.alive:
-                pgx, pgy = int(player.rect.centerx // TILE_SIZE), int(player.rect.centery // TILE_SIZE)
-                if pgx == self.active_work_tile[0] and pgy == self.active_work_tile[1]:
-                    self.logger.info("BOT_WORK", f"[{self.name}] Aborted work: Player occupies the tile.")
-                    self.map_manager.release_tile(self.active_work_tile[0], self.active_work_tile[1], self)
-                    self.work_tile_pos = None; self.active_work_tile = None
-                    return BTState.FAILURE
-
             if self.ap > 0:
-                self.logger.info("BOT_WORK", f"[{self.name}] Starting work progress...")
                 self.is_working = True; self.work_finish_timer = now + 3000; self.path = []; self.is_moving = False; self.add_popup("Working...")
-            else: 
-                self.logger.debug("BOT_WORK", f"[{self.name}] Not enough AP to work.")
-                if self.active_work_tile: self.map_manager.release_tile(self.active_work_tile[0], self.active_work_tile[1], self)
-                self.work_tile_pos = None; self.active_work_tile = None
-        elif not self.path and not self.is_pathfinding: 
-            self.logger.debug("BOT_WORK", f"[{self.name}] Aborted work: Path finding failed.")
-            if self.active_work_tile: self.map_manager.release_tile(self.active_work_tile[0], self.active_work_tile[1], self)
-            self.work_tile_pos = None; self.active_work_tile = None; return BTState.FAILURE
+            else: self.work_tile_pos = None
+        elif not self.path and not self.is_pathfinding: self.work_tile_pos = None; return BTState.FAILURE
         return BTState.RUNNING
 
     def do_work_fake(self, entity, bb):
@@ -459,17 +321,13 @@ class Dummy(Entity):
             if self.hiding_type == 1 and not is_hiding_tile: self.is_hiding = False; self.hiding_type = 0
             elif self.hiding_type == 2 and not (is_indoors or is_resting_tile): self.is_hiding = False; self.hiding_type = 0
 
-    def update(self, phase, player, npcs, is_mafia_frozen, noise_list, day_count, bloody_footsteps):
+    def update(self, phase, player, npcs, is_mafia_frozen, noise_list, day_count, bloody_footsteps, siren_timer=0):
         if not self.alive: return None
         self._validate_environment()
         now = pygame.time.get_ticks(); self.check_stat_changes()
         
         # [Sync Logic] Only Master updates logic
         if self.is_master:
-            # [LOG] 주기적 상태 로깅
-            if now % 1000 < 20:
-                self.logger.debug("BOT_STATE", f"[{self.name}] Pos:({int(self.pos_x)},{int(self.pos_y)}) Role:{self.role} HP:{self.hp} AP:{self.ap} Moving:{self.is_moving}")
-
             if self.role == "MAFIA" and is_mafia_frozen:
                 self.is_moving = False
                 return None
@@ -492,21 +350,7 @@ class Dummy(Entity):
             if self.ai_timer <= 0:
                 self.ai_timer = 10
                 result = self.tree.tick(self, blackboard)
-                if isinstance(result, str): 
-                    self.logger.info("BOT_DECISION", f"[{self.name}] AI Decision: {result}")
-                    return result
-            
-            # [Unstuck] 경로 탐색 실패 시 탈출 시도
-            if not self.path and not self.is_moving and self.work_tile_pos:
-                # 작업 목표는 있는데 이동을 못하고 있음
-                if now > self.stuck_timer:
-                    self.stuck_timer = now + 5000
-                    # 주변 랜덤 빈 곳으로 텔레포트
-                    esc_pos = self.get_valid_neighbor(int(self.pos_x//TILE_SIZE), int(self.pos_y//TILE_SIZE))
-                    if esc_pos:
-                        self.pos_x, self.pos_y = esc_pos
-                        self.rect.x, self.rect.y = int(self.pos_x), int(self.pos_y)
-                        self.logger.warning("BOT_MOVE", f"[{self.name}] Stuck! Teleported to {esc_pos}")
+                if isinstance(result, str): return result
             
             return self.process_movement(phase, npcs, slow_down=is_mafia_frozen if self.role == "MAFIA" else False)
         
@@ -578,9 +422,7 @@ class Dummy(Entity):
             # start_gx, start_gy는 인자로 받음 (self.rect 접근 제거)
             if (start_gx, start_gy) == (target_gx, target_gy): self.pending_path = []; return
             open_set = []; heapq.heappush(open_set, (0, start_gx, start_gy)); came_from = {}; g_score = {(start_gx, start_gy): 0}
-            
-            # [수정] 탐색 노드 제한 대폭 완화 (5000 -> 30000)
-            while open_set and len(came_from) < 30000:
+            while open_set and len(came_from) < 5000:
                 _, cx, cy = heapq.heappop(open_set)
                 if (cx, cy) == (target_gx, target_gy): break
                 for dx, dy in [(0, 1), (0, -1), (1, 0), (-1, 0)]:

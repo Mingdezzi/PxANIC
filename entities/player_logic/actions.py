@@ -4,7 +4,6 @@ import random
 from settings import TILE_SIZE, VENDING_MACHINE_TID, TREASURE_CHEST_RATES, ITEMS, WORK_SEQ, MINIGAME_MAP, INDOOR_ZONES, ZONES
 from world.tiles import get_tile_category, get_tile_interaction, get_tile_function, get_tile_name, check_collision
 from entities.bullet import Bullet
-from entities.work_logic import WorkLogic
 from systems.logger import GameLogger
 
 class ActionLogic:
@@ -83,14 +82,14 @@ class ActionLogic:
 
             job_key = self.p.role if self.p.role == "DOCTOR" else self.p.sub_role
             if job_key in WORK_SEQ:
-                target_tid = WorkLogic.get_work_target_tid(self.p.role, self.p.sub_role, self.p.day_count)
+                seq = WORK_SEQ[job_key]; target_idx = self.p.work_step % len(seq); target_tid = seq[target_idx]
                 if tid == target_tid:
-                    target_idx = (self.p.day_count - 1) % len(WORK_SEQ[job_key])
                     m_type = MINIGAME_MAP[job_key].get(target_idx, 'MASHING')
+                    next_t = seq[(target_idx + 1) % len(seq)]; is_final = (target_idx == len(seq) - 1)
                     if self.p.ap < 10: return "Not enough AP (10)"
-                    self.p.minigame.start(m_type, 1, lambda: self.work_complete(gx*TILE_SIZE, gy*TILE_SIZE), self.p.fail_penalty)
+                    self.p.minigame.start(m_type, 1, lambda: self.work_complete(gx*TILE_SIZE, gy*TILE_SIZE, next_t, is_final), self.p.fail_penalty)
                     return f"Working ({m_type})..."
-                elif tid in WORK_SEQ[job_key]: return "Not today's task."
+                elif tid in seq: return "Not today's task."
         return None
 
     def _open_chest_reward(self, gx, gy):
@@ -111,10 +110,11 @@ class ActionLogic:
         if self.p.map_manager: self.p.map_manager.set_tile(gx, gy, 5310025, layer='object')
         self.p.add_popup(msg, (255, 215, 0))
 
-    def work_complete(self, px, py):
-        gx, gy = px // TILE_SIZE, py // TILE_SIZE
-        WorkLogic.complete_work(self.p, gx, gy, self.p.day_count)
-
+    def work_complete(self, px, py, next_tile, reward=False):
+        self.p.try_spend_ap(10); gx, gy = px // TILE_SIZE, py // TILE_SIZE
+        if self.p.sub_role == 'FARMER' and next_tile is not None: self.p.map_manager.set_tile(gx, gy, next_tile)
+        if self.p.map_manager: self.p.map_manager.set_tile_cooldown(gx, gy, 3000)
+        self.p.coins += 1; self.p.daily_work_count += 1
 
     def do_break(self, px, py):
         gx, gy = (px, py) if isinstance(px, int) and px < self.p.map_width else (px // TILE_SIZE, py // TILE_SIZE)
