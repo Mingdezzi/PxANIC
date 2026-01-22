@@ -1,69 +1,11 @@
-import socket
-import threading
-import json
-import queue
-from settings import NETWORK_PORT, BUFFER_SIZE
+from engine.network.client import NetworkClient
+from settings import NETWORK_PORT
 
-class NetworkManager:
+class NetworkManager(NetworkClient):
     def __init__(self, ip="127.0.0.1", port=NETWORK_PORT):
-        self.ip = ip
-        self.port = port
-        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connected = False
-        self.msg_queue = queue.Queue()
-        self.my_id = -1 
+        super().__init__(ip, port)
 
-    def connect(self):
-        try:
-            self.client.connect((self.ip, self.port))
-            self.connected = True
-            print(f"[NET] Connected to {self.ip}:{self.port}")
-            thread = threading.Thread(target=self.receive_loop, daemon=True)
-            thread.start()
-            return True
-        except Exception as e:
-            print(f"[NET] Connection Failed: {e}")
-            return False
-
-    def receive_loop(self):
-        while self.connected:
-            try:
-                header = self.client.recv(4)
-                if not header: break
-                msg_len = int.from_bytes(header, byteorder='big')
-                data = b""
-                while len(data) < msg_len:
-                    packet = self.client.recv(msg_len - len(data))
-                    if not packet: break
-                    data += packet
-                if not data: break
-                try:
-                    payload = json.loads(data.decode('utf-8'))
-                    self.msg_queue.put(payload)
-                except json.JSONDecodeError as e:
-                    print(f"[NET] JSON Error: {e}")
-            except Exception as e:
-                print(f"[NET] Receive Error: {e}")
-                self.connected = False
-                break
-
-    def send(self, data):
-        if not self.connected: return
-        try:
-            if self.my_id != -1 and 'id' not in data:
-                data['id'] = self.my_id
-            serialized = json.dumps(data).encode('utf-8')
-            self.client.sendall(len(serialized).to_bytes(4, 'big') + serialized)
-        except Exception as e:
-            print(f"[NET] Send Error: {e}")
-
-    def get_events(self):
-        events = []
-        while not self.msg_queue.empty():
-            events.append(self.msg_queue.get())
-        return events
-
-    # --- Multiplayer Helpers ---
+    # --- Multiplayer Helpers (Game Specific) ---
     def send_role_change(self, new_role):
         self.send({"type": "UPDATE_ROLE", "role": new_role})
 
@@ -82,6 +24,24 @@ class NetworkManager:
     def send_move(self, x, y, is_moving, facing_dir):
         self.send({"type": "MOVE", "x": x, "y": y, "is_moving": is_moving, "facing": facing_dir})
 
-    def disconnect(self):
-        self.connected = False
-        self.client.close()
+    def send_stats(self, hp, max_hp, ap, max_ap, coins, emotion, action_text, eid=None):
+        data = {
+            "type": "UPDATE_STATS",
+            "hp": hp, "max_hp": max_hp,
+            "ap": ap, "max_ap": max_ap,
+            "coins": coins,
+            "emotion": emotion,
+            "action": action_text
+        }
+        if eid: data['id'] = eid
+        self.send(data)
+
+    def send_chat(self, message):
+        """임시: 채팅 메시지를 서버로 전송합니다."""
+        self.send({"type": "CHAT", "message": message})
+
+    def send_profile(self, name, custom_data):
+        self.send({"type": "UPDATE_PROFILE", "name": name, "custom": custom_data})
+
+    def send_death(self, victim_id, reason):
+        self.send({"type": "ENTITY_DIED", "victim": victim_id, "reason": reason})

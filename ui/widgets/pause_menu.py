@@ -1,6 +1,6 @@
 import pygame
 from ui.widgets.settings_popup import SettingsPopup
-from managers.sound_manager import SoundManager
+from engine.audio.sound_manager import SoundManager
 
 class PauseMenu:
     def __init__(self, game):
@@ -88,7 +88,7 @@ class PauseMenu:
         rect = pygame.Rect(0, 0, btn_w, btn_h)
         rect.center = (cx, cy)
         
-        mx, my = pygame.mouse.get_pos()
+        mx, my = self.game.get_scaled_mouse_pos()
         is_hover = rect.collidepoint(mx, my) and not self.settings_popup.active
         
         col = (60, 60, 80) if not is_hover else (80, 80, 100)

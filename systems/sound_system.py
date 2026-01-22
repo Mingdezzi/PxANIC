@@ -2,7 +2,7 @@ import math
 import random
 from settings import SOUND_INFO, TILE_SIZE
 from systems.effects import VisualSound, SoundDirectionIndicator
-from managers.sound_manager import SoundManager
+from engine.audio.sound_manager import SoundManager
 
 class SoundSystem:
     def __init__(self, game_world):
@@ -63,12 +63,19 @@ class SoundSystem:
             blink = False
             
             # --- [Listener-Speaker Importance Logic] ---
+            is_night = getattr(player, 'current_phase_ref', 'DAY') == 'NIGHT'
+            
             if my_role in ["CITIZEN", "DOCTOR"]:
                 if source_role == "MAFIA":
-                    importance = 2.0
-                    final_color = (255, 50, 50) # Red (Danger)
-                    shake = True 
-                    if s_type in ["BANG!", "SLASH", "SCREAM", "GUNSHOT"]: importance = 2.5
+                    if is_night:
+                        importance = 2.0
+                        final_color = (255, 50, 50) # Red (Danger)
+                        shake = True 
+                        if s_type in ["BANG!", "SLASH", "SCREAM", "GUNSHOT"]: importance = 2.5
+                    else:
+                        # Daytime: Mafia blends in
+                        importance = 1.0
+                        final_color = base_color
                 elif source_role == "POLICE":
                     importance = 1.5
                     final_color = (50, 150, 255) # Blue (Rescue)

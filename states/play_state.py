@@ -1,10 +1,11 @@
 import pygame
 import random
 import math
-from core.base_state import BaseState
+from engine.core.state import State
 from settings import *
-from systems.camera import Camera
+from engine.graphics.camera import Camera
 from systems.fov import FOV
+
 from systems.effects import VisualSound, SoundDirectionIndicator
 from systems.renderer import CharacterRenderer, MapRenderer
 from systems.lighting import LightingManager
@@ -19,8 +20,9 @@ from systems.debug_console import DebugConsole
 from entities.npc import Dummy
 from ui.widgets.pause_menu import PauseMenu
 from ui.widgets.cctv_view import CCTVViewWidget
+from ui.widgets.chat_box import ChatBox
 
-class PlayState(BaseState):
+class PlayState(State):
     def __init__(self, game):
         super().__init__(game)
         self.logger = game.logger
@@ -37,11 +39,10 @@ class PlayState(BaseState):
         self.fov = None
         self.visible_tiles = set()
         self.tile_alphas = {} 
-        self.zoom_level = 1.5
+        self.zoom_level = 3.0
         self.effect_surf = pygame.Surface((self.game.screen_width, self.game.screen_height), pygame.SRCALPHA)
         self.ui = None
-        self.is_chatting = False
-        self.chat_text = ""
+        self.chat_box = ChatBox(20, self.game.screen_height - 220, 350, 200)
         self.show_vote_ui = False
         self.my_vote_target = None
         self.candidate_rects = []
@@ -80,12 +81,16 @@ class PlayState(BaseState):
     def is_blackout(self): return self.world.is_blackout
     @property
     def is_mafia_frozen(self): return self.world.is_mafia_frozen
+    @property
+    def is_chatting(self): return self.chat_box.active
 
     def enter(self, params=None):
         self.logger.info("PLAY", "Entering PlayState...")
         self.world.load_map("map.json")
         self.map_renderer = MapRenderer(self.world.map_manager)
-        self.camera = Camera(self.game.screen_width, self.game.screen_height, self.world.map_manager.width, self.world.map_manager.height)
+        self.camera = Camera(self.game.screen_width, self.game.screen_height, 
+                             map_width_px=self.world.map_manager.width * TILE_SIZE, 
+                             map_height_px=self.world.map_manager.height * TILE_SIZE)
         self.camera.set_bounds(self.world.map_manager.width * TILE_SIZE, self.world.map_manager.height * TILE_SIZE)
         self.camera.set_zoom(self.zoom_level)
         self.fov = FOV(self.world.map_manager.width, self.world.map_manager.height, self.world.map_manager)
@@ -117,13 +122,45 @@ class PlayState(BaseState):
 
     def update(self, dt):
         if not self.player: return
-        if self.player.is_dead and self.player.role != "SPECTATOR": self.player.change_role("SPECTATOR"); self.ui.show_alert("YOU DIED!", (255, 0, 0))
+        if self.player.is_dead and self.player.role != "SPECTATOR": 
+            if hasattr(self.game, 'network') and self.game.network.connected:
+                self.game.network.send_death(self.player.uid, "starvation/fatigue")
+            self.player.change_role("SPECTATOR"); self.ui.show_alert("YOU DIED!", (255, 0, 0))
         if hasattr(self.game, 'network') and self.game.network.connected:
             for e in self.game.network.get_events():
                 if e.get('type') == 'MOVE' and e.get('id') in self.world.entities_by_id:
                     ent = self.world.entities_by_id[e['id']]
                     if isinstance(ent, Dummy): ent.sync_state(e['x'], e['y'], 100, 100, 'CITIZEN', e['is_moving'], e['facing'])
                 elif e.get('type') == 'TIME_SYNC': self.time_system.sync_time(e['phase_idx'], e['timer'], e['day'])
+                elif e.get('type') == 'STATS_UPDATE':
+                    # [Spectator] Sync detailed stats for Dummy entities
+                    eid = e.get('id')
+                    if eid in self.world.entities_by_id:
+                        ent = self.world.entities_by_id[eid]
+                        if hasattr(ent, 'sync_stats'):
+                            ent.sync_stats(e['stats'])
+                elif e.get('type') == 'DAILY_NEWS':
+                    self.ui.show_daily_news(e.get('news', []))
+                elif e.get('type') == 'GAME_OVER':
+                    winner = e.get('winner', 'Unknown')
+                    self.ui.show_alert(f"GAME OVER! {winner} WIN!", (255, 255, 0))
+                    # Wait 5 seconds and return to lobby?
+                    pygame.time.set_timer(pygame.USEREVENT + 10, 5000)
+                
+                # [Fix] Handle Role Updates & Game Start
+                elif e.get('type') in ['GAME_START', 'PLAYER_LIST']:
+                    players = e.get('players', {})
+                    for pid, pdata in players.items():
+                        if pid in self.world.entities_by_id:
+                            ent = self.world.entities_by_id[pid]
+                            new_role = pdata.get('role')
+                            if isinstance(ent, Dummy) and ent.role != new_role:
+                                ent.set_role(new_role)
+                        elif isinstance(ent, Player): ent.change_role(new_role)
+                elif e.get('type') == 'CHAT':
+                    sender = e.get('sender_name', 'System')
+                    msg = e.get('message', '')
+                    self.chat_box.add_message(sender, msg)
         if self.player.alive:
             curr_pos = (int(self.player.pos_x), int(self.player.pos_y))
             if curr_pos != self.last_sent_pos and hasattr(self.game, 'network') and self.game.network.connected:
@@ -134,6 +171,15 @@ class PlayState(BaseState):
                     n_pos = (int(n.pos_x), int(n.pos_y))
                     if not hasattr(n, 'last_sent_pos'): n.last_sent_pos = (0, 0)
                     if n_pos != n.last_sent_pos: self.game.network.send({"type": "MOVE", "id": n.uid, "x": n_pos[0], "y": n_pos[1], "is_moving": n.is_moving, "facing": n.facing_dir}); n.last_sent_pos = n_pos
+                    
+                    # [Spectator Refinement] Sync Bot Stats (Throttled?)
+                    # Every 60 frames (approx 1 sec) or check timer
+                    if not hasattr(n, 'stats_sync_timer'): n.stats_sync_timer = 0
+                    if pygame.time.get_ticks() > n.stats_sync_timer:
+                        n.stats_sync_timer = pygame.time.get_ticks() + 1000
+                        emotion_str = list(n.emotions.keys())[0] if n.emotions else "Neutral"
+                        self.game.network.send_stats(n.hp, n.max_hp, n.ap, n.max_ap, n.coins, emotion_str, getattr(n, 'current_action_text', 'Idle'), eid=n.uid)
+        
         # Update Work Target Navigation
         now = pygame.time.get_ticks()
         if now > self.work_check_timer:
@@ -181,7 +227,12 @@ class PlayState(BaseState):
                         zid = self.world.map_manager.zone_map[gy][gx]
                         if zid in ZONES and zid != 1: self.time_system.mafia_last_seen_zone = ZONES[zid]['name']
         for n in self.npcs:
-            if not n.is_stunned(): self._handle_npc_action(n.update(self.current_phase, self.player, self.npcs, self.world.is_mafia_frozen, self.world.noise_list, self.day_count, self.world.bloody_footsteps), n, 0)
+            if not n.is_stunned():
+                results = n.update(self.current_phase, self.player, self.npcs, self.world.is_mafia_frozen, self.world.noise_list, self.day_count, self.world.bloody_footsteps)
+                if results and isinstance(results, list):
+                    for res in results:
+                        if isinstance(res, str): self._handle_npc_action(res, n, 0)
+                        elif isinstance(res, tuple): self._process_sound_effect(res)
         if self.player.role == "SPECTATOR": self._update_spectator_camera()
         else: self.camera.update(self.player.rect.centerx, self.player.rect.centery)
 
@@ -207,10 +258,10 @@ class PlayState(BaseState):
         cam_dx, cam_dy = 0, 0
         cam_speed = 15
 
-        if keys[pygame.K_LEFT]: cam_dx = -cam_speed
-        if keys[pygame.K_RIGHT]: cam_dx = cam_speed
-        if keys[pygame.K_UP]: cam_dy = -cam_speed
-        if keys[pygame.K_DOWN]: cam_dy = cam_speed
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]: cam_dx = -cam_speed
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]: cam_dx = cam_speed
+        if keys[pygame.K_UP] or keys[pygame.K_w]: cam_dy = -cam_speed
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]: cam_dy = cam_speed
 
         if cam_dx != 0 or cam_dy != 0:
             self.ui.spectator_follow_target = None
@@ -279,24 +330,74 @@ class PlayState(BaseState):
         candidates = sorted([self.player] + self.npcs, key=lambda x: x.vote_count, reverse=True)
         if candidates and candidates[0].vote_count >= 2:
             top = random.choice([c for c in candidates if c.vote_count == candidates[0].vote_count])
-            top.is_dead = True; self.player.add_popup("EXECUTION!", (255, 0, 0))
+            top.is_dead = True
+            if hasattr(self.game, 'network') and self.game.network.connected:
+                self.game.network.send_death(top.uid, "public execution")
+            self.player.add_popup("EXECUTION!", (255, 0, 0))
 
     def draw(self, screen):
+        # [Spectator Refinement] Split Screen Setup
+        clip_rect = None
+        w, h = screen.get_size()
+        
+        if self.player.role == "SPECTATOR":
+            panel_w = 300
+            game_view_w = w - panel_w
+            
+            screen.fill((20, 20, 25)) # Sidebar BG (for the obscured part? no, global fill)
+            
+            clip_rect = pygame.Rect(0, 0, game_view_w, h)
+            screen.set_clip(clip_rect)
+            
+            # View Limit
+            if getattr(self.camera, 'view_limit_w', 0) != game_view_w:
+                self.camera.view_limit_w = game_view_w
+                self.camera._update_viewport_size()
+        else:
+            if getattr(self.camera, 'view_limit_w', None):
+                self.camera.view_limit_w = None
+                self.camera._update_viewport_size()
+
         screen.fill(COLORS['BG'])
         if not self.camera: return
+        
+        # Spectator: Skip Lighting System complexity, draw direct if possible?
+        # Lighting system returns a canvas.
         canvas = self.lighting.draw(screen, self.camera)
         canvas.fill(COLORS['BG'])
+        
         if self.map_renderer:
             vis = self.visible_tiles if self.player.role != "SPECTATOR" else None
             self.map_renderer.draw(canvas, self.camera, 0, visible_tiles=vis, tile_alphas=self.tile_alphas)
         
-        for n in self.npcs:
-            if (int(n.rect.centerx//TILE_SIZE), int(n.rect.centery//TILE_SIZE)) in self.visible_tiles or self.player.role == "SPECTATOR":
-                n.draw(canvas, self.camera.x, self.camera.y, self.player.role, self.current_phase, self.player.device_on)
-        if not self.player.is_dead: CharacterRenderer.draw_entity(canvas, self.player, self.camera.x, self.camera.y, self.player.role, self.current_phase, self.player.device_on)
+        # Entities
+        # Sort by Y position for depth
+        all_ents = self.npcs + ([self.player] if not self.player.is_dead else [])
+        # Fix: self.npcs is list of Dummy, self.player is Player. 
+        # Need to include all entities properly.
+        # Original code iterated self.npcs then self.player.
+        # Let's keep it similar but unified sort is better for depth.
+        
+        all_draw = [self.player] + [n for n in self.npcs if n.alive]
+        all_draw.sort(key=lambda e: e.rect.bottom)
+        
+        for ent in all_draw:
+             # Visibility Check
+             is_visible = False
+             if self.player.role == "SPECTATOR": is_visible = True
+             elif (int(ent.rect.centerx//TILE_SIZE), int(ent.rect.centery//TILE_SIZE)) in self.visible_tiles: is_visible = True
+             
+             if is_visible:
+                 CharacterRenderer.draw_entity(canvas, ent, self.camera.x, self.camera.y, self.player.role, self.current_phase, self.player.device_on)
+
         for fx in self.world.effects: fx.draw(canvas, self.camera.x, self.camera.y)
         for i in self.world.indicators: i.draw(canvas, self.player.rect, self.camera.x, self.camera.y)
+        
         if self.player.role != "SPECTATOR": self.lighting.apply_lighting(self.camera)
+
+        # [Spectator] Restore Clip
+        if clip_rect:
+            screen.set_clip(None)
 
         # [Work Target Indicator - Highlight] - DRAWN ON CANVAS
         self.found_visible_work_target = False
@@ -415,9 +516,22 @@ class PlayState(BaseState):
         
         if self.pause_menu.active:
             self.pause_menu.draw(screen)
+            
+        # [NEW] Chat (Dynamic Position)
+        self.chat_box.rect.y = self.game.screen_height - 220
+        self.chat_box.draw(screen)
 
     def handle_event(self, event):
+        if event.type == pygame.USEREVENT + 10:
+            from states.main_lobby_state import MainLobbyState
+            self.game.state_machine.change(MainLobbyState(self.game))
+            return
+
         if self.console.handle_event(event): return
+        
+        # [NEW] Chat interaction
+        if self.chat_box.handle_event(event, getattr(self.game, 'network', None)):
+            return
         
         if self.pause_menu.active:
             self.pause_menu.handle_event(event)
@@ -500,7 +614,7 @@ class PlayState(BaseState):
                         self.time_system.state_timer = 0
                     
                     # 4. Click Entity in World
-                    mx, my = event.pos
+                    mx, my = event.pos # handle_event already scaled event.pos in GameEngine
                     world_mx = mx / self.zoom_level + self.camera.x
                     world_my = my / self.zoom_level + self.camera.y
                     

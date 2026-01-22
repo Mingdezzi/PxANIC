@@ -1,12 +1,12 @@
 import pygame
-from core.base_state import BaseState
+from engine.core.state import State
 from managers.resource_manager import ResourceManager
-from managers.sound_manager import SoundManager
+from engine.audio.sound_manager import SoundManager
 from ui.widgets.input_popup import InputPopup
 from ui.widgets.settings_popup import SettingsPopup
 from settings import SERVER_IP
 
-class MultiMenuState(BaseState):
+class MultiMenuState(State):
     def __init__(self, game):
         super().__init__(game)
         self.resource_manager = ResourceManager.get_instance()
@@ -43,19 +43,34 @@ class MultiMenuState(BaseState):
         # Top Bar
         self._draw_top_bar(screen, w)
 
+        # Dynamic Size
+        panel_w = min(600, int(w * 0.5))
+        panel_h = max(400, int(h * 0.6))
+
+        # Panel Background
+        if self.panel_bg.get_size() != (panel_w, panel_h):
+             self.panel_bg = self._create_panel_bg(panel_w, panel_h)
+
         # Title
         title_surf = self.title_font.render("MULTIPLAYER", True, (100, 200, 255))
-        screen.blit(title_surf, (w//2 - title_surf.get_width()//2, h//4))
+        screen.blit(title_surf, (w//2 - title_surf.get_width()//2, (h - panel_h)//2 - 80)) # Above panel
 
         # Panel
-        panel_rect = self.panel_bg.get_rect(center=(w//2, h//2 + 50))
+        panel_rect = self.panel_bg.get_rect(center=(w//2, h//2 + 20))
         screen.blit(self.panel_bg, panel_rect)
 
         # Buttons
+        # Calculate button height based on panel height
+        avail_h = panel_h - 100
+        btn_count = 3
+        btn_h = int(avail_h / btn_count * 0.6) # 60% fill
+        gap = 30
+        
         start_y = panel_rect.top + 60
-        self._draw_styled_button(screen, "CREATE GAME", w//2, start_y, 'Create')
-        self._draw_styled_button(screen, "JOIN GAME", w//2, start_y + 80, 'Join')
-        self._draw_styled_button(screen, "BACK", w//2, start_y + 160, 'Back')
+        
+        self._draw_styled_button(screen, "CREATE GAME", w//2, start_y, btn_h, 'Create')
+        self._draw_styled_button(screen, "JOIN GAME", w//2, start_y + btn_h + gap, btn_h, 'Join')
+        self._draw_styled_button(screen, "BACK", w//2, start_y + (btn_h + gap) * 2, btn_h, 'Back')
         
         # Popups
         if self.popup and self.popup.active:
@@ -94,11 +109,11 @@ class MultiMenuState(BaseState):
         for y in range(0, h, 40):
             pygame.draw.line(screen, (20, 20, 30), (0, y), (w, y))
 
-    def _draw_styled_button(self, screen, text, cx, cy, key):
+    def _draw_styled_button(self, screen, text, cx, cy, bh, key):
         if (self.popup and self.popup.active) or self.settings_popup.active: return
         
-        btn_w, btn_h = 280, 50
-        rect = pygame.Rect(0, 0, btn_w, btn_h)
+        btn_w = int(self.panel_bg.get_width() * 0.8)
+        rect = pygame.Rect(0, 0, btn_w, bh)
         rect.center = (cx, cy)
         
         mx, my = pygame.mouse.get_pos()
@@ -146,12 +161,12 @@ class MultiMenuState(BaseState):
                 mx, my = event.pos
                 if 'Nav_Back' in self.buttons and self.buttons['Nav_Back'].collidepoint(mx, my):
                     self.sound_manager.play_sfx("CLICK")
-                    from states.menu_state import MenuState
-                    self.game.state_machine.change(MenuState(self.game))
+                    from states.main_lobby_state import MainLobbyState
+                    self.game.state_machine.change(MainLobbyState(self.game))
                 if 'Nav_Home' in self.buttons and self.buttons['Nav_Home'].collidepoint(mx, my):
                     self.sound_manager.play_sfx("CLICK")
-                    from states.menu_state import MenuState
-                    self.game.state_machine.change(MenuState(self.game))
+                    from states.main_lobby_state import MainLobbyState
+                    self.game.state_machine.change(MainLobbyState(self.game))
                 if 'Nav_Settings' in self.buttons and self.buttons['Nav_Settings'].collidepoint(mx, my):
                     self.sound_manager.play_sfx("CLICK")
                     self.settings_popup.open()
@@ -169,9 +184,9 @@ class MultiMenuState(BaseState):
                     
                 if 'Back' in self.buttons and self.buttons['Back'].collidepoint(mx, my):
                     self.sound_manager.play_sfx("CLICK")
-                    from states.menu_state import MenuState
-                    self.game.state_machine.change(MenuState(self.game))
+                    from states.main_lobby_state import MainLobbyState
+                    self.game.state_machine.change(MainLobbyState(self.game))
         
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-             from states.menu_state import MenuState
-             self.game.state_machine.change(MenuState(self.game))
+             from states.main_lobby_state import MainLobbyState
+             self.game.state_machine.change(MainLobbyState(self.game))

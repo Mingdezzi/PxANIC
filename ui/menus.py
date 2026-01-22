@@ -124,27 +124,7 @@ class PopupManager(UIWidget):
         close_txt = self.font_small.render("Press SPACE to Close", True, (100, 100, 100))
         screen.blit(close_txt, (center_x - close_txt.get_width()//2, paper_rect.bottom - 40))
 
-    def draw_spectator_ui(self, screen, w, h):
-        self.skip_btn_rect = pygame.Rect(w - 300, 110, 100, 40)
-        pygame.draw.rect(screen, (150, 50, 50), self.skip_btn_rect, border_radius=8)
-        txt = self.font_small.render("SKIP PHASE", True, (255, 255, 255))
-        screen.blit(txt, (self.skip_btn_rect.centerx - txt.get_width()//2, self.skip_btn_rect.centery - txt.get_height()//2))
-        
-        self.entity_rects = []
-        start_y = 160 - self.spectator_scroll_y
-        right_panel_x = w - 180
-        
-        for npc in self.game.npcs:
-            if not npc.alive: continue
-            r = pygame.Rect(right_panel_x, start_y, 160, 30)
-            if 0 < start_y < h:
-                col = (100, 255, 100) if npc.role == "CITIZEN" else ((255, 100, 100) if npc.role == "MAFIA" else (200, 200, 255))
-                pygame.draw.rect(screen, (50, 50, 50), r, border_radius=4)
-                pygame.draw.rect(screen, col, (r.left, r.top, 5, r.height), border_top_left_radius=4, border_bottom_left_radius=4)
-                name_txt = self.font_small.render(f"{npc.name} ({npc.role})", True, (200, 200, 200))
-                screen.blit(name_txt, (r.left + 10, r.centery - name_txt.get_height()//2))
-                self.entity_rects.append((r, npc))
-            start_y += 35
+
 
     def draw(self, screen):
         pass # Placeholder

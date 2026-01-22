@@ -23,6 +23,8 @@ class GameServer:
         self.day_count = 1
         self.state_timer = DEFAULT_PHASE_DURATIONS[self.phases[0]]
         self.last_tick = time.time()
+        self.news_log = []
+        self.game_over = False
 
     def start(self):
         try:
@@ -64,15 +66,39 @@ class GameServer:
             if self.state_timer <= 0:
                 self._advance_phase()
                 
-            if int(now) % 1 == 0:
+            if int(now) % 5 == 0:
                 self.broadcast({"type": "TIME_SYNC", "phase_idx": self.current_phase_idx, "timer": self.state_timer, "day": self.day_count})
+            
+            self.check_win_conditions()
 
     def _advance_phase(self):
+        old_phase = self.phases[self.current_phase_idx]
         self.current_phase_idx = (self.current_phase_idx + 1) % len(self.phases)
         new_phase = self.phases[self.current_phase_idx]
-        if new_phase == "DAWN": self.day_count += 1 # Day increases at DAWN
+        
+        if new_phase == "DAWN": self.day_count += 1
+        
+        # [Morning News]
+        if new_phase == "MORNING":
+            if not self.news_log: self.news_log = ["No special news today."]
+            self.broadcast({"type": "DAILY_NEWS", "news": self.news_log})
+            self.news_log = []
+
         self.state_timer = DEFAULT_PHASE_DURATIONS.get(new_phase, 30)
         self.broadcast({"type": "TIME_SYNC", "phase_idx": self.current_phase_idx, "timer": self.state_timer, "day": self.day_count})
+
+    def check_win_conditions(self):
+        if not self.game_started or self.game_over: return
+        alive_players = [p for p in self.players.values() if p.get('alive', True) and p.get('group') == 'PLAYER']
+        mafia = [p for p in alive_players if p.get('role') == 'MAFIA']
+        others = [p for p in alive_players if p.get('role') != 'MAFIA']
+        
+        if not mafia: self._end_game("CITIZENS")
+        elif len(mafia) >= len(others): self._end_game("MAFIA")
+
+    def _end_game(self, winner):
+        self.game_over = True
+        self.broadcast({"type": "GAME_OVER", "winner": winner})
 
     def handle_client(self, sock, pid):
         self.send_to(sock, {"type": "WELCOME", "my_id": pid})
@@ -113,6 +139,11 @@ class GameServer:
             target_id = data.get('id', pid) # Use provided ID or sender ID
             if target_id in self.players:
                 self.players[target_id]['role'] = data.get('role'); self.broadcast_player_list()
+        elif ptype == 'UPDATE_PROFILE':
+            if pid in self.players:
+                self.players[pid]['name'] = data.get('name', self.players[pid]['name'])
+                self.players[pid]['custom'] = data.get('custom', {})
+                self.broadcast_player_list()
         elif ptype == 'CHANGE_GROUP':
             tid = data.get('target_id')
             if tid in self.players:
@@ -131,21 +162,52 @@ class GameServer:
                 self.broadcast_player_list()
         elif ptype == 'START_GAME':
             if pid == 0:
-                # [Game Start Logic] Assign Random Roles
-                import random
-                available_roles = ["FARMER", "MINER", "FISHER", "POLICE", "MAFIA", "DOCTOR"]
-                
-                for p in self.players.values():
-                    if p['role'] == 'RANDOM':
-                        p['role'] = random.choice(available_roles)
+                # [Game Start Logic] Assign Random Roles using Rules
+                from game.rules import RoleManager
+                RoleManager.distribute_roles(list(self.players.values()))
                 
                 self.game_started = True; self.last_tick = time.time()
                 self.broadcast({"type": "GAME_START", "players": self.players})
+        elif ptype == 'UPDATE_STATS':
+            # [Spectator] Receive stats from client and broadcast to spectators (or everyone)
+            # Data: hp, ap, coins, emotion, action_text, etc.
+            sid = data.get('id', pid)
+            if sid in self.players:
+                self.players[sid].update({
+                    'hp': data.get('hp'),
+                    'max_hp': data.get('max_hp'),
+                    'ap': data.get('ap'),
+                    'max_ap': data.get('max_ap'),
+                    'coins': data.get('coins'),
+                    'emotion': data.get('emotion'),
+                    'action': data.get('action')
+                })
+                # Broadcast only to spectators to save bandwidth? 
+                # For now, broadcast to all effectively updates the "Shared State"
+                self.broadcast({"type": "STATS_UPDATE", "id": sid, "stats": self.players[sid]})
+
+        elif ptype == 'ENTITY_DIED':
+            victim_id = data.get('victim')
+            reason = data.get('reason', 'natural causes')
+            if victim_id in self.players:
+                self.players[victim_id]['alive'] = False
+                name = self.players[victim_id].get('name', 'Someone')
+                self.news_log.append(f"{name} has died of {reason}.")
+                self.broadcast_player_list() # Update lobby/play lists
+
         elif ptype == 'MOVE':
             mid = data.get('id', pid) # Can be bot ID sent by host
             if mid in self.players:
                 self.players[mid].update({'x': data['x'], 'y': data['y'], 'facing': data.get('facing'), 'is_moving': data.get('is_moving')})
                 self.broadcast(data, exclude_pid=pid)
+        
+        elif ptype == 'CHAT':
+            # Add sender name for convenience
+            if pid in self.players:
+                data['sender_name'] = self.players[pid].get('name', f"Player {pid}")
+            else:
+                data['sender_name'] = f"System {pid}"
+            self.broadcast(data)
 
     def broadcast_player_list(self):
         self.broadcast({"type": "PLAYER_LIST", "participants": list(self.players.values())})

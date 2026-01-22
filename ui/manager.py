@@ -73,14 +73,9 @@ class UIManager:
         if self.show_vending:
             self.menus.draw_vending_machine(screen, w, h, self.sel_idx)
             
-        if self.game.player.role == "SPECTATOR":
-            # PlayState에서 변경된 스크롤 값을 PopupManager에 전달
-            self.menus.spectator_scroll_y = self.spectator_scroll_y
-            self.menus.draw_spectator_ui(screen, w, h)
-            
-            # 그려진 후의 버튼 위치와 엔티티 목록을 다시 가져와 PlayState가 참조할 수 있게 함
-            self.entity_rects = self.menus.entity_rects
-            self.skip_btn_rect = self.menus.skip_btn_rect
+        # [Spectator System] 
+        # Now handled within HUD -> SpectatorDashboard
+        pass
             
         if self.show_news:
             self.menus.draw_daily_news(screen, w, h, self.news_text)

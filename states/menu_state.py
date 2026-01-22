@@ -1,13 +1,13 @@
 import pygame
-from core.base_state import BaseState
+from engine.core.state import State
 from managers.resource_manager import ResourceManager
-from managers.sound_manager import SoundManager
+from engine.audio.sound_manager import SoundManager
 from colors import COLORS
 from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 from ui.widgets.settings_popup import SettingsPopup
 
-class MenuState(BaseState):
+class MenuState(State):
     def __init__(self, game):
         super().__init__(game)
         self.resource_manager = ResourceManager.get_instance()
@@ -66,7 +66,7 @@ class MenuState(BaseState):
 
     def _draw_nav_button(self, screen, text, x, y, w, h, key):
         rect = pygame.Rect(x, y, w, h)
-        mx, my = pygame.mouse.get_pos()
+        mx, my = self.game.get_scaled_mouse_pos()
         is_hover = rect.collidepoint(mx, my) and not self.settings_popup.active
         
         col = (100, 100, 120) if not is_hover else (150, 150, 200)
@@ -90,7 +90,7 @@ class MenuState(BaseState):
         rect = pygame.Rect(0, 0, btn_w, btn_h)
         rect.center = (cx, cy)
         
-        mx, my = pygame.mouse.get_pos()
+        mx, my = self.game.get_scaled_mouse_pos()
         is_hover = rect.collidepoint(mx, my)
         
         # Hover Sound

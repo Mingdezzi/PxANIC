@@ -1,7 +1,8 @@
 import sys
 import os
 import subprocess
-from core.engine import GameEngine
+import json
+from engine.core.game_engine import GameEngine
 
 # 현재 디렉토리를 경로에 추가
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -34,7 +35,18 @@ if __name__ == "__main__":
     # 2. 게임 엔진 실행
     try:
         game = GameEngine()
-        game.run()
+        # [Fix] Load Profile if exists
+        p_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "profile.json")
+        if os.path.exists(p_path):
+            try:
+                with open(p_path, "r", encoding='utf-8') as f:
+                    pdata = json.load(f)
+                    game.shared_data['player_name'] = pdata.get('name', 'Player')
+                    game.shared_data['custom'] = pdata.get('custom', {})
+            except: pass
+
+        from states.login_state import LoginState
+        game.run(LoginState(game))
     except Exception as e:
         import traceback
         traceback.print_exc()

@@ -173,7 +173,9 @@ class StatusLogic:
         
         day_vision = VISION_RADIUS['DAY']
         if self.p.role == "MAFIA": night_vision = VISION_RADIUS['NIGHT_MAFIA']
-        elif self.p.role == "POLICE": night_vision = VISION_RADIUS['NIGHT_POLICE_FLASH'] if self.p.flashlight_on else 2.0
+        elif self.p.role == "POLICE": 
+            night_vision = VISION_RADIUS['NIGHT_POLICE_BASE']
+            if self.p.flashlight_on: night_vision += VISION_RADIUS['NIGHT_POLICE_FLASH']
         else: night_vision = VISION_RADIUS['NIGHT_CITIZEN'] 
 
         if self.p.current_phase_ref == 'DAWN' and self.p.role != "MAFIA": night_vision = 0.0

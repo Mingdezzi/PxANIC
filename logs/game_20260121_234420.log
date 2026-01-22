@@ -1,0 +1,429 @@
+2026-01-21 23:44:20,742 - [INFO] - [DATA] Loaded 17 items.
+2026-01-21 23:44:20,742 - [INFO] - [DATA] Loaded 110 tiles.
+2026-01-21 23:44:20,742 - [INFO] - [DATA] Loaded 5 roles.
+2026-01-21 23:44:21,018 - [INFO] - [SYSTEM] Game Engine Initializing...
+2026-01-21 23:44:21,018 - [INFO] - [SYSTEM] Game Engine Initializing...
+2026-01-21 23:44:21,036 - [INFO] - [SYSTEM] Engine Loop Started
+2026-01-21 23:44:21,036 - [INFO] - [SYSTEM] Engine Loop Started
+2026-01-21 23:44:29,060 - [INFO] - [PLAY] Entering PlayState...
+2026-01-21 23:44:29,060 - [INFO] - [PLAY] Entering PlayState...
+2026-01-21 23:44:29,080 - [INFO] - [PLAYER] Initialized at (1664, 1632) Role: CITIZEN
+2026-01-21 23:44:29,080 - [INFO] - [PLAYER] Initialized at (1664, 1632) Role: CITIZEN
+2026-01-21 23:44:29,080 - [INFO] - [PLAYER] Role changed to CITIZEN (FISHER)
+2026-01-21 23:44:29,080 - [INFO] - [PLAYER] Role changed to CITIZEN (FISHER)
+2026-01-21 23:44:29,090 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: DAWN | Pos: (1478, 1510) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,090 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: DAWN | Pos: (1478, 1510) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,090 - [DEBUG] - [AI_MOVE_Bot 8] Set Destination: (68, 34) | Reason: Random Move | CurrPos: (46, 47)
+2026-01-21 23:44:29,090 - [DEBUG] - [AI_MOVE_Bot 8] Set Destination: (68, 34) | Reason: Random Move | CurrPos: (46, 47)
+2026-01-21 23:44:29,092 - [DEBUG] - [AI_DECISION_Bot 8] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,092 - [DEBUG] - [AI_DECISION_Bot 8] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,129 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: DAWN | Pos: (1734, 1606) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,129 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: DAWN | Pos: (1734, 1606) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,133 - [DEBUG] - [AI_MOVE_Bot 2] Set Destination: (7, 39) | Reason: Go Home | CurrPos: (54, 50)
+2026-01-21 23:44:29,133 - [DEBUG] - [AI_MOVE_Bot 2] Set Destination: (7, 39) | Reason: Go Home | CurrPos: (54, 50)
+2026-01-21 23:44:29,135 - [DEBUG] - [AI_DECISION_Bot 2] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,135 - [DEBUG] - [AI_DECISION_Bot 2] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,247 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: DAWN | Pos: (1478, 1542) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,247 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: DAWN | Pos: (1478, 1542) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,250 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (3, 39) | Reason: Go Home | CurrPos: (46, 48)
+2026-01-21 23:44:29,250 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (3, 39) | Reason: Go Home | CurrPos: (46, 48)
+2026-01-21 23:44:29,251 - [DEBUG] - [AI_DECISION_Bot 5] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,251 - [DEBUG] - [AI_DECISION_Bot 5] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,294 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,294 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,294 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: DAWN | Pos: (1670, 1478) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,294 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: DAWN | Pos: (1670, 1478) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,295 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (63, 68) | Reason: Go Home | CurrPos: (52, 46)
+2026-01-21 23:44:29,295 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (63, 68) | Reason: Go Home | CurrPos: (52, 46)
+2026-01-21 23:44:29,295 - [DEBUG] - [AI_DECISION_Bot 4] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,295 - [DEBUG] - [AI_DECISION_Bot 4] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,295 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: DAWN | Pos: (1638, 1542) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,295 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: DAWN | Pos: (1638, 1542) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,299 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (5, 9) | Reason: Random Move | CurrPos: (51, 48)
+2026-01-21 23:44:29,299 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (5, 9) | Reason: Random Move | CurrPos: (51, 48)
+2026-01-21 23:44:29,300 - [DEBUG] - [AI_DECISION_Bot 7] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,300 - [DEBUG] - [AI_DECISION_Bot 7] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,344 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: DAWN | Pos: (1734, 1638) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,344 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: DAWN | Pos: (1734, 1638) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,344 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (59, 42) | Reason: Random Move | CurrPos: (54, 51)
+2026-01-21 23:44:29,344 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (59, 42) | Reason: Random Move | CurrPos: (54, 51)
+2026-01-21 23:44:29,347 - [DEBUG] - [AI_DECISION_Bot 1] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,347 - [DEBUG] - [AI_DECISION_Bot 1] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,445 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,445 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,451 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: DAWN | Pos: (1510, 1638) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,451 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: DAWN | Pos: (1510, 1638) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,452 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (29, 23) | Reason: Go Home | CurrPos: (47, 51)
+2026-01-21 23:44:29,452 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (29, 23) | Reason: Go Home | CurrPos: (47, 51)
+2026-01-21 23:44:29,452 - [DEBUG] - [AI_DECISION_Bot 6] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,452 - [DEBUG] - [AI_DECISION_Bot 6] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,497 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,497 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,511 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: DAWN | Pos: (1542, 1478) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,511 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: DAWN | Pos: (1542, 1478) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,514 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (91, 75) | Reason: Random Move | CurrPos: (48, 46)
+2026-01-21 23:44:29,514 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (91, 75) | Reason: Random Move | CurrPos: (48, 46)
+2026-01-21 23:44:29,518 - [DEBUG] - [AI_DECISION_Bot 3] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,518 - [DEBUG] - [AI_DECISION_Bot 3] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,563 - [DEBUG] - [AI_DECISION_Bot 5] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,563 - [DEBUG] - [AI_DECISION_Bot 5] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,645 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,645 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,650 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,650 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,652 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: DAWN | Pos: (1542, 1542) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,652 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: DAWN | Pos: (1542, 1542) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:29,652 - [DEBUG] - [AI_MOVE_Bot 9] Set Destination: (28, 45) | Reason: Go Home | CurrPos: (48, 48)
+2026-01-21 23:44:29,652 - [DEBUG] - [AI_MOVE_Bot 9] Set Destination: (28, 45) | Reason: Go Home | CurrPos: (48, 48)
+2026-01-21 23:44:29,652 - [DEBUG] - [AI_DECISION_Bot 9] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,652 - [DEBUG] - [AI_DECISION_Bot 9] Changed State:  -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:29,763 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,763 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,911 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,911 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,979 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:29,979 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:31,624 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (97, 68) | Reason: Random Move | CurrPos: (59, 42)
+2026-01-21 23:44:31,624 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (97, 68) | Reason: Random Move | CurrPos: (59, 42)
+2026-01-21 23:44:31,628 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:31,628 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:31,927 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:31,927 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:34,284 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: DAWN | Pos: (2180, 1120) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,284 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: DAWN | Pos: (2180, 1120) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,334 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: DAWN | Pos: (678, 1250) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,334 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: DAWN | Pos: (678, 1250) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,368 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: DAWN | Pos: (678, 1538) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,368 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: DAWN | Pos: (678, 1538) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,369 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: DAWN | Pos: (1996, 2182) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,369 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: DAWN | Pos: (1996, 2182) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,385 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: DAWN | Pos: (742, 1346) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,385 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: DAWN | Pos: (742, 1346) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,402 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: DAWN | Pos: (2166, 1670) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,402 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: DAWN | Pos: (2166, 1670) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,584 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: DAWN | Pos: (2022, 2086) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,584 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: DAWN | Pos: (2022, 2086) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,669 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:34,669 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:34,670 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: DAWN | Pos: (966, 1054) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:34,670 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: DAWN | Pos: (966, 1054) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:38,035 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: DAWN | Pos: (998, 1366) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:38,035 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: DAWN | Pos: (998, 1366) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:38,268 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:38,268 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:39,399 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: DAWN | Pos: (2180, 1120) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:39,399 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: DAWN | Pos: (2180, 1120) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:39,515 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: DAWN | Pos: (586, 390) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:39,515 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: DAWN | Pos: (586, 390) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:39,546 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: DAWN | Pos: (2770, 2182) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:39,546 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: DAWN | Pos: (2770, 2182) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:39,564 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:39,564 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:39,729 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: DAWN | Pos: (2846, 2374) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:39,729 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: DAWN | Pos: (2846, 2374) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:40,007 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: DAWN | Pos: (1996, 2182) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:40,007 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: DAWN | Pos: (1996, 2182) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:40,007 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: DAWN | Pos: (906, 739) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:40,007 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: DAWN | Pos: (906, 739) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:40,355 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (71, 51) | Reason: Random Move | CurrPos: (91, 75)
+2026-01-21 23:44:40,355 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (71, 51) | Reason: Random Move | CurrPos: (91, 75)
+2026-01-21 23:44:40,360 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:40,360 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:40,988 - [DEBUG] - [INPUT] E Key Pressed
+2026-01-21 23:44:40,988 - [DEBUG] - [INPUT] E Key Pressed
+2026-01-21 23:44:40,990 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:40,990 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:41,100 - [DEBUG] - [INPUT] E Key Released (Hold: 115ms) Target: (55, 96)
+2026-01-21 23:44:41,100 - [DEBUG] - [INPUT] E Key Released (Hold: 115ms) Target: (55, 96)
+2026-01-21 23:44:41,100 - [INFO] - [PLAYER] Interact with 5321206 at (55, 96) Mode: short
+2026-01-21 23:44:41,100 - [INFO] - [PLAYER] Interact with 5321206 at (55, 96) Mode: short
+2026-01-21 23:44:41,133 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (39, 78) | Reason: Random Move | CurrPos: (97, 68)
+2026-01-21 23:44:41,133 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (39, 78) | Reason: Random Move | CurrPos: (97, 68)
+2026-01-21 23:44:41,140 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:41,140 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:41,287 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:41,287 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:41,684 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: DAWN | Pos: (298, 1126) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:41,684 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: DAWN | Pos: (298, 1126) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:42,016 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (40, 9) | Reason: Random Move | CurrPos: (5, 9)
+2026-01-21 23:44:42,016 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (40, 9) | Reason: Random Move | CurrPos: (5, 9)
+2026-01-21 23:44:42,019 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:42,019 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:42,169 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:42,169 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:43,142 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: DAWN | Pos: (282, 1126) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:43,142 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: DAWN | Pos: (282, 1126) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:43,524 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: DAWN | Pos: (874, 1443) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:43,524 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: DAWN | Pos: (874, 1443) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:43,754 - [DEBUG] - [AI_DECISION_Bot 5] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:43,754 - [DEBUG] - [AI_DECISION_Bot 5] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:44,207 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:44,207 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Moving -> Hiding | Result: BTState.SUCCESS
+2026-01-21 23:44:44,454 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: DAWN | Pos: (2180, 1120) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:44,454 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: DAWN | Pos: (2180, 1120) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:44,587 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: DAWN | Pos: (2458, 2086) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:44,587 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: DAWN | Pos: (2458, 2086) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:44,704 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: DAWN | Pos: (714, 326) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:44,704 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: DAWN | Pos: (714, 326) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:44,754 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: DAWN | Pos: (2374, 1994) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:44,754 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: DAWN | Pos: (2374, 1994) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:45,302 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: DAWN | Pos: (1996, 2182) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:45,302 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: DAWN | Pos: (1996, 2182) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:45,303 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: DAWN | Pos: (906, 739) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:45,303 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: DAWN | Pos: (906, 739) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:46,724 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: DAWN | Pos: (104, 1228) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:46,724 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: DAWN | Pos: (104, 1228) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:46,821 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (94, 24) | Reason: Random Move | CurrPos: (71, 51)
+2026-01-21 23:44:46,821 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (94, 24) | Reason: Random Move | CurrPos: (71, 51)
+2026-01-21 23:44:46,826 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:46,826 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:46,959 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:46,959 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:47,671 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (58, 5) | Reason: Random Move | CurrPos: (40, 9)
+2026-01-21 23:44:47,671 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (58, 5) | Reason: Random Move | CurrPos: (40, 9)
+2026-01-21 23:44:47,676 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:47,676 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:47,808 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:47,808 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:48,287 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: DAWN | Pos: (227, 1226) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:48,287 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: DAWN | Pos: (227, 1226) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:48,639 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: DAWN | Pos: (874, 1443) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:48,639 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: DAWN | Pos: (874, 1443) | State: Hiding | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:49,021 - [INFO] - [PLAYER] Morning Process Complete
+2026-01-21 23:44:49,021 - [INFO] - [PLAYER] Morning Process Complete
+2026-01-21 23:44:49,069 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (93, 46) | Reason: Random Move | CurrPos: (48, 66)
+2026-01-21 23:44:49,069 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (93, 46) | Reason: Random Move | CurrPos: (48, 66)
+2026-01-21 23:44:49,071 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,071 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,075 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (59, 3) | Reason: Random Move | CurrPos: (74, 39)
+2026-01-21 23:44:49,075 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (59, 3) | Reason: Random Move | CurrPos: (74, 39)
+2026-01-21 23:44:49,075 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,075 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,154 - [DEBUG] - [AI_MOVE_Bot 2] Set Destination: (97, 73) | Reason: Work Start | CurrPos: (7, 38)
+2026-01-21 23:44:49,154 - [DEBUG] - [AI_MOVE_Bot 2] Set Destination: (97, 73) | Reason: Work Start | CurrPos: (7, 38)
+2026-01-21 23:44:49,163 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,163 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,319 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,319 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,322 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (70, 45) | Reason: Work Start | CurrPos: (62, 68)
+2026-01-21 23:44:49,322 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (70, 45) | Reason: Work Start | CurrPos: (62, 68)
+2026-01-21 23:44:49,325 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,325 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,471 - [DEBUG] - [INPUT] E Key Pressed
+2026-01-21 23:44:49,471 - [DEBUG] - [INPUT] E Key Pressed
+2026-01-21 23:44:49,484 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,484 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,484 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (8, 7) | Reason: Work Start | CurrPos: (28, 23)
+2026-01-21 23:44:49,484 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (8, 7) | Reason: Work Start | CurrPos: (28, 23)
+2026-01-21 23:44:49,488 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,488 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,537 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,537 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,551 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,551 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,555 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: MORNING | Pos: (2180, 1120) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:49,555 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: MORNING | Pos: (2180, 1120) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:49,555 - [DEBUG] - [AI_MOVE_Bot 8] Set Destination: (64, 41) | Reason: Random Move | CurrPos: (68, 35)
+2026-01-21 23:44:49,555 - [DEBUG] - [AI_MOVE_Bot 8] Set Destination: (64, 41) | Reason: Random Move | CurrPos: (68, 35)
+2026-01-21 23:44:49,556 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,556 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,621 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,621 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,636 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (21, 55) | Reason: Random Move | CurrPos: (49, 9)
+2026-01-21 23:44:49,636 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (21, 55) | Reason: Random Move | CurrPos: (49, 9)
+2026-01-21 23:44:49,640 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,640 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,653 - [DEBUG] - [INPUT] E Key Released (Hold: 185ms) Target: (55, 96)
+2026-01-21 23:44:49,653 - [DEBUG] - [INPUT] E Key Released (Hold: 185ms) Target: (55, 96)
+2026-01-21 23:44:49,653 - [INFO] - [PLAYER] Interact with 5321206 at (55, 96) Mode: short
+2026-01-21 23:44:49,653 - [INFO] - [PLAYER] Interact with 5321206 at (55, 96) Mode: short
+2026-01-21 23:44:49,656 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: MORNING | Pos: (1542, 1998) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:49,656 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: MORNING | Pos: (1542, 1998) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:49,686 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,686 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,687 - [DEBUG] - [AI_MOVE_Bot 9] Set Destination: (79, 88) | Reason: Work Start | CurrPos: (27, 45)
+2026-01-21 23:44:49,687 - [DEBUG] - [AI_MOVE_Bot 9] Set Destination: (79, 88) | Reason: Work Start | CurrPos: (27, 45)
+2026-01-21 23:44:49,693 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,693 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,751 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (77, 95) | Reason: Work Start | CurrPos: (3, 38)
+2026-01-21 23:44:49,751 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (77, 95) | Reason: Work Start | CurrPos: (3, 38)
+2026-01-21 23:44:49,759 - [DEBUG] - [AI_DECISION_Bot 5] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,759 - [DEBUG] - [AI_DECISION_Bot 5] Changed State: Hiding -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:49,819 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: MORNING | Pos: (1534, 294) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:49,819 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: MORNING | Pos: (1534, 294) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:49,821 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,821 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,869 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: MORNING | Pos: (2242, 1222) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:49,869 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: MORNING | Pos: (2242, 1222) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:49,871 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,871 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,919 - [DEBUG] - [AI_DECISION_Bot 5] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:49,919 - [DEBUG] - [AI_DECISION_Bot 5] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:50,852 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: MORNING | Pos: (1826, 2022) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:50,852 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: MORNING | Pos: (1826, 2022) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:50,855 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: MORNING | Pos: (742, 610) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:50,855 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: MORNING | Pos: (742, 610) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:51,839 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: MORNING | Pos: (462, 1126) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:51,839 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: MORNING | Pos: (462, 1126) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:53,357 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: MORNING | Pos: (678, 1430) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:53,357 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: MORNING | Pos: (678, 1430) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:53,904 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: MORNING | Pos: (998, 1978) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:53,904 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: MORNING | Pos: (998, 1978) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:54,772 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: MORNING | Pos: (2182, 1542) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:54,772 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: MORNING | Pos: (2182, 1542) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:54,785 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: MORNING | Pos: (2050, 1318) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:54,785 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: MORNING | Pos: (2050, 1318) | State: Idle | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:54,785 - [DEBUG] - [AI_MOVE_Bot 8] Set Destination: (29, 65) | Reason: Random Move | CurrPos: (64, 41)
+2026-01-21 23:44:54,785 - [DEBUG] - [AI_MOVE_Bot 8] Set Destination: (29, 65) | Reason: Random Move | CurrPos: (64, 41)
+2026-01-21 23:44:54,789 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:54,789 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:54,904 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: MORNING | Pos: (694, 550) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:54,904 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: MORNING | Pos: (694, 550) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:54,954 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: MORNING | Pos: (1862, 494) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:54,954 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: MORNING | Pos: (1862, 494) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:54,955 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:54,955 - [DEBUG] - [AI_DECISION_Bot 8] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:55,188 - [DEBUG] - [AI_ACTION_Bot 6] Started Working at (8, 7)
+2026-01-21 23:44:55,188 - [DEBUG] - [AI_ACTION_Bot 6] Started Working at (8, 7)
+2026-01-21 23:44:55,189 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:55,189 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:55,337 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:44:55,337 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:44:56,118 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: MORNING | Pos: (1962, 1321) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:56,118 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: MORNING | Pos: (1962, 1321) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:56,120 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: MORNING | Pos: (262, 234) | State: Working | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:56,120 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: MORNING | Pos: (262, 234) | State: Working | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:56,954 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: MORNING | Pos: (966, 1738) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:56,954 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: MORNING | Pos: (966, 1738) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:57,531 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (57, 83) | Reason: Random Move | CurrPos: (59, 3)
+2026-01-21 23:44:57,531 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (57, 83) | Reason: Random Move | CurrPos: (59, 3)
+2026-01-21 23:44:57,540 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:57,540 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:57,714 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:57,714 - [DEBUG] - [AI_DECISION_Bot 3] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:58,247 - [DEBUG] - [AI_ACTION_Bot 4] Started Working at (70, 45)
+2026-01-21 23:44:58,247 - [DEBUG] - [AI_ACTION_Bot 4] Started Working at (70, 45)
+2026-01-21 23:44:58,259 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Moving -> Working | Result: BTState.RUNNING
+2026-01-21 23:44:58,259 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Moving -> Working | Result: BTState.RUNNING
+2026-01-21 23:44:58,260 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (4, 4) | Reason: Work Start | CurrPos: (8, 7)
+2026-01-21 23:44:58,260 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (4, 4) | Reason: Work Start | CurrPos: (8, 7)
+2026-01-21 23:44:58,264 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:58,264 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:58,457 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: MORNING | Pos: (1166, 2054) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:58,457 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: MORNING | Pos: (1166, 2054) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:58,458 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:58,458 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:44:59,003 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: MORNING | Pos: (1754, 2342) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:59,003 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: MORNING | Pos: (1754, 2342) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:59,568 - [DEBUG] - [AI_ACTION_Bot 6] Started Working at (4, 4)
+2026-01-21 23:44:59,568 - [DEBUG] - [AI_ACTION_Bot 6] Started Working at (4, 4)
+2026-01-21 23:44:59,568 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:59,568 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:44:59,718 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:44:59,718 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:44:59,799 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: MORNING | Pos: (1154, 1510) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:44:59,799 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: MORNING | Pos: (1154, 1510) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:00,019 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: MORNING | Pos: (678, 1634) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:00,019 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: MORNING | Pos: (678, 1634) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:00,069 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: MORNING | Pos: (1830, 526) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:00,069 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: MORNING | Pos: (1830, 526) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:00,766 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (58, 8) | Reason: Random Move | CurrPos: (21, 55)
+2026-01-21 23:45:00,766 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (58, 8) | Reason: Random Move | CurrPos: (21, 55)
+2026-01-21 23:45:00,773 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:00,773 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:01,268 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: MORNING | Pos: (2498, 1542) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:01,268 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: MORNING | Pos: (2498, 1542) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:01,400 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:01,400 - [DEBUG] - [AI_DECISION_Bot 7] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:01,533 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: MORNING | Pos: (2246, 1442) | State: Working | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:01,533 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: MORNING | Pos: (2246, 1442) | State: Working | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:01,535 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: MORNING | Pos: (134, 138) | State: Working | HP: 100 AP: 99 Coins: 1
+2026-01-21 23:45:01,535 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: MORNING | Pos: (134, 138) | State: Working | HP: 100 AP: 99 Coins: 1
+2026-01-21 23:45:01,679 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (70, 45) | Reason: Work Start | CurrPos: (70, 45)
+2026-01-21 23:45:01,679 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (70, 45) | Reason: Work Start | CurrPos: (70, 45)
+2026-01-21 23:45:01,684 - [DEBUG] - [AI_ACTION_Bot 4] Started Working at (70, 45)
+2026-01-21 23:45:01,684 - [DEBUG] - [AI_ACTION_Bot 4] Started Working at (70, 45)
+2026-01-21 23:45:01,685 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:01,685 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:01,848 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:01,848 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:02,159 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: MORNING | Pos: (1542, 2302) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:02,159 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: MORNING | Pos: (1542, 2302) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:03,134 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (20, 3) | Reason: Work Start | CurrPos: (4, 4)
+2026-01-21 23:45:03,134 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (20, 3) | Reason: Work Start | CurrPos: (4, 4)
+2026-01-21 23:45:03,137 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:03,137 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:03,452 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:03,452 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:03,468 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: MORNING | Pos: (2214, 2086) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:03,468 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: MORNING | Pos: (2214, 2086) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:03,829 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (58, 32) | Reason: Random Move | CurrPos: (93, 46)
+2026-01-21 23:45:03,829 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (58, 32) | Reason: Random Move | CurrPos: (93, 46)
+2026-01-21 23:45:03,834 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:03,834 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:04,012 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:04,012 - [DEBUG] - [AI_DECISION_Bot 1] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:04,209 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: MORNING | Pos: (2430, 2790) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:04,209 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: MORNING | Pos: (2430, 2790) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:04,704 - [DEBUG] - [AI_ACTION_Bot 9] Started Working at (79, 88)
+2026-01-21 23:45:04,704 - [DEBUG] - [AI_ACTION_Bot 9] Started Working at (79, 88)
+2026-01-21 23:45:04,854 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: MORNING | Pos: (960, 2084) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:04,854 - [DEBUG] - [AI_STATUS_Bot 8] Role: MAFIA | Phase: MORNING | Pos: (960, 2084) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:04,856 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Moving -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:04,856 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Moving -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:05,099 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (70, 44) | Reason: Work Start | CurrPos: (70, 45)
+2026-01-21 23:45:05,099 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (70, 44) | Reason: Work Start | CurrPos: (70, 45)
+2026-01-21 23:45:05,103 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:05,103 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:05,105 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: MORNING | Pos: (678, 834) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:05,105 - [DEBUG] - [AI_STATUS_Bot 7] Role: POLICE | Phase: MORNING | Pos: (678, 834) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:05,185 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: MORNING | Pos: (1638, 1446) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:05,185 - [DEBUG] - [AI_STATUS_Bot 3] Role: MAFIA | Phase: MORNING | Pos: (1638, 1446) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:05,268 - [DEBUG] - [AI_ACTION_Bot 4] Started Working at (70, 44)
+2026-01-21 23:45:05,268 - [DEBUG] - [AI_ACTION_Bot 4] Started Working at (70, 44)
+2026-01-21 23:45:05,433 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:05,433 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:05,583 - [DEBUG] - [AI_ACTION_Bot 6] Started Working at (20, 3)
+2026-01-21 23:45:05,583 - [DEBUG] - [AI_ACTION_Bot 6] Started Working at (20, 3)
+2026-01-21 23:45:06,047 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Moving -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:06,047 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Moving -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:06,412 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: MORNING | Pos: (2502, 1484) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:06,412 - [DEBUG] - [AI_STATUS_Bot 1] Role: POLICE | Phase: MORNING | Pos: (2502, 1484) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:06,843 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: MORNING | Pos: (2246, 1418) | State: Working | HP: 100 AP: 98 Coins: 2
+2026-01-21 23:45:06,843 - [DEBUG] - [AI_STATUS_Bot 4] Role: DOCTOR | Phase: MORNING | Pos: (2246, 1418) | State: Working | HP: 100 AP: 98 Coins: 2
+2026-01-21 23:45:06,843 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: MORNING | Pos: (626, 102) | State: Working | HP: 100 AP: 98 Coins: 2
+2026-01-21 23:45:06,843 - [DEBUG] - [AI_STATUS_Bot 6] Role: CITIZEN | Phase: MORNING | Pos: (626, 102) | State: Working | HP: 100 AP: 98 Coins: 2
+2026-01-21 23:45:07,469 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: MORNING | Pos: (2150, 2842) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:07,469 - [DEBUG] - [AI_STATUS_Bot 5] Role: CITIZEN | Phase: MORNING | Pos: (2150, 2842) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:08,612 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: MORNING | Pos: (3074, 2342) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:08,612 - [DEBUG] - [AI_STATUS_Bot 2] Role: CITIZEN | Phase: MORNING | Pos: (3074, 2342) | State: Moving | HP: 100 AP: 100 Coins: 0
+2026-01-21 23:45:08,675 - [DEBUG] - [AI_MOVE_Bot 9] Set Destination: (88, 81) | Reason: Work Start | CurrPos: (78, 88)
+2026-01-21 23:45:08,675 - [DEBUG] - [AI_MOVE_Bot 9] Set Destination: (88, 81) | Reason: Work Start | CurrPos: (78, 88)
+2026-01-21 23:45:08,679 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:08,679 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:08,743 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (70, 45) | Reason: Work Start | CurrPos: (70, 44)
+2026-01-21 23:45:08,743 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (70, 45) | Reason: Work Start | CurrPos: (70, 44)
+2026-01-21 23:45:08,747 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:08,747 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:08,829 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:08,829 - [DEBUG] - [AI_DECISION_Bot 9] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:08,923 - [DEBUG] - [AI_ACTION_Bot 2] Started Working at (97, 73)
+2026-01-21 23:45:08,923 - [DEBUG] - [AI_ACTION_Bot 2] Started Working at (97, 73)
+2026-01-21 23:45:08,924 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:08,924 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Moving -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:08,924 - [DEBUG] - [AI_ACTION_Bot 4] Started Working at (70, 45)
+2026-01-21 23:45:08,924 - [DEBUG] - [AI_ACTION_Bot 4] Started Working at (70, 45)
+2026-01-21 23:45:08,924 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (6, 7) | Reason: Work Start | CurrPos: (19, 3)
+2026-01-21 23:45:08,924 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (6, 7) | Reason: Work Start | CurrPos: (19, 3)
+2026-01-21 23:45:08,928 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:08,928 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Working -> Idle | Result: BTState.RUNNING
+2026-01-21 23:45:09,406 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:09,406 - [DEBUG] - [AI_DECISION_Bot 2] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:09,408 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:09,408 - [DEBUG] - [AI_DECISION_Bot 4] Changed State: Idle -> Working | Result: BTState.RUNNING
+2026-01-21 23:45:09,408 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:09,408 - [DEBUG] - [AI_DECISION_Bot 6] Changed State: Idle -> Moving | Result: BTState.RUNNING
+2026-01-21 23:45:09,474 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: NOON | Pos: (2502, 2654) | State: Moving | HP: 100 AP: 99 Coins: 1
+2026-01-21 23:45:09,474 - [DEBUG] - [AI_STATUS_Bot 9] Role: CITIZEN | Phase: NOON | Pos: (2502, 2654) | State: Moving | HP: 100 AP: 99 Coins: 1
+2026-01-21 23:45:09,838 - [DEBUG] - [AI_ACTION_Bot 5] Started Working at (77, 95)
+2026-01-21 23:45:09,838 - [DEBUG] - [AI_ACTION_Bot 5] Started Working at (77, 95)

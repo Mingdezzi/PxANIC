@@ -4,6 +4,7 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 TILE_SIZE = 32
 FPS = 60
+RENDER_SCALE = 1.25 # [Fix] DPI Awareness Scaling (1.0: Native, 1.25: 25% Larger UI/FOV)
 
 # [최적화] 전역 폰트 캐시 저장소 추가
 SHARED_FONTS = {}
@@ -23,7 +24,6 @@ SPEED_RUN = 6.0
 SPEED_CROUCH = 2.0
 
 BASE_SPEED_PPS = 270 # Base Pixels Per Second (Reference for UI: 4.5 * 60)
-
 POLICE_SPEED_MULTI = 1.25
 
 NOISE_RADIUS = {
@@ -101,8 +101,9 @@ PHASE_SETTINGS = {
 
 VISION_RADIUS = {
     'DAY': 12,
-    'NIGHT_CITIZEN': 5,
-    'NIGHT_POLICE_FLASH': 12,
+    'NIGHT_CITIZEN': 2,
+    'NIGHT_POLICE_BASE': 2,
+    'NIGHT_POLICE_FLASH': 4, # Flashlight adds 4 to base
     'NIGHT_MAFIA': 8,
     'BLACKOUT': 1.5,
     'DAWN': 0,

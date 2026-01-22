@@ -1,16 +1,18 @@
 import pygame
 import json
 import os
-from core.base_state import BaseState
+from engine.core.state import State
+from game.rules import RoleManager
 from managers.resource_manager import ResourceManager
-from managers.sound_manager import SoundManager
+from engine.audio.sound_manager import SoundManager
 from systems.network import NetworkManager
 from colors import COLORS
 from settings import MAX_PLAYERS, MAX_SPECTATORS, DEFAULT_PHASE_DURATIONS, MAX_TOTAL_USERS
 
 from ui.widgets.settings_popup import SettingsPopup
+from ui.widgets.chat_box import ChatBox
 
-class LobbyState(BaseState):
+class LobbyState(State):
     def __init__(self, game):
         super().__init__(game)
         self.resource_manager = ResourceManager.get_instance()
@@ -29,14 +31,22 @@ class LobbyState(BaseState):
         
         self.settings_popup = SettingsPopup(game)
         
-        # Panel sizes
-        self.lw, self.lh = 500, 500 # Left panel (Players)
-        self.rw, self.rh = 400, 240 # Right panels (Specs, Settings)
+        # Panel sizes (Dynamic based on screen height if needed, but fixed logic for now with safety)
+        # We will recalculate these in draw() or update() anyway, but setting defaults
+        self.lw, self.lh = 480, 500 # Slightly narrower
+        self.rw = 380 
+        self.spec_h = 180 # Reduced height for spectators
+        self.set_h = 200  # Settings height
         self.gap = 20
         
-        self.panel_players = self._create_panel_bg(self.lw, self.lh)
-        self.panel_specs = self._create_panel_bg(self.rw, self.rh)
-        self.panel_settings = self._create_panel_bg(self.rw, self.rh)
+        # Surfaces initialized with max expected size to avoid huge allocations every frame if possible
+        # But for dynamic resize, we might recreate them if size changes drastically
+        self.panel_players = None 
+        self.panel_specs = None
+        self.panel_settings = None
+        
+        # [NEW] Chat Box - Initially positioned safe
+        self.chat_box = ChatBox(0, 0, 380, 150)
 
     def _load_map_info(self):
         try:
@@ -77,13 +87,31 @@ class LobbyState(BaseState):
     def update(self, dt):
         if not self.game.network.connected: return
         for e in self.game.network.get_events():
-            if e.get('type') == 'WELCOME': self.my_id = e.get('my_id'); self.game.network.my_id = self.my_id
+            if e.get('type') == 'WELCOME':
+                self.my_id = e.get('my_id'); self.game.network.my_id = self.my_id
+                # [Fix] Sync Name and Customization with Server
+                name = self.game.shared_data.get('player_name', 'Player')
+                custom = self.game.shared_data.get('custom', {})
+                self.game.network.send_profile(name, custom)
             elif e.get('type') == 'PLAYER_LIST':
                 self.participants = e.get('participants', [])
                 self.game.shared_data['participants'] = self.participants
             elif e.get('type') == 'GAME_START':
+                # [Fix] Update participants with assigned roles from Server
+                players_data = e.get('players', {})
+                if isinstance(players_data, dict):
+                    self.participants = list(players_data.values())
+                else: 
+                    self.participants = players_data # Should be dict, but safety check
+                
+                self.game.shared_data['participants'] = self.participants
+                
                 from states.play_state import PlayState
                 self.game.state_machine.change(PlayState(self.game))
+            elif e.get('type') == 'CHAT':
+                sender = e.get('sender_name', 'System')
+                msg = e.get('message', '')
+                self.chat_box.add_message(sender, msg)
 
     def draw(self, screen):
         w, h = screen.get_size()
@@ -95,27 +123,66 @@ class LobbyState(BaseState):
         # Top Bar
         self._draw_top_bar(screen, w)
         
-        mx, my = pygame.mouse.get_pos()
+        mx, my = self.game.get_scaled_mouse_pos()
         
         # Calculate Center Layout
+        # Dynamic resizing based on screen height to avoid overlap
+        available_h = h - 80 
+        self.lh = int(available_h * 0.9) # 90% of available height
+        
+        # Right side distribution
+        self.spec_h = int(self.lh * 0.35)
+        self.set_h = int(self.lh * 0.40)
+        chat_h = max(100, self.lh - self.spec_h - self.set_h - (self.gap * 2))
+        
+        self.lw = int(w * 0.55) 
+        self.rw = int(w * 0.35)
+        
         total_w = self.lw + self.gap + self.rw
         start_x = (w - total_w) // 2
-        start_y = (h - self.lh) // 2
+        start_y = (h - self.lh) // 2 + 20 
+
+        # Dynamic Element Sizing
+        row_h = max(40, int(self.lh * 0.07)) # 7% of panel height
+        gap_y = max(5, int(self.lh * 0.01))
+        
+        # ... Panel Creation Code ... 
+        
+        if not self.panel_players or self.panel_players.get_height() != self.lh or self.panel_players.get_width() != self.lw:
+            self.panel_players = self._create_panel_bg(self.lw, self.lh)
+        if not self.panel_specs or self.panel_specs.get_height() != self.spec_h or self.panel_specs.get_width() != self.rw:
+            self.panel_specs = self._create_panel_bg(self.rw, self.spec_h)
+        if not self.panel_settings or self.panel_settings.get_height() != self.set_h or self.panel_settings.get_width() != self.rw:
+            self.panel_settings = self._create_panel_bg(self.rw, self.set_h)
+            
+        # Update Chat Box Position
+        self.chat_box.rect.width = self.rw
+        self.chat_box.rect.height = chat_h
+        self.chat_box.rect.x = start_x + self.lw + self.gap
+        self.chat_box.rect.y = start_y + self.spec_h + self.gap + self.set_h + self.gap
         
         player_group = [p for p in self.participants if p.get('group') == 'PLAYER']
         spectator_group = [p for p in self.participants if p.get('group') == 'SPECTATOR']
 
         # --- LEFT PANEL: PLAYERS ---
+        # --- LEFT PANEL: PLAYERS ---
         screen.blit(self.panel_players, (start_x, start_y))
         title_txt = self.bold_font.render(f"PLAYERS ({len(player_group)}/{MAX_PLAYERS})", True, (150, 255, 150))
         screen.blit(title_txt, (start_x + 20, start_y + 20))
         
+        # Element Scaling
+        row_h = max(40, int(self.lh * 0.08)) 
+        
         for i, p in enumerate(player_group):
-            if i >= 8: break
-            rect = pygame.Rect(start_x + 20, start_y + 60 + i*50, 460, 40); is_me = (p.get('id') == self.my_id)
+            if i >= 10: break # Ensure loop limit fits
+            rect = pygame.Rect(start_x + 20, start_y + 60 + i*(row_h + 5), self.lw - 40, row_h)
+            is_me = (p.get('id') == self.my_id)
             pygame.draw.rect(screen, (50, 50, 70) if is_me else (30, 30, 40), rect, border_radius=5)
             pygame.draw.rect(screen, (100, 200, 255) if is_me else (60, 60, 70), rect, 1, border_radius=5)
-            screen.blit(self.font.render(f"{p['name']} (ID: {p['id']})", True, (255, 255, 255)), (rect.x + 15, rect.y + 10))
+            
+            # Text Centering
+            txt_surf = self.font.render(f"{p['name']} (ID: {p['id']})", True, (255, 255, 255))
+            screen.blit(txt_surf, (rect.x + 15, rect.centery - txt_surf.get_height()//2))
             
             r_col = {'CITIZEN': (150, 200, 150), 'MAFIA': (255, 100, 100), 'POLICE': (100, 100, 255), 'DOCTOR': (200, 200, 100)}.get(p.get('role'), (200, 200, 200))
             # [UI Fix] Shifted left to avoid overlapping with Delete button
@@ -157,12 +224,13 @@ class LobbyState(BaseState):
             screen.blit(txt_img, txt_img.get_rect(center=btn.center)); self.lobby_buttons['ADD_BOT_PLAYER'] = btn
 
         # --- RIGHT TOP PANEL: SPECTATORS ---
+        # --- RIGHT TOP PANEL: SPECTATORS ---
         rx, ry = start_x + self.lw + self.gap, start_y
         screen.blit(self.panel_specs, (rx, ry))
         screen.blit(self.bold_font.render(f"SPECTATORS ({len(spectator_group)}/{MAX_SPECTATORS})", True, (150, 150, 255)), (rx + 20, ry + 20))
         for i, p in enumerate(spectator_group):
-            if i >= 3: break
-            rect = pygame.Rect(rx + 20, ry + 60 + i*50, 360, 40)
+            if i >= 5: break
+            rect = pygame.Rect(rx + 20, ry + 60 + i*(row_h+5), self.rw - 40, row_h)
             pygame.draw.rect(screen, (30, 30, 40), rect, border_radius=5)
             
             # [UI Fix] Shift text if bot (to make room for X button)
@@ -192,7 +260,7 @@ class LobbyState(BaseState):
             screen.blit(txt_s_img, txt_s_img.get_rect(center=btn_s.center)); self.lobby_buttons['ADD_BOT_SPEC'] = btn_s
 
         # --- RIGHT BOTTOM PANEL: SETTINGS ---
-        sx, sy = rx, ry + self.rh + self.gap
+        sx, sy = rx, ry + self.spec_h + self.gap
         screen.blit(self.panel_settings, (sx, sy))
         screen.blit(self.bold_font.render("GAME SETTINGS", True, (255, 255, 100)), (sx + 20, sy + 20))
         m_r = pygame.Rect(sx + 130, sy + 55, 30, 30); p_r = pygame.Rect(sx + 230, sy + 55, 30, 30)
@@ -206,7 +274,8 @@ class LobbyState(BaseState):
         screen.blit(self.font.render(f"Map Size: {self.map_size_str}", True, (160, 160, 180)), (sx + 20, sy + 130))
 
         if self.my_id == 0 or not self.game.network.connected:
-            s_r = pygame.Rect(sx + 20, sy + 160, 360, 60)
+            s_btn_h = max(60, int(self.set_h * 0.3))
+            s_r = pygame.Rect(sx + 20, sy + self.set_h - s_btn_h - 20, self.rw - 40, s_btn_h)
             pygame.draw.rect(screen, (0, 150, 0) if s_r.collidepoint(mx, my) else (0, 100, 0), s_r, border_radius=8)
             pygame.draw.rect(screen, (100, 255, 100), s_r, 2, border_radius=8)
             start_txt_img = self.large_font.render("START GAME", True, (255, 255, 255))
@@ -216,6 +285,9 @@ class LobbyState(BaseState):
         
         if self.settings_popup.active:
             self.settings_popup.draw(screen)
+            
+        # Draw Chat Box
+        self.chat_box.draw(screen)
 
     def _draw_grid_bg(self, screen, w, h):
         for x in range(0, w, 40): pygame.draw.line(screen, (20, 20, 30), (x, 0), (x, h))
@@ -233,7 +305,7 @@ class LobbyState(BaseState):
 
     def _draw_nav_button(self, screen, text, x, y, w, h, key):
         rect = pygame.Rect(x, y, w, h)
-        mx, my = pygame.mouse.get_pos()
+        mx, my = self.game.get_scaled_mouse_pos()
         is_hover = rect.collidepoint(mx, my) and not self.settings_popup.active
         col = (100, 100, 120) if not is_hover else (150, 150, 200)
         pygame.draw.rect(screen, (30, 30, 40), rect, border_radius=5)
@@ -247,6 +319,10 @@ class LobbyState(BaseState):
             self.settings_popup.handle_event(event)
             return
 
+        # [NEW] Chat interaction
+        if self.chat_box.handle_event(event, self.game.network):
+            return
+
         if event.type != pygame.MOUSEBUTTONDOWN or event.button != 1: return
         mx, my = event.pos
         
@@ -258,14 +334,14 @@ class LobbyState(BaseState):
                 from states.multi_menu_state import MultiMenuState
                 self.game.state_machine.change(MultiMenuState(self.game))
             else: # Came from Single
-                from states.menu_state import MenuState
-                self.game.state_machine.change(MenuState(self.game))
+                from states.main_lobby_state import MainLobbyState
+                self.game.state_machine.change(MainLobbyState(self.game))
             return
 
         if 'Nav_Home' in self.lobby_buttons and self.lobby_buttons['Nav_Home'].collidepoint(mx, my):
             self.sound_manager.play_sfx("CLICK")
-            from states.menu_state import MenuState
-            self.game.state_machine.change(MenuState(self.game))
+            from states.main_lobby_state import MainLobbyState
+            self.game.state_machine.change(MainLobbyState(self.game))
             return
 
         if 'Nav_Settings' in self.lobby_buttons and self.lobby_buttons['Nav_Settings'].collidepoint(mx, my):
@@ -279,6 +355,11 @@ class LobbyState(BaseState):
             self.game.shared_data['custom_durations'] = {k: int(v * scale) for k, v in DEFAULT_PHASE_DURATIONS.items()}
             if self.game.network.connected: self.game.network.send_start_game()
             else:
+                # [Fix] Assign Random Roles for Offline Mode (Single Player)
+                RoleManager.distribute_roles(self.participants)
+                
+                self.game.shared_data['participants'] = self.participants
+                
                 from states.play_state import PlayState
                 self.game.state_machine.change(PlayState(self.game))
         if 'ADD_BOT_PLAYER' in self.lobby_buttons and self.lobby_buttons['ADD_BOT_PLAYER'].collidepoint(mx, my):
@@ -319,11 +400,18 @@ class LobbyState(BaseState):
             for p in self.participants:
                 if p['id'] == self.my_id: curr_role = p.get('role', 'RANDOM'); break
             
-            try:
-                idx = roles.index(curr_role)
-                new_role = roles[(idx + 1) % len(roles)]
-            except ValueError:
-                new_role = roles[0]
+            limits = RoleManager.get_role_counts(len(self.participants))
+            counts = {'MAFIA': 0, 'POLICE': 0, 'DOCTOR': 0}
+            for p in self.participants:
+                if p['id'] != self.my_id and p.get('role') in counts:
+                    counts[p['role']] += 1
+            
+            idx = roles.index(curr_role) if curr_role in roles else 0
+            new_role = curr_role
+            for i in range(1, len(roles)):
+                cand = roles[(idx + i) % len(roles)]
+                if cand in counts and counts[cand] >= limits[cand]: continue
+                new_role = cand; break
 
             if self.game.network.connected: self.game.network.send_role_change(new_role)
             else: 
@@ -340,11 +428,18 @@ class LobbyState(BaseState):
                 for p in self.participants:
                     if p['id'] == tid: curr_role = p.get('role', 'RANDOM'); break
                 
-                try:
-                    idx = roles.index(curr_role)
-                    new_role = roles[(idx + 1) % len(roles)]
-                except ValueError:
-                    new_role = roles[0]
+                limits = RoleManager.get_role_counts(len(self.participants))
+                counts = {'MAFIA': 0, 'POLICE': 0, 'DOCTOR': 0}
+                for p in self.participants:
+                    if p['id'] != tid and p.get('role') in counts:
+                        counts[p['role']] += 1
+                
+                idx = roles.index(curr_role) if curr_role in roles else 0
+                new_role = curr_role
+                for i in range(1, len(roles)):
+                    cand = roles[(idx + i) % len(roles)]
+                    if cand in counts and counts[cand] >= limits[cand]: continue
+                    new_role = cand; break
                 
                 if self.game.network.connected:
                     # Manually construct packet for specific ID role change

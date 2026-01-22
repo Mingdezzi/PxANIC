@@ -10,12 +10,12 @@ class CharacterRenderer:
     NAME_FONT = pygame.font.SysFont("arial", 11, bold=True)
     POPUP_FONT = pygame.font.SysFont("arial", 12, bold=True)
 
-    RECT_BODY = pygame.Rect(4, 4, 24, 24)
-    RECT_CLOTH = pygame.Rect(4, 14, 24, 14)
-    RECT_ARM_L = pygame.Rect(8, 14, 4, 14)
-    RECT_ARM_R = pygame.Rect(20, 14, 4, 14)
-    RECT_HAT_TOP = pygame.Rect(2, 2, 28, 5)
-    RECT_HAT_RIM = pygame.Rect(6, 0, 20, 7)
+    # [Balanced Skeleton] Proportions for Cute Character
+    # Head is round and friendly
+    RECT_HEAD = pygame.Rect(6, 2, 20, 18)
+    RECT_BODY = pygame.Rect(10, 18, 12, 10)
+    RECT_ARMS = pygame.Rect(7, 18, 18, 6) # Combined arm span for base
+    RECT_LEGS = pygame.Rect(10, 26, 12, 6)
 
     _name_surface_cache = {}
 
@@ -26,11 +26,51 @@ class CharacterRenderer:
 
     @classmethod
     def _get_cache_key(cls, entity, is_highlighted):
-        skin_idx = entity.custom.get('skin', 0)
-        cloth_idx = entity.custom.get('clothes', 0)
-        hat_idx = entity.custom.get('hat', 0)
+        # Flatten the modular custom dict for cache key
+        c = entity.custom
+        # Defensive check: Ensure each part is a dictionary (compatibility with legacy data)
+        f = c.get('face', {}) if isinstance(c.get('face'), dict) else {}
+        h = c.get('hair', {}) if isinstance(c.get('hair'), dict) else {}
+        cl = c.get('clothes', {}) if isinstance(c.get('clothes'), dict) else {}
+        s = c.get('shoes', {}) if isinstance(c.get('shoes'), dict) else {}
+        g = c.get('glasses', {}) if isinstance(c.get('glasses'), dict) else {}
+        
         facing = getattr(entity, 'facing_dir', (0, 1))
-        return (skin_idx, cloth_idx, hat_idx, entity.role, entity.sub_role, facing, is_highlighted)
+        is_crouching = getattr(entity, 'move_state', 'WALK') == 'CROUCH' or getattr(entity, 'is_hiding', False)
+        
+        # [Animation] Discretize frames for caching
+        walk_frame = 0
+        if getattr(entity, 'is_moving', False) and not is_crouching: # No walk anim while crouching for simplicity, or we can keep it
+            # 4-stage walk cycle (150ms per frame)
+            walk_frame = (pygame.time.get_ticks() // 150) % 4
+        
+        action_frame = 0
+        action_start = getattr(entity, 'action_anim_start_time', 0)
+        if action_start > 0:
+            elapsed = pygame.time.get_ticks() - action_start
+            if elapsed < 400: # 400ms total action duration
+                action_frame = (elapsed // 100) + 1 # Frames 1 to 4
+        
+        # Convert pixel dicts to frozen sets for caching
+        px_key = (
+            frozenset(f.get('pixels', {}).items()),
+            frozenset(h.get('pixels', {}).items()),
+            frozenset(cl.get('pixels', {}).items()),
+            frozenset(s.get('pixels', {}).items()),
+            frozenset(g.get('pixels', {}).items())
+        )
+
+        return (
+            c.get('gender'),
+            f.get('skin'), f.get('eye_type'), f.get('mouth_type'),
+            h.get('type'), h.get('color'),
+            cl.get('type'), cl.get('color'),
+            s.get('type'), s.get('color'),
+            g.get('type'), g.get('color'),
+            px_key,
+            entity.role, entity.sub_role, facing, is_highlighted,
+            walk_frame, action_frame, is_crouching
+        )
 
     @staticmethod
     def draw_entity(screen, entity, camera_x, camera_y, viewer_role="PLAYER", current_phase="DAY", viewer_device_on=False):
@@ -39,6 +79,10 @@ class CharacterRenderer:
         draw_y = entity.rect.y - camera_y
         screen_w, screen_h = screen.get_width(), screen.get_height()
         if not (-50 < draw_x < screen_w + 50 and -50 < draw_y < screen_h + 50): return
+
+        # [Refactor] Spectator Rendering moved here
+        if entity.role == "SPECTATOR":
+            return
 
         alpha = 255
         is_highlighted = False
@@ -56,35 +100,233 @@ class CharacterRenderer:
             base_surf = CharacterRenderer._sprite_cache[cache_key]
         else:
             base_surf = pygame.Surface((TILE_SIZE, TILE_SIZE), pygame.SRCALPHA)
-            skin_idx = entity.custom.get('skin', 0) % len(CUSTOM_COLORS['SKIN'])
-            cloth_idx = entity.custom.get('clothes', 0) % len(CUSTOM_COLORS['CLOTHES'])
-            body_color = CUSTOM_COLORS['SKIN'][skin_idx]
-            clothes_color = CUSTOM_COLORS['CLOTHES'][cloth_idx]
-            if is_highlighted: body_color = (255, 50, 50); clothes_color = (150, 0, 0)
-            pygame.draw.ellipse(base_surf, (0, 0, 0, 80), (4, TILE_SIZE - 8, TILE_SIZE - 8, 6))
-            pygame.draw.rect(base_surf, body_color, CharacterRenderer.RECT_BODY, border_radius=6)
-            if entity.role == "MAFIA":
-                if current_phase == "NIGHT":
-                    pygame.draw.rect(base_surf, (30, 30, 35), CharacterRenderer.RECT_CLOTH, border_bottom_left_radius=6, border_bottom_right_radius=6)
-                    pygame.draw.polygon(base_surf, (180, 0, 0), [(16, 14), (13, 22), (19, 22)])
-                else:
-                    fake_color = clothes_color
-                    if entity.sub_role == "POLICE": fake_color = (20, 40, 120)
-                    elif entity.sub_role == "DOCTOR": fake_color = (240, 240, 250)
-                    pygame.draw.rect(base_surf, fake_color, CharacterRenderer.RECT_CLOTH, border_bottom_left_radius=6, border_bottom_right_radius=6)
-            elif entity.role == "DOCTOR":
-                pygame.draw.rect(base_surf, (240, 240, 250), CharacterRenderer.RECT_CLOTH, border_bottom_left_radius=6, border_bottom_right_radius=6)
-            elif entity.role == "POLICE":
-                pygame.draw.rect(base_surf, (20, 40, 120), CharacterRenderer.RECT_CLOTH, border_bottom_left_radius=6, border_bottom_right_radius=6)
-            else:
-                pygame.draw.rect(base_surf, clothes_color, CharacterRenderer.RECT_CLOTH, border_bottom_left_radius=6, border_bottom_right_radius=6)
+            
+            # 1. Colors & Data Setup
+            c_data = entity.custom
+            gender = c_data.get('gender', 'MALE')
+            f_data = c_data.get('face', {}) if isinstance(c_data.get('face'), dict) else {}
+            h_data = c_data.get('hair', {}) if isinstance(c_data.get('hair'), dict) else {}
+            cl_data = c_data.get('clothes', {}) if isinstance(c_data.get('clothes'), dict) else {}
+            s_data = c_data.get('shoes', {}) if isinstance(c_data.get('shoes'), dict) else {}
+            g_data = c_data.get('glasses', {}) if isinstance(c_data.get('glasses'), dict) else {}
 
+            body_color = CUSTOM_COLORS['SKIN'][f_data.get('skin', 0) % len(CUSTOM_COLORS['SKIN'])]
+            clothes_color = CUSTOM_COLORS['CLOTHES'][cl_data.get('color', 0) % len(CUSTOM_COLORS['CLOTHES'])]
+            hair_color = CUSTOM_COLORS['HAIR'][h_data.get('color', 0) % len(CUSTOM_COLORS['HAIR'])]
+            
+            if is_highlighted: body_color = (255, 50, 50); clothes_color = (150, 0, 0)
+            
+            # 2. Shadow (Drawn first)
+            pygame.draw.ellipse(base_surf, (0, 0, 0, 80), (4, TILE_SIZE - 4, TILE_SIZE - 8, 4))
+            
+            # [Animation Offsets]
+            is_crouching = getattr(entity, 'move_state', 'WALK') == 'CROUCH' or getattr(entity, 'is_hiding', False)
+            c_y = 4 if is_crouching else 0 # Crouch downward offset
+            
+            walk_frame = 0
+            if getattr(entity, 'is_moving', False):
+                walk_frame = (pygame.time.get_ticks() // 150) % 4
+            
+            action_frame = 0
+            action_start = getattr(entity, 'action_anim_start_time', 0)
+            if action_start > 0:
+                elapsed = pygame.time.get_ticks() - action_start
+                if elapsed < 400:
+                    action_frame = (elapsed // 100) + 1
+
+            y_off_l, y_off_r = 0, 0
+            if walk_frame == 1: y_off_l, y_off_r = -2, 1
+            elif walk_frame == 3: y_off_l, y_off_r = 1, -2
+            
+            arm_r_y_off = 0
+            if action_frame > 0:
+                if action_frame <= 2: arm_r_y_off = -5
+                else: arm_r_y_off = -3
+
+            # 3. Feet & Shoes
+            shoe_type = s_data.get('type', 0)
+            shoe_color = CUSTOM_COLORS['SHOES'][s_data.get('color', 0) % len(CUSTOM_COLORS['SHOES'])]
+            if shoe_type > 0:
+                pygame.draw.rect(base_surf, shoe_color, (10, 28 + y_off_l, 5, 3), border_radius=1)
+                pygame.draw.rect(base_surf, shoe_color, (17, 28 + y_off_r, 5, 3), border_radius=1)
+
+            # 4. Legs
+            pygame.draw.rect(base_surf, clothes_color, (10, 26 + y_off_l, 5, 5), border_radius=1)
+            pygame.draw.rect(base_surf, clothes_color, (17, 26 + y_off_r, 5, 5), border_radius=1)
+            
+            # 5. Arms (Connected to shoulders)
+            arm_y = 19 + c_y
+            ax_l, ax_r = 7, 22
+            if gender == 'FEMALE':
+                ax_l, ax_r = 8, 21 # Narrower shoulders for female
+            
+            # Arms move opposite to legs
+            pygame.draw.rect(base_surf, body_color, (ax_l, arm_y + y_off_r, 3, 7 - (2 if is_crouching else 0)), border_radius=1)
+            pygame.draw.rect(base_surf, body_color, (ax_r, arm_y + y_off_l + arm_r_y_off, 3, 7 - (2 if is_crouching else 0)), border_radius=1)
+
+            # 6. Torso & Clothes (Gender Based Body Shapes)
+            torso_y = 18 + c_y
+            torso_h = 10 - (2 if is_crouching else 0)
+            torso_color = clothes_color
+            if entity.role == "MAFIA" and current_phase == "NIGHT":
+                torso_color = (40, 40, 45)
+            elif entity.role == "DOCTOR":
+                torso_color = (255, 255, 255)
+            elif entity.role == "POLICE":
+                torso_color = (40, 60, 150)
+            
+            cl_type = cl_data.get('type', 0)
+            
+            if gender == 'FEMALE':
+                # Female body
+                if cl_type == 1: # Dress
+                    pygame.draw.rect(base_surf, torso_color, (10, torso_y, 12, torso_h + 1), border_radius=5)
+                    pygame.draw.polygon(base_surf, torso_color, [(8, 28), (24, 28), (20, 23 + c_y), (12, 23 + c_y)])
+                elif cl_type == 3: # Hoodie
+                    pygame.draw.rect(base_surf, torso_color, (9, torso_y, 14, torso_h + 1), border_radius=6)
+                elif cl_type == 4: # Shirt
+                    pygame.draw.rect(base_surf, torso_color, (10, torso_y, 12, torso_h), border_radius=4)
+                    pygame.draw.circle(base_surf, (200, 50, 50), (16, torso_y + 3), 2)
+                else:
+                    pygame.draw.rect(base_surf, torso_color, (10, torso_y, 12, torso_h), border_radius=5)
+            else:
+                # Male body
+                if cl_type == 1: # Overall
+                    pygame.draw.rect(base_surf, torso_color, (9, torso_y, 14, torso_h), border_radius=3)
+                    pygame.draw.rect(base_surf, torso_color, (9, 24 + c_y, 14, 4 - (2 if is_crouching else 0)))
+                elif cl_type == 2: # Suit
+                    pygame.draw.rect(base_surf, torso_color, (8, torso_y, 16, torso_h + 1), border_top_left_radius=4, border_top_right_radius=4)
+                    pygame.draw.polygon(base_surf, (255, 255, 255), [(13, torso_y), (16, torso_y + 7), (19, torso_y)])
+                elif cl_type == 3: # Hoodie
+                    pygame.draw.rect(base_surf, torso_color, (8, torso_y, 16, torso_h + 1), border_radius=6)
+                elif cl_type == 4: # Uniform
+                    pygame.draw.rect(base_surf, torso_color, (9, torso_y, 14, torso_h), border_radius=3)
+                    pygame.draw.rect(base_surf, (255, 215, 0), (11, torso_y + 2, 3, 3))
+                else: # Basic
+                    pygame.draw.rect(base_surf, torso_color, (9, torso_y, 14, torso_h), border_radius=3)
+            
+            # Role Details (Adjusted for crouch)
+            if entity.role == "MAFIA" and current_phase == "NIGHT":
+                 pygame.draw.line(base_surf, (150, 0, 0), (14, torso_y + 2), (18, torso_y + 2), 2)
+            elif entity.role == "POLICE":
+                 pygame.draw.rect(base_surf, (255, 215, 0), (15, torso_y + 2, 3, 3))
+ 
+            # 7. Head (Squashed Down)
+            head_rect = pygame.Rect(CharacterRenderer.RECT_HEAD.x, CharacterRenderer.RECT_HEAD.y + c_y, 
+                                CharacterRenderer.RECT_HEAD.width, CharacterRenderer.RECT_HEAD.height)
+            pygame.draw.rect(base_surf, body_color, head_rect, border_radius=9)
+
+            # 8. Facial Features
             f_dir = getattr(entity, 'facing_dir', (0, 1))
-            ox, oy = f_dir[0] * 3, f_dir[1] * 2
-            pygame.draw.circle(base_surf, (255, 255, 255), (16 - 5 + ox, 12 + oy), 3)
-            pygame.draw.circle(base_surf, (0, 0, 0), (16 - 5 + ox + f_dir[0], 12 + oy + f_dir[1]), 1)
-            pygame.draw.circle(base_surf, (255, 255, 255), (16 + 5 + ox, 12 + oy), 3)
-            pygame.draw.circle(base_surf, (0, 0, 0), (16 + 5 + ox + f_dir[0], 12 + oy + f_dir[1]), 1)
+            ox, oy = f_dir[0] * 2, f_dir[1] * 1 + c_y
+            
+            # 1. Eyes
+            eye_y = 10 + oy
+            eye_t = f_data.get('eye_type', 0)
+            
+            if eye_t == 1: # Big Sparkly
+                pygame.draw.circle(base_surf, (255, 255, 255), (10.5 + ox, eye_y), 3.5)
+                pygame.draw.circle(base_surf, (20, 20, 40), (10.5 + ox + f_dir[0]*0.5, eye_y + f_dir[1]*0.5), 1.8)
+                pygame.draw.circle(base_surf, (255, 255, 255), (10 + ox, eye_y - 1), 1)
+                pygame.draw.circle(base_surf, (255, 255, 255), (21.5 + ox, eye_y), 3.5)
+                pygame.draw.circle(base_surf, (20, 20, 40), (21.5 + ox + f_dir[0]*0.5, eye_y + f_dir[1]*0.5), 1.8)
+                pygame.draw.circle(base_surf, (255, 255, 255), (21 + ox, eye_y - 1), 1)
+            elif eye_t == 2: # Wink
+                pygame.draw.line(base_surf, (40, 40, 50), (9+ox, eye_y), (12+ox, eye_y), 2)
+                pygame.draw.circle(base_surf, (255, 255, 255), (21.5+ox, eye_y), 3)
+                pygame.draw.circle(base_surf, (20, 20, 40), (21.5+ox, eye_y), 1.5)
+            elif eye_t == 3: # Angry (> <)
+                pygame.draw.line(base_surf, (40, 40, 50), (9+ox, eye_y-1), (12+ox, eye_y+1), 2)
+                pygame.draw.line(base_surf, (40, 40, 50), (12+ox, eye_y-1), (9+ox, eye_y+1), 2)
+                pygame.draw.line(base_surf, (40, 40, 50), (20+ox, eye_y-1), (23+ox, eye_y+1), 2)
+                pygame.draw.line(base_surf, (40, 40, 50), (23+ox, eye_y-1), (20+ox, eye_y+1), 2)
+            elif eye_t == 4: # Sleeping (- -)
+                pygame.draw.line(base_surf, (40, 40, 50), (9+ox, eye_y), (12+ox, eye_y), 2)
+                pygame.draw.line(base_surf, (40, 40, 50), (20+ox, eye_y), (23+ox, eye_y), 2)
+            else: # Normal
+                pygame.draw.circle(base_surf, (255, 255, 255), (10.5 + ox, eye_y), 3)
+                pygame.draw.circle(base_surf, (20, 20, 40), (10.5 + ox+f_dir[0]*0.5, eye_y+f_dir[1]*0.5), 1.5)
+                pygame.draw.circle(base_surf, (255, 255, 255), (21.5 + ox, eye_y), 3)
+                pygame.draw.circle(base_surf, (20, 20, 40), (21.5 + ox+f_dir[0]*0.5, eye_y+f_dir[1]*0.5), 1.5)
+
+            # Glasses
+            g_type = g_data.get('type', 0)
+            if g_type > 0:
+                g_col = CUSTOM_COLORS['GLASSES'][g_data.get('color', 0) % len(CUSTOM_COLORS['GLASSES'])]
+                if g_type == 1: # Square
+                    pygame.draw.rect(base_surf, g_col, (8 + ox, eye_y - 2, 6, 5), 1)
+                    pygame.draw.rect(base_surf, g_col, (18 + ox, eye_y - 2, 6, 5), 1)
+                    pygame.draw.line(base_surf, g_col, (14 + ox, eye_y), (18 + ox, eye_y), 1)
+                elif g_type == 2: # Round
+                    pygame.draw.circle(base_surf, g_col, (10.5 + ox, eye_y), 4, 1)
+                    pygame.draw.circle(base_surf, g_col, (21.5 + ox, eye_y), 4, 1)
+                    pygame.draw.line(base_surf, g_col, (14 + ox, eye_y), (18 + ox, eye_y), 1)
+                elif g_type == 3: # Sunglasses
+                    pygame.draw.rect(base_surf, (20, 20, 30), (8 + ox, eye_y - 2, 7, 5), border_radius=1)
+                    pygame.draw.rect(base_surf, (20, 20, 30), (17 + ox, eye_y - 2, 7, 5), border_radius=1)
+                    pygame.draw.line(base_surf, (20, 20, 30), (15 + ox, eye_y), (17 + ox, eye_y), 1)
+                elif g_type == 4: # Monocle
+                    pygame.draw.circle(base_surf, g_col, (10.5 + ox, eye_y), 4, 1)
+                    pygame.draw.line(base_surf, g_col, (14.5 + ox, eye_y), (18 + ox, eye_y - 5), 1)
+
+            # 2. Blush
+            blush_col = (255, 210, 215, 100)
+            pygame.draw.circle(base_surf, blush_col, (16 - 6 + ox, 14.5 + oy), 2)
+            pygame.draw.circle(base_surf, blush_col, (16 + 6 + ox, 14.5 + oy), 2)
+
+            # 3. Mouth
+            m_y = 15.5 + oy
+            m_t = f_data.get('mouth_type', 0)
+            if not entity.alive:
+                pygame.draw.line(base_surf, (60, 40, 40), (14.5+ox, m_y), (17.5+ox, m_y), 1)
+                pygame.draw.line(base_surf, (60, 40, 40), (16+ox, m_y-1), (16+ox, m_y+1), 1)
+            else:
+                if m_t == 1: # Smile
+                    pygame.draw.arc(base_surf, (100, 40, 40), (14+ox, m_y-2, 4, 4), 3.14, 0, 2)
+                elif m_t == 2: # Cat
+                    pygame.draw.arc(base_surf, (60, 40, 40), (14+ox, m_y-1, 2, 3), 3.14, 0, 1)
+                    pygame.draw.arc(base_surf, (60, 40, 40), (16+ox, m_y-1, 2, 3), 3.14, 0, 1)
+                elif m_t == 3: # Surprised (O)
+                    pygame.draw.circle(base_surf, (60, 40, 40), (16+ox, m_y), 2, 1)
+                elif m_t == 4: # Pouting (/ \)
+                    pygame.draw.line(base_surf, (60, 40, 40), (15+ox, m_y+1), (16+ox, m_y-1), 1)
+                    pygame.draw.line(base_surf, (60, 40, 40), (16+ox, m_y-1), (17+ox, m_y+1), 1)
+                else: # Neutral
+                    pygame.draw.line(base_surf, (60, 40, 40), (15+ox, m_y), (17+ox, m_y), 1)
+
+            # 9. Hair (Redesigned to not cover eyes)
+            h_type = h_data.get('type', 0)
+            if h_type > 0:
+                if h_type == 1: # Short
+                    pygame.draw.rect(base_surf, hair_color, (6, 1, 20, 5), border_top_left_radius=9, border_top_right_radius=9)
+                elif h_type == 2: # Bob Cut (Sides only, clear forehead)
+                    pygame.draw.rect(base_surf, hair_color, (6, 1, 20, 5), border_top_left_radius=9, border_top_right_radius=9)
+                    pygame.draw.rect(base_surf, hair_color, (6, 6, 4, 7))
+                    pygame.draw.rect(base_surf, hair_color, (22, 6, 4, 7))
+                elif h_type == 3: # Spiky
+                    pygame.draw.rect(base_surf, hair_color, (7, 0, 18, 5), border_top_left_radius=9, border_top_right_radius=9)
+                    for i in range(3):
+                        pygame.draw.polygon(base_surf, hair_color, [(9+i*6, 1), (12+i*6, -3), (15+i*6, 1)])
+                elif h_type == 4: # Long with side tail
+                    pygame.draw.rect(base_surf, hair_color, (6, 1, 20, 5), border_top_left_radius=9, border_top_right_radius=9)
+                    pygame.draw.rect(base_surf, hair_color, (22, 6, 4, 11), border_radius=2)
+
+            # 10. User Dot Pixels (Overlays)
+            all_parts = [f_data, h_data, cl_data, s_data, g_data]
+            for part in all_parts:
+                pixels = part.get('pixels', {})
+                for k, col_idx in pixels.items():
+                    # Handle both (x,y) tuples and "x,y" strings from JSON
+                    if isinstance(k, str):
+                        try: px, py = map(int, k.split(','))
+                        except: continue
+                    else:
+                        px, py = k
+                    
+                    if 0 <= px < TILE_SIZE and 0 <= py < TILE_SIZE:
+                        p_col = CUSTOM_COLORS['CLOTHES'][col_idx % len(CUSTOM_COLORS['CLOTHES'])]
+                        base_surf.set_at((px, py), p_col)
+
             CharacterRenderer._sprite_cache[cache_key] = base_surf
 
         final_surf = base_surf

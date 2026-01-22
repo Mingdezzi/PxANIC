@@ -1,5 +1,5 @@
 import pygame
-from managers.sound_manager import SoundManager
+from engine.audio.sound_manager import SoundManager
 
 class SettingsPopup:
     def __init__(self, game):
@@ -105,7 +105,7 @@ class SettingsPopup:
         pygame.draw.rect(screen, (100, 255, 100), (self.sfx_slider_rect.x, self.sfx_slider_rect.y, fill_w, self.sfx_slider_rect.height), border_radius=5)
         
         # Close Button
-        col = (150, 50, 50) if self.btn_close.collidepoint(pygame.mouse.get_pos()) else (100, 40, 40)
+        col = (150, 50, 50) if self.btn_close.collidepoint(self.game.get_scaled_mouse_pos()) else (100, 40, 40)
         pygame.draw.rect(screen, col, self.btn_close, border_radius=5)
         close_txt = self.font.render("CLOSE", True, (255, 255, 255))
         screen.blit(close_txt, close_txt.get_rect(center=self.btn_close.center))

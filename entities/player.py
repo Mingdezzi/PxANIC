@@ -6,7 +6,7 @@ from colors import *
 from world.tiles import *
 from systems.minigame import MiniGameManager
 from systems.renderer import CharacterRenderer
-from .entity import Entity
+from game.entities.character import Character
 from systems.logger import GameLogger
 from entities.bullet import Bullet
 
@@ -16,7 +16,7 @@ from entities.player_logic.status import StatusLogic
 from entities.player_logic.actions import ActionLogic
 from entities.player_logic.inventory import InventoryLogic
 
-class Player(Entity):
+class Player(Character):
     def __init__(self, x, y, width, height, map_data, zone_map, map_manager=None):
         super().__init__(x, y, map_data, map_width=width, map_height=height, zone_map=zone_map, name="Player", role="CITIZEN", map_manager=map_manager)
         self.logger = GameLogger.get_instance()
@@ -176,7 +176,39 @@ class Player(Entity):
         return self.logic_move.get_current_speed(weather_type)
 
     def _handle_movement_input(self):
+        # [Spectator] Ghost Flight Mode
+        if self.role == "SPECTATOR":
+            keys = pygame.key.get_pressed()
+            dx, dy = 0, 0
+            if keys[pygame.K_w]: dy = -1
+            if keys[pygame.K_s]: dy = 1
+            if keys[pygame.K_a]: dx = -1
+            if keys[pygame.K_d]: dx = 1
+            
+            # Simple flight movement (no physics)
+            speed = 10
+            self.rect.x += dx * speed
+            self.rect.y += dy * speed
+            return False # Not "moving" in the animation sense
+            
         return self.logic_move.handle_input()
+
+    def update_stats_sync(self, network, current_action_text="Idle"):
+        # [Spectator Refinement] Determine Action Text based on State
+        act_text = "Idle"
+        if not self.alive: act_text = "Dead"
+        elif self.is_working: act_text = "Working"
+        elif self.is_unlocking: act_text = "Unlocking"
+        elif self.is_hiding: act_text = "Hiding"
+        elif self.is_moving:
+            if self.move_state == "RUN": act_text = "Running"
+            else: act_text = "Moving"
+        elif self.device_on: act_text = "Using Device"
+        else: act_text = "Idle"
+        
+        # Send stats periodically (e.g., called every 60 frames from State)
+        emotion_str = list(self.emotions.keys())[0] if self.emotions else "Neutral"
+        network.send_stats(self.hp, self.max_hp, self.ap, self.max_ap, self.coins, emotion_str, act_text)
 
     def _update_stamina(self, is_moving):
         self.logic_move.update_stamina(is_moving)
@@ -229,12 +261,3 @@ class Player(Entity):
     def work_complete(self, px, py, next_tile, reward=False): self.logic_action.work_complete(px, py, next_tile, reward)
     def do_break(self, px, py): self.logic_action.do_break(px, py)
 
-    def draw(self, screen, camera_x, camera_y):
-        if self.role == "SPECTATOR":
-            draw_x = self.rect.centerx - camera_x; draw_y = self.rect.centery - camera_y
-            s = pygame.Surface((40, 40), pygame.SRCALPHA); pygame.draw.circle(s, (100, 100, 255, 120), (20, 20), 15); pygame.draw.circle(s, (255, 255, 255, 180), (20, 20), 15, 2); screen.blit(s, (draw_x - 20, draw_y - 20))
-            return
-        if self.is_dead:
-            draw_rect = self.rect.move(-camera_x, -camera_y); pygame.draw.rect(screen, (50, 50, 50), draw_rect)
-        else: CharacterRenderer.draw_entity(screen, self, camera_x, camera_y, self.role, self.current_phase_ref, self.device_on) # Added device_on
-        for b in self.bullets: b.draw(screen, camera_x, camera_y)

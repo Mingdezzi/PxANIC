@@ -1,0 +1,38 @@
+2026-01-22 23:02:53,295 - [INFO] - [DATA] Loaded 17 items.
+2026-01-22 23:02:53,295 - [INFO] - [DATA] Loaded 110 tiles.
+2026-01-22 23:02:53,295 - [INFO] - [DATA] Loaded 5 roles.
+2026-01-22 23:02:53,579 - [INFO] - [SYSTEM] Game Engine Initializing...
+2026-01-22 23:02:53,579 - [INFO] - [SYSTEM] Game Engine Initializing...
+2026-01-22 23:02:53,608 - [INFO] - [SYSTEM] Engine Loop Started
+2026-01-22 23:02:53,608 - [INFO] - [SYSTEM] Engine Loop Started
+2026-01-22 23:02:53,645 - [INFO] - [DATA] Loaded 17 items.
+2026-01-22 23:02:53,645 - [INFO] - [DATA] Loaded 110 tiles.
+2026-01-22 23:02:53,651 - [INFO] - [DATA] Loaded 5 roles.
+2026-01-22 23:03:40,899 - [INFO] - [PLAY] Entering PlayState...
+2026-01-22 23:03:40,899 - [INFO] - [PLAY] Entering PlayState...
+2026-01-22 23:03:40,913 - [INFO] - [PLAYER] Initialized at (1472, 1504) Role: CITIZEN
+2026-01-22 23:03:40,913 - [INFO] - [PLAYER] Initialized at (1472, 1504) Role: CITIZEN
+2026-01-22 23:03:40,913 - [INFO] - [PLAYER] Role changed to CITIZEN (FARMER)
+2026-01-22 23:03:40,913 - [INFO] - [PLAYER] Role changed to CITIZEN (FARMER)
+2026-01-22 23:03:41,046 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (54, 24) | Reason: Random Move | CurrPos: (45, 45)
+2026-01-22 23:03:41,046 - [DEBUG] - [AI_MOVE_Bot 1] Set Destination: (54, 24) | Reason: Random Move | CurrPos: (45, 45)
+2026-01-22 23:03:41,152 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (79, 16) | Reason: Go Home | CurrPos: (52, 50)
+2026-01-22 23:03:41,152 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (79, 16) | Reason: Go Home | CurrPos: (52, 50)
+2026-01-22 23:03:41,186 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (24, 41) | Reason: Random Move | CurrPos: (46, 53)
+2026-01-22 23:03:41,186 - [DEBUG] - [AI_MOVE_Bot 4] Set Destination: (24, 41) | Reason: Random Move | CurrPos: (46, 53)
+2026-01-22 23:03:41,187 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (48, 36) | Reason: Random Move | CurrPos: (46, 45)
+2026-01-22 23:03:41,187 - [DEBUG] - [AI_MOVE_Bot 7] Set Destination: (48, 36) | Reason: Random Move | CurrPos: (46, 45)
+2026-01-22 23:03:41,368 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (91, 97) | Reason: Random Move | CurrPos: (49, 52)
+2026-01-22 23:03:41,368 - [DEBUG] - [AI_MOVE_Bot 3] Set Destination: (91, 97) | Reason: Random Move | CurrPos: (49, 52)
+2026-01-22 23:03:41,617 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (3, 39) | Reason: Go Home | CurrPos: (50, 50)
+2026-01-22 23:03:41,617 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (3, 39) | Reason: Go Home | CurrPos: (50, 50)
+2026-01-22 23:03:41,757 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (2, 39) | Reason: Go Home | CurrPos: (49, 50)
+2026-01-22 23:03:41,757 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (2, 39) | Reason: Go Home | CurrPos: (49, 50)
+2026-01-22 23:03:42,411 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (11, 62) | Reason: Go Home | CurrPos: (47, 50)
+2026-01-22 23:03:42,411 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (11, 62) | Reason: Go Home | CurrPos: (47, 50)
+2026-01-22 23:03:43,446 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (80, 16) | Reason: Go Home | CurrPos: (56, 47)
+2026-01-22 23:03:43,446 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (80, 16) | Reason: Go Home | CurrPos: (56, 47)
+2026-01-22 23:03:44,001 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (11, 63) | Reason: Go Home | CurrPos: (43, 50)
+2026-01-22 23:03:44,001 - [DEBUG] - [AI_MOVE_Bot 5] Set Destination: (11, 63) | Reason: Go Home | CurrPos: (43, 50)
+2026-01-22 23:03:44,136 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (79, 16) | Reason: Go Home | CurrPos: (58, 47)
+2026-01-22 23:03:44,136 - [DEBUG] - [AI_MOVE_Bot 6] Set Destination: (79, 16) | Reason: Go Home | CurrPos: (58, 47)

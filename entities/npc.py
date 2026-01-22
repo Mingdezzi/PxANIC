@@ -7,13 +7,13 @@ from settings import *
 from world.tiles import check_collision, get_tile_function, BED_TILES, HIDEABLE_TILES, get_tile_interaction, get_tile_category, get_tile_name, TRANSPARENT_TILES
 from systems.logger import GameLogger
 from colors import *
-from .entity import Entity
+from game.entities.character import Character
 from systems.renderer import CharacterRenderer
 from systems.behavior_tree import BTNode, Composite, Selector, Sequence, Action, Condition, BTState
 
 FONT_POPUP = None
 
-class Dummy(Entity):
+class Dummy(Character):
     def __init__(self, x, y, map_data, map_width, map_height, name="Dummy", role="CITIZEN", tile_cache=None, zone_map=None, map_manager=None, is_master=True):
         if role in ["FARMER", "MINER", "FISHER"]:
             self.sub_role = role
@@ -65,6 +65,7 @@ class Dummy(Entity):
         self.footstep_timer = 0
         self.popups = []
         self.last_stats = {'hp': self.hp, 'coins': self.coins}
+        self.current_action_text = "Idle" # [Spectator] Synced action text
 
         self.suspicion_meter = {}
         self.chase_target = None
@@ -111,8 +112,21 @@ class Dummy(Entity):
         self.path, self.current_path_target, self.work_tile_pos = [], None, None
         self.failed_targets = {}; self.investigate_pos, self.chase_target = None, None
         self.suspicion_meter = {k: max(0, v - 30) for k, v in self.suspicion_meter.items()}
-        self.device_battery = min(100, self.device_battery + 20)
+        # [Fix] Full recharge for NPCs
+        self.device_battery = 100.0
+        self.device_on = False
 
+
+    def set_role(self, new_role):
+        self.role = new_role
+        # Recalculate sub_role if needed
+        if self.role in ["CITIZEN", "MAFIA"]:
+            if not self.sub_role: self.sub_role = random.choice(["FARMER", "MINER", "FISHER"])
+        else:
+            self.sub_role = None # Specific roles don't need sub_roles usually
+            
+        self.tree = self._build_behavior_tree() # Rebuild Logic
+        self.logger.debug(f"AI_STATUS_{self.name}", f"Role Updated to {self.role} (Sub: {self.sub_role})")
 
     def _build_behavior_tree(self):
         survival_seq = Sequence([Condition(self.check_danger), Action(self.do_flee_or_hide)])
@@ -121,10 +135,10 @@ class Dummy(Entity):
         if self.role == "POLICE":
             return Selector([
                 shopping_seq,
-                Sequence([Condition(self.police_scan_targets), Action(self.police_chase_attack)]),
+                Sequence([Condition(self.police_scan_targets), Action(self.police_use_siren), Action(self.police_chase_attack)]),
                 Sequence([Condition(self.has_last_seen_pos), Action(self.police_investigate_last_pos)]),
                 Sequence([Condition(self.has_investigate_pos), Action(self.police_investigate_noise)]),
-                Action(self.do_patrol)
+                Action(self.do_wander)
             ])
         elif self.role == "MAFIA":
             return Selector([
@@ -134,11 +148,13 @@ class Dummy(Entity):
                 Action(self.do_work_fake)
             ])
         else:
+            # Citizens/Doctors: 1. Survival(Flee) 2. Shop 3. Go Home(Night) 4. Work(Day) 5. Wander
             return Selector([
                 survival_seq,
+                Sequence([Condition(self.can_use_device), Action(self.do_citizen_scan)]),
                 shopping_seq,
-                Sequence([Condition(self.is_work_time), Action(self.do_work)]),
                 Sequence([Condition(self.is_night_time), Action(self.do_go_home)]),
+                Sequence([Condition(self.is_work_time), Action(self.do_work)]),
                 Action(self.do_wander)
             ])
 
@@ -150,28 +166,61 @@ class Dummy(Entity):
             self.chase_target = None
             return False
 
-        if self.chase_target and self.chase_target.alive and not self.chase_target.is_hiding:
-            if self.has_line_of_sight(self.chase_target): return True
+        # [New] Aggressive Q Usage
+        if current_phase == 'NIGHT' and self.device_battery > 20 and not self.device_on:
+            self.device_on = True
+
+        # [Equal Condition] Get actual vision radius
+        vision_rad_tiles = self.get_vision_radius(bb)
+
+        if self.chase_target and self.chase_target.alive and self.chase_target.role != "SPECTATOR" and not self.chase_target.is_hiding:
+            dist = math.hypot(self.rect.centerx - self.chase_target.rect.centerx, self.rect.centery - self.chase_target.rect.centery)
+            if dist <= vision_rad_tiles * TILE_SIZE:
+                if self.has_line_of_sight(self.chase_target, bb) or self.device_on: return True
         
-        # [핵심 수정] "마피아인가?"(신상조회) -> "빌런의 모습인가?"(외형관찰) 로 변경
+        self.chase_target = None # Invalid target
+        
+        # [핵심 수정] 경찰은 마피아 외형(Villain Look) 또는 실제 마피아(장치 사용 시)를 추격
         for t in bb.get('targets', []):
-            if t != self and t.alive:
+            if t != self and t.alive and t.role != "SPECTATOR":
+                dist = math.hypot(self.rect.centerx - t.rect.centerx, self.rect.centery - t.rect.centery)
+                if dist > vision_rad_tiles * TILE_SIZE: continue
+
                 is_villain_look = t.is_visible_villain(current_phase)
+                # 장치가 켜져있거나 의심도가 높으면 투시/감지 가능
+                can_see = self.has_line_of_sight(t, bb) or (self.device_on and t.role == "MAFIA")
                 
-                if (is_villain_look and self.has_line_of_sight(t)) or (self.suspicion_meter.get(t.name, 0) >= 100):
-                    if self.has_line_of_sight(t) and not t.is_hiding:
+                if (is_villain_look and can_see) or (self.suspicion_meter.get(t.name, 0) >= 100) or (self.device_on and t.role == "MAFIA" and can_see):
+                    if not t.is_hiding:
                         self.chase_target = t; self.last_seen_pos = (t.rect.centerx, t.rect.centery)
                         return True
         return False
 
     def mafia_scan_targets(self, entity, bb):
         if bb.get('phase') != 'NIGHT': return False
-        if self.chase_target and self.chase_target.alive and self.has_line_of_sight(self.chase_target): return True
+        
+        # [New] Aggressive Q Usage
+        if self.device_battery > 10 and not self.device_on and not self.chase_target:
+            self.device_on = True
+
+        vision_rad_tiles = self.get_vision_radius(bb)
+
+        if self.chase_target and self.chase_target.alive and self.chase_target.role != "SPECTATOR":
+            dist = math.hypot(self.rect.centerx - self.chase_target.rect.centerx, self.rect.centery - self.chase_target.rect.centery)
+            if dist <= vision_rad_tiles * TILE_SIZE:
+                if self.has_line_of_sight(self.chase_target, bb) or self.device_on: return True
+        
+        self.chase_target = None # Invalid target
+
         visible_victims = []
         for t in bb.get('targets', []):
             if t != self and t.alive and t.role not in ["MAFIA", "SPECTATOR"]:
-                if self.has_line_of_sight(t) and not t.is_hiding:
-                    dist = math.sqrt((self.rect.centerx - t.rect.centerx)**2 + (self.rect.centery - t.rect.centery)**2)
+                dist = math.hypot(self.rect.centerx - t.rect.centerx, self.rect.centery - t.rect.centery)
+                if dist > vision_rad_tiles * TILE_SIZE: continue
+
+                # 장치가 켜져있으면 장애물 무시
+                can_see = self.has_line_of_sight(t, bb) or (self.device_on and t.role != "POLICE")
+                if can_see and not t.is_hiding:
                     visible_victims.append((dist, t))
         if visible_victims:
             visible_victims.sort(key=lambda x: x[0]); self.chase_target = visible_victims[0][1]
@@ -188,29 +237,62 @@ class Dummy(Entity):
         return False
 
     def check_danger(self, entity, bb):
-        if self.role in ["CITIZEN", "DOCTOR"] and bb.get('phase') == 'NIGHT':
-            for n in bb.get('npcs', []):
-                if n != self and n.alive and self.has_line_of_sight(n):
-                    dist = math.sqrt((self.rect.centerx-n.rect.centerx)**2+(self.rect.centery-n.rect.centery)**2)
-                    if dist < TILE_SIZE * 2: return True
+        phase = bb.get('phase')
+        if phase not in ['EVENING', 'NIGHT', 'DAWN']: return False
+        
+        vision_rad_tiles = self.get_vision_radius(bb)
+        
+        # 마피아가 피해야 할 대상: 경찰
+        # 시민/의사가 피해야 할 대상: 마피아
+        danger_roles = ["MAFIA"]
+        if self.role == "MAFIA": danger_roles = ["POLICE"]
+
+        for n in bb.get('targets', []):
+            if n != self and n.alive and n.role in danger_roles:
+                dist = math.hypot(self.rect.centerx - n.rect.centerx, self.rect.centery - n.rect.centery)
+                if dist > vision_rad_tiles * TILE_SIZE: continue
+
+                can_detect = self.has_line_of_sight(n, bb) or (self.device_on and n.role == "MAFIA")
+                if can_detect:
+                    if random.random() < 0.05: 
+                        msg = "POLICE!!!" if self.role == "MAFIA" else "MAFIA!!!"
+                        self.add_popup(msg, (255, 50, 50))
+                    self.chase_target = n # Flee from this target
+                    return True
         return False
+
+    def can_use_device(self, entity, bb):
+        return bb.get('phase') == 'NIGHT' and self.device_battery > 0 and not self.device_on
+
+    def do_citizen_scan(self, entity, bb):
+        if self.device_battery > 50 and random.random() < 0.01:
+            self.device_on = True
+            self.add_popup("Scanning...", (100, 255, 100))
+        return BTState.SUCCESS
 
     def check_needs_shopping(self, entity, bb):
         return (self.hp < 5 or self.ap < 4) and self.coins >= 3 and not self.is_hiding
 
-    def is_work_time(self, entity, bb): return bb.get('phase') in ['MORNING', 'DAY'] and self.daily_work_count < DAILY_QUOTA
-    def is_night_time(self, entity, bb): return bb.get('phase') in ['EVENING', 'NIGHT']
+    def is_work_time(self, entity, bb): 
+        # [Fix] Work during MORNING, NOON, and AFTERNOON. Also check AP.
+        return bb.get('phase') in ['MORNING', 'NOON', 'AFTERNOON'] and self.daily_work_count < DAILY_QUOTA and self.ap > 0
+
+    def is_night_time(self, entity, bb): 
+        # [Fix] Go home during EVENING, NIGHT, and DAWN (if not already handled elsewhere)
+        return bb.get('phase') in ['EVENING', 'NIGHT', 'DAWN']
+
     def can_sabotage(self, entity, bb): return self.role == "MAFIA" and bb.get('phase') == 'NIGHT' and not self.ability_used and self.ap >= 5
 
 
     def police_chase_attack(self, entity, bb):
-        if not self.chase_target: return BTState.FAILURE
+        if not self.chase_target or not self.chase_target.alive or self.chase_target.role == "SPECTATOR": 
+            self.chase_target = None; return BTState.FAILURE
         dist = math.sqrt((self.rect.centerx - self.chase_target.rect.centerx)**2 + (self.rect.centery - self.chase_target.rect.centery)**2)
-        if dist > 200 and not self.ability_used and self.ap >= 5:
-            self.ability_used = True; self.ap -= 5; return "USE_SIREN"
         now = pygame.time.get_ticks()
         if dist < 400 and now > self.last_attack_time + 1000:
-            if self.try_spend_ap(1): self.last_attack_time = now; return "SHOOT_TARGET"
+            if self.try_spend_ap(1): 
+                self.trigger_action_anim()
+                self.last_attack_time = now; return "SHOOT_TARGET"
         self.set_destination(self.chase_target.rect.centerx, self.chase_target.rect.centery, "Chasing")
         return BTState.RUNNING
 
@@ -232,7 +314,36 @@ class Dummy(Entity):
         if not self.path and not self.is_pathfinding: self.random_move()
         return BTState.RUNNING
 
+    def police_use_siren(self, entity, bb):
+        if self.chase_target and not self.ability_used and bb.get('phase') == 'NIGHT':
+            dist = math.sqrt((self.rect.centerx - self.chase_target.rect.centerx)**2 + (self.rect.centery - self.chase_target.rect.centery)**2)
+            if dist > TILE_SIZE * 3:
+                self.ability_used = True
+                return "USE_SIREN"
+        return BTState.SUCCESS
+
     def do_flee_or_hide(self, entity, bb):
+        if self.chase_target:
+            # Run away from threat
+            tx, ty = self.rect.center
+            ox, oy = self.chase_target.rect.center
+            dx, dy = tx - ox, ty - oy
+            dist = math.sqrt(dx**2 + dy**2)
+            if dist > TILE_SIZE * 6: 
+                self.chase_target = None
+                return BTState.SUCCESS
+            
+            # Move to a opposite position
+            if dist > 0:
+                flee_x, flee_y = tx + (dx/dist) * TILE_SIZE * 3, ty + (dy/dist) * TILE_SIZE * 3
+            else:
+                # Same position? flee to random direction
+                flee_x, flee_y = tx + random.choice([-1, 1]) * TILE_SIZE, ty + random.choice([-1, 1]) * TILE_SIZE
+                
+            self.set_destination(flee_x, flee_y, "Fleeing")
+            if random.random() < 0.03: self.add_popup("HELP!", (255, 0, 0))
+            return BTState.RUNNING
+
         if not self.path:
             if not self.find_hiding_spot(bb.get('npcs', [])): self.random_move()
         return BTState.RUNNING
@@ -243,7 +354,12 @@ class Dummy(Entity):
             if vending_pos:
                 dist = math.sqrt((self.rect.centerx - vending_pos[0])**2 + (self.rect.centery - vending_pos[1])**2)
                 if dist < TILE_SIZE * 1.5:
-                    if self.hp < 5: self.coins -= 3; self.hp += 2
+                    # Buy items based on needs
+                    bought = False
+                    if not bought and (self.hp < self.max_hp or self.ap < self.max_ap) and self.coins >= 3:
+                         self.coins -= 3; self.hp += 2; self.ap += 2; bought = True
+                    
+                    if bought: self.trigger_action_anim()
                     return BTState.SUCCESS
                 self.set_destination(vending_pos[0], vending_pos[1], "Shopping")
         return BTState.RUNNING
@@ -256,8 +372,12 @@ class Dummy(Entity):
                 self.is_working = False; self.work_tile_pos = None; return BTState.SUCCESS
             return BTState.RUNNING
         
-        job_key = "DOCTOR" if self.role == "DOCTOR" else self.sub_role
-        if not job_key: return BTState.FAILURE # [Fix] Prevent KeyError
+        # [Fix] Support Role as Job Key (e.g. FARMER, MINER)
+        job_key = self.sub_role
+        if self.role in WORK_SEQ: job_key = self.role
+        elif self.role == "DOCTOR": job_key = "DOCTOR"
+        
+        if not job_key: return BTState.FAILURE
         
         if not self.work_tile_pos:
             target_tid = WORK_SEQ[job_key][(bb.get('day_count', 1) - 1) % 3]
@@ -270,7 +390,9 @@ class Dummy(Entity):
         dist = math.sqrt((self.rect.centerx - self.work_tile_pos[0])**2 + (self.rect.centery - self.work_tile_pos[1])**2)
         if dist < TILE_SIZE * 0.8:
             if self.ap > 0:
+                self.trigger_action_anim()
                 self.is_working = True; self.work_finish_timer = now + 3000; self.path = []; self.is_moving = False; self.add_popup("Working...")
+                self.logger.debug(f"AI_ACTION_{self.name}", f"Started Working at ({int(self.work_tile_pos[0]//TILE_SIZE)}, {int(self.work_tile_pos[1]//TILE_SIZE)})")
             else: self.work_tile_pos = None
         elif not self.path and not self.is_pathfinding: self.work_tile_pos = None; return BTState.FAILURE
         return BTState.RUNNING
@@ -280,19 +402,26 @@ class Dummy(Entity):
         return BTState.RUNNING
 
     def do_go_home(self, entity, bb):
-        if self.is_hiding: return BTState.SUCCESS
+        if self.is_hiding: return BTState.SUCCESS # Already home
         if not self.target_house_pos: self.target_house_pos = self.find_house_door(bb.get('npcs', []))
         if self.target_house_pos:
             dist = math.sqrt((self.rect.centerx - self.target_house_pos[0])**2 + (self.rect.centery - self.target_house_pos[1])**2)
             if dist < TILE_SIZE:
                 self.is_hiding = True; self.hiding_type = 2; self.is_moving = False; self.path = []; return BTState.SUCCESS
-            self.set_destination(self.target_house_pos[0], self.target_house_pos[1], "Go Home")
-        return BTState.RUNNING
+            if not self.set_destination(self.target_house_pos[0], self.target_house_pos[1], "Go Home"):
+                # If pathfinding fails repeatedly, clear and fallback
+                if self.stuck_timer > 3000: self.target_house_pos = None; return BTState.FAILURE
+            return BTState.RUNNING
+        return BTState.FAILURE # Fallback to Wander
 
     def mafia_kill(self, entity, bb):
-        if self.ap >= 1 and self.chase_target:
+        if not self.chase_target or not self.chase_target.alive or self.chase_target.role == "SPECTATOR":
+            self.chase_target = None; return BTState.FAILURE
+            
+        if self.ap >= 1:
             dist = math.sqrt((self.rect.centerx - self.chase_target.rect.centerx)**2 + (self.rect.centery - self.chase_target.rect.centery)**2)
             if dist < TILE_SIZE * 1.5:
+                self.trigger_action_anim()
                 self.ap -= 1; self.chase_target.take_damage(10); self.action_cooldown = pygame.time.get_ticks() + 1000
                 return "MURDER_OCCURRED"
             self.set_destination(self.chase_target.rect.centerx, self.chase_target.rect.centery, "Killing")
@@ -322,9 +451,10 @@ class Dummy(Entity):
             elif self.hiding_type == 2 and not (is_indoors or is_resting_tile): self.is_hiding = False; self.hiding_type = 0
 
     def update(self, phase, player, npcs, is_mafia_frozen, noise_list, day_count, bloody_footsteps, siren_timer=0):
-        if not self.alive: return None
+        if not self.alive: return []
         self._validate_environment()
         now = pygame.time.get_ticks(); self.check_stat_changes()
+        self.pending_events = []
         
         # [Sync Logic] Only Master updates logic
         if self.is_master:
@@ -337,27 +467,89 @@ class Dummy(Entity):
                     if self.path:
                         nx, ny = self.path[0]
                         if self.map_manager: self.map_manager.unlock_door(nx, ny); self.add_popup("Unlocked!")
-                    return None
-                return BTState.RUNNING
+                    return self.pending_events
+                return self.pending_events # BTState.RUNNING -> None/Empty in this context
             if self.pending_path is not None:
-                if not self.is_hiding: self.path = self.pending_path
+                # [Fix] Applying path forces hide-break to prevent deadlock
+                if self.is_hiding: 
+                    self.is_hiding = False
+                    self.hiding_type = 0
+                self.path = self.pending_path
                 self.pending_path = None; self.is_pathfinding = False
             
-            blackboard = {'phase': phase, 'player': player, 'npcs': npcs, 'targets': npcs + [player], 'noise_list': noise_list, 'bloody_footsteps': bloody_footsteps, 'day_count': day_count, 'is_mafia_frozen': is_mafia_frozen}
+            # [Spectator Refinement] Calculate Action Text for AI
+            act_text = "Idle"
+            if not self.alive: act_text = "Dead"
+            elif self.is_working: act_text = "Working"
+            elif self.is_unlocking: act_text = "Unlocking"
+            elif self.is_hiding: act_text = "Hiding"
+            elif self.is_moving:
+                 if self.move_state == "RUN": act_text = "Running"
+                 else: act_text = "Moving"
+            elif self.device_on: act_text = "Using Device"
+            self.current_action_text = act_text
+
+            # [New] Idle Variation: Randomly look around or shift slightly
+            if not self.is_moving and not self.is_hiding and not self.is_working and not self.is_unlocking:
+                if random.random() < 0.02: # 2% chance per tick
+                    self.facing_dir = random.choice([(0, 1), (0, -1), (1, 0), (-1, 0)])
             
-            # [Optimization] Throttled AI
-            self.ai_timer -= 1
-            if self.ai_timer <= 0:
-                self.ai_timer = 10
-                result = self.tree.tick(self, blackboard)
-                if isinstance(result, str): return result
+            # [New] Battery Management for NPCs
+            if self.device_on:
+                self.device_battery -= 0.05
+                if self.device_battery <= 0:
+                    self.device_battery = 0
+                    self.device_on = False
+                    self.add_popup("Battery Out", (255, 100, 100))
+
+            # [Optimization] Stagger AI Updates & Logging (not movement)
+            check_ai = (self.ai_timer + pygame.time.get_ticks()) % 15 == 0
+
+            # [New] Sound/Text Popup variety
+            if check_ai:
+                if self.tree:
+                     # Re-evaluate tree
+                     blackboard = {'phase': phase, 'player': player, 'npcs': npcs, 'targets': npcs + [player], 'noise_list': noise_list, 'bloody_footsteps': bloody_footsteps, 'day_count': day_count, 'is_mafia_frozen': is_mafia_frozen}
+                     old_device = self.device_on
+                     result = self.tree.tick(self, blackboard)
+
+                     if isinstance(result, str):
+                        self.pending_events.append(result)
+                     elif isinstance(result, list):
+                        self.pending_events.extend(result)
+
+                     # [New] Sound Event: Device Toggle
+                     if self.device_on != old_device:
+                         self.pending_events.append(("BEEP", self.rect.centerx, self.rect.centery, 4*TILE_SIZE, self.role))
+
+                if not self.is_moving and random.random() < 0.01:
+                    msgs = {
+                        "CITIZEN": ["Hungry...", "What a day.", "Peaceful.", "...?"],
+                        "DOCTOR": ["Need to help.", "Stay healthy.", "Medical supplies?", "...!"],
+                        "POLICE": ["Patrolling.", "Sector clear.", "Keep it quiet.", "Scanning..."],
+                        "MAFIA": ["...", "Soon.", "The shadows...", "Heh."]
+                    }
+                    msg_pool = msgs.get(self.role, ["..."])
+                    self.add_popup(random.choice(msg_pool))
+
+                # Role-specific aggressive text
+                if self.chase_target and random.random() < 0.05:
+                    if self.role == "MAFIA": self.add_popup("Found you!", (255, 0, 0))
+                    elif self.role == "POLICE": self.add_popup("FREEZE!", (0, 0, 255))
+                    elif self.role in ["CITIZEN", "DOCTOR"]:
+                        self.add_popup("KYAAA!", (255, 255, 255))
+                        self.pending_events.append(("SCREAM", self.rect.centerx, self.rect.centery, 10*TILE_SIZE, self.role))
+
+            move_res = self.process_movement(phase, npcs, slow_down=is_mafia_frozen if self.role == "MAFIA" else False)
+            if move_res and isinstance(move_res, str):
+                self.pending_events.append(move_res)
             
-            return self.process_movement(phase, npcs, slow_down=is_mafia_frozen if self.role == "MAFIA" else False)
+            return self.pending_events
         
         else:
             # [Slave Mode] Just interpolate position (No AI)
             self._update_slave_movement()
-            return None
+            return []
 
     def _update_slave_movement(self):
         # Simple lerp to target position
@@ -382,6 +574,22 @@ class Dummy(Entity):
         else:
             self.is_moving = False
 
+    def sync_stats(self, data):
+        """Called by STATS_UPDATE packet"""
+        self.hp = data.get('hp', self.hp)
+        self.max_hp = data.get('max_hp', self.max_hp)
+        self.ap = data.get('ap', self.ap)
+        self.max_ap = data.get('max_ap', self.max_ap)
+        self.coins = data.get('coins', self.coins)
+        
+        emo = data.get('emotion')
+        if emo and emo != "Neutral":
+            self.emotions = {emo: 1}
+        else:
+            self.emotions = {}
+            
+        self.current_action_text = data.get('action', "Idle")
+
     def sync_state(self, x, y, hp, ap, role, is_moving, facing):
         """Called by network manager to update slave state"""
         self.target_pos = (x, y)
@@ -397,10 +605,37 @@ class Dummy(Entity):
         self.facing_dir = facing
 
     def set_destination(self, tx, ty, reason="Unknown"):
-        if self.is_hiding: self.is_hiding = False; self.hiding_type = 0
-        tgx, tgy = int(tx // TILE_SIZE), int(ty // TILE_SIZE)
+        # [Separation] Apply small offset to destination to avoid clustering if reason is generic
+        if reason in ["Patrolling", "Wander", "Go Home"]:
+            tx += random.randint(-16, 16)
+            ty += random.randint(-16, 16)
+
+        # [Optimization] Check distance: if already very close, skip recalculation
+        dist_sq = (self.pos_x - tx)**2 + (self.pos_y - ty)**2
+        if dist_sq < 16: # 4 pixels radius
+            return True
+
+        # [Fix] Immediate hide-break when moving
+        if self.is_hiding: 
+            self.is_hiding = False
+            self.hiding_type = 0
+            self.path = [] # Clear old path
+            
+        # [New] Path Jittering: Don't always go to exact tile center
+        # Adds +- 8 pixels of randomness to prevent single-file movement
+        jit_tx = tx + random.randint(-8, 8)
+        jit_ty = ty + random.randint(-8, 8)
+
+        tgx, tgy = int(jit_tx // TILE_SIZE), int(jit_ty // TILE_SIZE)
         if self.path and self.current_path_target == (tgx, tgy): return True
         if self.is_pathfinding: return False
+        
+        # [Optimization] Even if path is empty, check if we are already at that TILE center
+        # to avoid infinite "Set Destination" logs while standing at target.
+        if not self.path and int(self.pos_x // TILE_SIZE) == tgx and int(self.pos_y // TILE_SIZE) == tgy:
+            return True
+
+        self.logger.debug(f"AI_MOVE_{self.name}", f"Set Destination: ({tgx}, {tgy}) | Reason: {reason} | CurrPos: ({int(self.pos_x//TILE_SIZE)}, {int(self.pos_y//TILE_SIZE)})")
         
         # [수정] 현재 경로가 없고 멈춰있는 상태라면 쿨타임 무시 (즉시 반응)
         now = pygame.time.get_ticks()
@@ -445,12 +680,46 @@ class Dummy(Entity):
             else: self.pending_path = None; self.is_pathfinding = False
         except: self.is_pathfinding = False
 
+    def get_current_speed(self, bb):
+        # [Equal Conditions] Match player's MovementLogic.get_current_speed
+        base = SPEED_WALK
+        if self.move_state == "RUN": base = SPEED_RUN
+        elif self.move_state == "CROUCH": base = SPEED_CROUCH
+        
+        multiplier = 1.0
+        # NPC emotions are currently simplified to keys
+        # If we have actual levels, we'd use them. For now, assume level 3 for active status.
+        if 'HAPPINESS' in self.status_effects: multiplier += 0.10
+        if self.status_effects.get('DOPAMINE'): multiplier += 0.15 # Level 3 equivalent
+        if self.status_effects.get('RAGE'): multiplier += 0.15
+        if self.status_effects.get('FEAR'): multiplier -= 0.30
+        
+        if self.role == "POLICE": multiplier *= POLICE_SPEED_MULTI
+        if self.buffs.get('FAST_WORK'): multiplier *= 1.2
+        if bb.get('weather') == 'SNOW': multiplier *= 0.8
+        
+        return base * max(0.2, multiplier)
+
     def process_movement(self, phase, npcs=None, slow_down=False):
         if self.is_hiding: return None
         if slow_down:
             self.is_moving = False
             return None
         
+        # [New] Separation Force: Push away from other NPCs of same group at night
+        if phase in ['EVENING', 'NIGHT', 'DAWN'] and npcs:
+            for n in npcs:
+                if n != self and n.role == self.role and n.alive:
+                    dist_sq = (self.pos_x - n.pos_x)**2 + (self.pos_y - n.pos_y)**2
+                    if dist_sq < (48**2): # Too close
+                        force = 1.0 # Push away
+                        dx = (self.pos_x - n.pos_x)
+                        dy = (self.pos_y - n.pos_y)
+                        dist = math.sqrt(dist_sq) if dist_sq > 0 else 1
+                        self.pos_x += (dx / dist) * force
+                        self.pos_y += (dy / dist) * force
+                        self.rect.x, self.rect.y = round(self.pos_x), round(self.pos_y)
+
         # [New] Update Emotion State (AI)
         if self.role == "MAFIA" and self.chase_target:
             self.status_effects['DOPAMINE'] = True
@@ -459,10 +728,12 @@ class Dummy(Entity):
 
         now = pygame.time.get_ticks(); self.move_state, self.speed = "WALK", SPEED_WALK
         if self.chase_target: 
-            self.move_state, self.speed = "RUN", SPEED_RUN
-            # [New] Dopamine Effect: Faster Chase
-            if self.status_effects.get('DOPAMINE'):
-                self.speed *= 1.2
+            self.move_state = "RUN"
+            
+        # [Equal Condition] Calculate dynamic speed
+        # Construct a mini-blackboard for speed calculation
+        speed_bb = {'weather': getattr(self, 'weather', 'CLEAR')} 
+        self.speed = self.get_current_speed(speed_bb)
 
         if not self.path: self.is_moving = False; return None
         ngx, ngy = self.path[0]; tid = self.map_manager.get_tile(ngx, ngy, 'object') if self.map_manager else 0
@@ -490,12 +761,34 @@ class Dummy(Entity):
             if not self.path: self.is_moving = False
         else:
             self.is_moving = True; mx, my = (dx/dist)*self.speed, (dy/dist)*self.speed
-            self.move_single_axis(mx, 0, npcs); self.move_single_axis(0, my, npcs)
             
+            # [New] NPC Separation: Avoid clumping
+            sep_x, sep_y = 0, 0
+            if npcs:
+                for other in npcs:
+                    if other != self and other.alive and not other.is_hiding:
+                        ox, oy = other.rect.center
+                        sx, sy = self.rect.center
+                        d_npcs = math.sqrt((ox - sx)**2 + (oy - sy)**2)
+                        if d_npcs < TILE_SIZE * 0.8: # Too close!
+                            # Push away from the neighbor
+                            force = (TILE_SIZE * 0.8 - d_npcs) / TILE_SIZE
+                            sep_x -= (ox - sx) / (d_npcs + 1) * force * 1.5
+                            sep_y -= (oy - sy) / (d_npcs + 1) * force * 1.5
+            
+            self.move_single_axis(mx + sep_x, 0, npcs); self.move_single_axis(0, my + sep_y, npcs)
+            
+            # [New] Sound Event: Footsteps (Chance)
+            # [Balance] Reduced frequency (0.15 -> 0.05) and radius (6 -> 3)
+            if random.random() < 0.05:
+                s_type = "FOOTSTEP" if self.move_state == "WALK" else "RUN"
+                self.pending_events.append((s_type, self.rect.centerx, self.rect.centery, TILE_SIZE*3, self.role))
+
             # [Optimization] Update Spatial Grid
             if hasattr(self, 'world') and self.world.spatial_grid:
                 self.world.spatial_grid.update_entity(self)
         return True
+
 
 
     def random_move(self):
@@ -542,10 +835,36 @@ class Dummy(Entity):
             if 0 <= nx < self.map_width and 0 <= ny < self.map_height:
                 if self.map_manager and not self.map_manager.check_any_collision(nx, ny): return (nx * TILE_SIZE + 16, ny * TILE_SIZE + 16)
         return None
-    def has_line_of_sight(self, target):
+    def get_vision_radius(self, bb):
+        # [Equal Conditions] Follow player logic
+        phase = bb.get('phase')
+        is_blackout = bb.get('is_blackout', False)
+        
+        day_vision = VISION_RADIUS['DAY']
+        if self.role == "MAFIA": night_vision = VISION_RADIUS['NIGHT_MAFIA']
+        elif self.role == "POLICE":
+            night_vision = VISION_RADIUS['NIGHT_POLICE_BASE']
+            if self.device_on: night_vision += VISION_RADIUS['NIGHT_POLICE_FLASH']
+        else: night_vision = VISION_RADIUS['NIGHT_CITIZEN']
+
+        if phase == 'DAWN' and self.role != "MAFIA": night_vision = 0.0
+
+        # Phase settings influence
+        curr_cfg = PHASE_SETTINGS.get(phase, PHASE_SETTINGS['NOON'])
+        vision_factor = curr_cfg['vision_factor']
+        
+        current_rad = night_vision + (day_vision - night_vision) * vision_factor
+        if is_blackout and self.role != "MAFIA": return 1.5
+        return max(0, current_rad)
+
+    def has_line_of_sight(self, target, bb=None):
         # 1. Distance Check
         dist = math.sqrt((self.rect.centerx - target.rect.centerx)**2 + (self.rect.centery - target.rect.centery)**2)
-        if dist >= VISION_RADIUS['DAY'] * TILE_SIZE:
+        
+        vision_rad = VISION_RADIUS['DAY']
+        if bb: vision_rad = self.get_vision_radius(bb)
+        
+        if dist >= vision_rad * TILE_SIZE:
             return False
             
         # 2. Wall Check (Raycasting using Bresenham's Algorithm)
@@ -610,11 +929,3 @@ class Dummy(Entity):
             if math.sqrt((self.rect.centerx - found[0])**2 + (self.rect.centery - found[1])**2) < TILE_SIZE: self.is_hiding, self.hiding_type, self.path = True, 2, []; self.is_moving = False; return True
             return self.set_destination(found[0], found[1], "Moving to Hide")
         return False
-    def draw(self, screen, camera_x, camera_y, viewer_role="PLAYER", phase="DAY", viewer_device_on=False):
-        if self.alive: CharacterRenderer.draw_entity(screen, self, camera_x, camera_y, viewer_role, phase, viewer_device_on)
-        rx, ry = self.rect.x - camera_x, self.rect.y - camera_y
-        if not self.is_hiding or self.hiding_type == 2:
-            y_off = 0
-            for p in reversed(self.popups):
-                if pygame.time.get_ticks() < p['timer']:
-                    txt = FONT_POPUP.render(p['text'], True, p['color']); screen.blit(txt, (rx + TILE_SIZE//2 - txt.get_width()//2, ry - 20 - y_off)); y_off += 15

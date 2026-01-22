@@ -60,8 +60,13 @@ class MovementLogic:
         if dx != 0 or dy != 0:
             speed = self.get_current_speed(getattr(self.p, 'weather', 'CLEAR'))
             if dx != 0 and dy != 0: speed *= 0.7071
-            self.p.move_single_axis(dx * speed, 0); self.p.move_single_axis(0, dy * speed)
-            is_moving = True
+            
+            mx = dx * speed
+            my = dy * speed
+            
+            self.p.move_single_axis(mx, 0); self.p.move_single_axis(0, my)
+            if mx != 0 or my != 0: is_moving = True
+
             if dx != 0: self.p.facing_dir = (dx, 0)
             elif dy != 0: self.p.facing_dir = (0, dy)
             

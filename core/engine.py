@@ -9,8 +9,8 @@ from systems.logger import GameLogger
 class GameEngine:
     def __init__(self):
         pygame.init()
-        # [Optimization] Disable Auto GC to prevent stuttering
-        gc.disable()
+        # [Optimization] GC enabled for stability
+        # gc.disable()
         
         self.logger = GameLogger.get_instance()
         self.logger.info("SYSTEM", "Game Engine Initializing...")

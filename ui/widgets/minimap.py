@@ -61,16 +61,53 @@ class MinimapWidget(UIWidget):
         return surf
 
     def draw(self, screen):
-        # if self.game.player.role == "SPECTATOR": return
-
+        # Normal HUD Minimap (Bottom Right)
         w, h = screen.get_size()
-        mm_w, mm_h = 220, 220
+        mm_size = max(220, int(min(w, h) * 0.25)) # 25% of smaller dim
+        mm_w, mm_h = mm_size, mm_size
+        
         x = w - mm_w - 20
-        y = h - mm_h - 20 # Bottom Right
+        y = h - mm_h - 20 
         
+        # Check if we are in Spectator Mode (Externally set rect in HUD overrides this?)
+        # Actually HUD calls draw() on the widget after checking role.
+        # But if the HUD simply calls draw(), this default logic puts it in bottom right.
+        # HUD modifies self.rect before calling draw? No, it sets rect and then calls draw.
+        # Wait, the draw method here recalculates x, y. This overrides HUD's placement!
+        
+        # [Fix] Use self.rect if it was set externally by HUD for Spectator Mode?
+        # Or split into draw_normal and draw_spectator.
+        
+        # Let's trust self.rect if it matches Spectator Panel Logic
+        if self.rect.width == 300 and self.rect.height == 300:
+             # This is Spectator Mode call
+             self._draw_full_map(screen)
+             return
+
+        # Default HUD usage
         mm_rect = pygame.Rect(x, y, mm_w, mm_h)
-        self.rect = mm_rect # Update for click detection
+        self.rect = mm_rect 
+        self._draw_minimap_logic(screen, mm_rect)
+
+    def _draw_full_map(self, screen):
+        # Spectator Mode: Full Map Scaled to self.rect (300x300)
+        # Assuming self.rect is already set by HUD to (970, 420, 300, 300)
         
+        # Background
+        pygame.draw.rect(screen, (20, 20, 25), self.rect)
+        pygame.draw.rect(screen, (100, 100, 120), self.rect, 2)
+        
+        if not self.minimap_surface:
+             self.minimap_surface = self._generate_surface()
+        
+        # Scale to fit fully
+        scaled_map = pygame.transform.scale(self.minimap_surface, (self.rect.width - 4, self.rect.height - 4))
+        screen.blit(scaled_map, (self.rect.x + 2, self.rect.y + 2))
+        
+        # Draw Entities on Full Map
+        self._draw_radar(screen, self.rect, self.game.map_manager.width * TILE_SIZE, self.game.map_manager.height * TILE_SIZE, self.rect.width, self.rect.height, full_map=True)
+
+    def _draw_minimap_logic(self, screen, mm_rect):
         s = pygame.Surface((mm_rect.width, mm_rect.height), pygame.SRCALPHA)
         s.fill((0, 0, 0, 180))
         screen.blit(s, mm_rect.topleft)
@@ -78,25 +115,40 @@ class MinimapWidget(UIWidget):
         
         if not self.minimap_surface:
             self.minimap_surface = self._generate_surface()
-            self.cached_minimap = pygame.transform.scale(self.minimap_surface, (mm_w - 4, mm_h - 4))
+            self.cached_minimap = pygame.transform.scale(self.minimap_surface, (mm_rect.width - 4, mm_rect.height - 4))
             
         screen.blit(self.cached_minimap, (mm_rect.x + 2, mm_rect.y + 2))
         
-        # Player Dot
         map_w_px = self.game.map_manager.width * TILE_SIZE
         map_h_px = self.game.map_manager.height * TILE_SIZE
+        
+        # Player Dot (Self)
         if map_w_px > 0:
-            dot_x = mm_rect.x + 2 + (self.game.player.rect.centerx / map_w_px) * (mm_w - 4)
-            dot_y = mm_rect.y + 2 + (self.game.player.rect.centery / map_h_px) * (mm_h - 4)
+            dot_x = mm_rect.x + 2 + (self.game.player.rect.centerx / map_w_px) * (mm_rect.width - 4)
+            dot_y = mm_rect.y + 2 + (self.game.player.rect.centery / map_h_px) * (mm_rect.height - 4)
             pygame.draw.circle(screen, (0, 255, 0), (int(dot_x), int(dot_y)), 3)
 
-        # Radar / Special Detection
-        self._draw_radar(screen, mm_rect, map_w_px, map_h_px, mm_w, mm_h)
+        self._draw_radar(screen, mm_rect, map_w_px, map_h_px, mm_rect.width, mm_rect.height)
 
-    def _draw_radar(self, screen, mm_rect, map_w, map_h, mm_w, mm_h):
+    def _draw_radar(self, screen, mm_rect, map_w, map_h, mm_w, mm_h, full_map=False):
         is_blackout = getattr(self.game, 'is_blackout', False)
         player = self.game.player
         
+        # [Spectator] Show ALL entities
+        if full_map or player.role == "SPECTATOR":
+            for n in self.game.npcs + ([player] if player.role != "SPECTATOR" else []):
+                if not n.alive or n.role == "SPECTATOR": continue
+                
+                col = (0, 255, 0) # Citizen
+                if n.role == "MAFIA": col = (255, 0, 0)
+                elif n.role == "POLICE": col = (0, 100, 255)
+                elif n.role == "DOCTOR": col = (100, 255, 100)
+                
+                nx = mm_rect.x + 2 + (n.rect.centerx / map_w) * (mm_w - 4)
+                ny = mm_rect.y + 2 + (n.rect.centery / map_h) * (mm_h - 4)
+                pygame.draw.circle(screen, col, (int(nx), int(ny)), 4)
+            return
+
         # 1. Police CCTV Passive
         if player.role == "POLICE":
             cctv_tid = 7310011
@@ -127,7 +179,7 @@ class MinimapWidget(UIWidget):
                 else:
                     # Static dot
                     pygame.draw.rect(screen, col, (int(mx)-2, int(my)-2, 4, 4))
-
+ 
         # 2. Mafia Blackout Radar
         elif player.role == "MAFIA" and is_blackout:
             now = pygame.time.get_ticks()
