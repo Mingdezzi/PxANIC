@@ -14,9 +14,9 @@ class MainLobbyState(State):
         self.large_font = self.res.get_font('large')
         self.settings_popup = SettingsPopup(game)
         
-        self.panel_bg = pygame.Surface((500, 550), pygame.SRCALPHA)
-        pygame.draw.rect(self.panel_bg, (20, 20, 25, 220), (0, 0, 500, 550), border_radius=15)
-        pygame.draw.rect(self.panel_bg, (80, 80, 100, 255), (0, 0, 500, 550), 2, border_radius=15)
+        self.panel_bg = pygame.Surface((400, 420), pygame.SRCALPHA)
+        pygame.draw.rect(self.panel_bg, (20, 20, 25, 220), (0, 0, 400, 420), border_radius=15)
+        pygame.draw.rect(self.panel_bg, (80, 80, 100, 255), (0, 0, 400, 420), 2, border_radius=15)
 
     def draw(self, screen):
         w, h = screen.get_size()
@@ -32,51 +32,24 @@ class MainLobbyState(State):
         name_img = self.res.get_font('bold').render(f"WELCOME, {user_name}", True, (100, 200, 255))
         screen.blit(name_img, (20, 20))
 
-        # Dynamic Scaling
-        box_w = min(900, int(w * 0.6))
-        box_h = int(h * 0.85)
-        
-        # Draw Title
-        title_font = self.res.get_font('title')
-        title_img = title_font.render("PxANIC!", True, (255, 255, 255))
-        # Place title nicely above panel
-        title_y = (h - box_h) // 2 - title_img.get_height() - 20
-        screen.blit(title_img, (w//2 - title_img.get_width()//2, title_y))
-        
-        # Panel Background
-        if self.panel_bg.get_size() != (box_w, box_h):
-             self.panel_bg = pygame.Surface((box_w, box_h), pygame.SRCALPHA)
-             pygame.draw.rect(self.panel_bg, (20, 20, 25, 220), (0, 0, box_w, box_h), border_radius=20)
-             pygame.draw.rect(self.panel_bg, (80, 80, 100, 255), (0, 0, box_w, box_h), 4, border_radius=20)
-        
-        panel_rect = self.panel_bg.get_rect(center=(w//2, h//2 + 20))
+        # Title
+        title_img = self.title_font.render("PxANIC!", True, (255, 255, 255))
+        screen.blit(title_img, (w//2 - title_img.get_width()//2, 80))
+
+        panel_rect = self.panel_bg.get_rect(center=(w//2, h//2 + 50))
         screen.blit(self.panel_bg, panel_rect)
 
-        # Button Layout
-        # We have 4 buttons. 
-        # Calculate available height for buttons within the panel
-        # Margin top/bottom = 10% of panel
-        margin_y = int(box_h * 0.1)
-        avail_h = box_h - (margin_y * 2)
-        
-        btn_count = 4
-        # Allocate 70% of available space to buttons, 30% to gaps?
-        # Let's say button height is calculated dynamically
-        btn_h = int(avail_h / btn_count * 0.75) # 75% fill
-        gap = int(avail_h / btn_count * 0.25)
-        
-        start_y = panel_rect.top + margin_y + gap//2
-        
-        self._draw_btn(screen, "OFFLINE START", w//2, start_y + (btn_h+gap)*0 + btn_h//2, btn_h, 'Single')
-        self._draw_btn(screen, "SERVER BROWSER", w//2, start_y + (btn_h+gap)*1 + btn_h//2, btn_h, 'Multi')
-        self._draw_btn(screen, "CUSTOMIZE", w//2, start_y + (btn_h+gap)*2 + btn_h//2, btn_h, 'Custom')
-        self._draw_btn(screen, "EXIT GAME", w//2, start_y + (btn_h+gap)*3 + btn_h//2, btn_h, 'Exit')
+        # Buttons
+        start_y = panel_rect.top + 60
+        self._draw_btn(screen, "OFFLINE START", w//2, start_y, 'Single')
+        self._draw_btn(screen, "SERVER BROWSER", w//2, start_y + 80, 'Multi')
+        self._draw_btn(screen, "CUSTOMIZE", w//2, start_y + 160, 'Custom')
+        self._draw_btn(screen, "EXIT GAME", w//2, start_y + 240, 'Exit')
 
         if self.settings_popup.active: self.settings_popup.draw(screen)
 
-    def _draw_btn(self, screen, text, cx, cy, bh, key):
-        w, h = screen.get_size()
-        bw = int(self.panel_bg.get_width() * 0.8) # 80% of panel width
+    def _draw_btn(self, screen, text, cx, cy, key):
+        bw, bh = 300, 50
         rect = pygame.Rect(cx - bw//2, cy - bh//2, bw, bh)
         mx, my = pygame.mouse.get_pos()
         hover = rect.collidepoint(mx, my) and not self.settings_popup.active
@@ -84,11 +57,10 @@ class MainLobbyState(State):
         col = (60, 60, 80) if hover else (40, 40, 50)
         border = (100, 255, 100) if hover else (80, 80, 100)
         
-        pygame.draw.rect(screen, col, rect, border_radius=10)
-        pygame.draw.rect(screen, border, rect, 3 if hover else 2, border_radius=10)
+        pygame.draw.rect(screen, col, rect, border_radius=8)
+        pygame.draw.rect(screen, border, rect, 2, border_radius=8)
         
-        font = self.res.get_font('large')
-        txt_img = font.render(text, True, (255, 255, 255))
+        txt_img = self.large_font.render(text, True, (255, 255, 255))
         screen.blit(txt_img, txt_img.get_rect(center=rect.center))
         self.buttons[key] = rect
 

@@ -16,9 +16,7 @@ class DataManager:
             raise Exception("This class is a singleton!")
         
         self.logger = GameLogger.get_instance()
-        self.items = {}
-        self.tiles = {}
-        self.roles = {}
+        self.profile = {}
         
         self.load_all()
 
@@ -26,6 +24,29 @@ class DataManager:
         self.load_items()
         self.load_tiles()
         self.load_roles()
+        self.load_user_profile()
+
+    def load_user_profile(self):
+        try:
+            if os.path.exists('profile.json'):
+                with open('profile.json', 'r', encoding='utf-8') as f:
+                    self.profile = json.load(f)
+                self.logger.info("DATA", "Loaded user profile.")
+            else:
+                self.logger.warning("DATA", "No profile found. Creating new.")
+                self.profile = {"custom": {}, "name": "Player 1"}
+                self.save_user_profile()
+        except Exception as e:
+            self.logger.error("DATA", f"Failed to load profile: {e}")
+            self.profile = {"custom": {}, "name": "Player 1"}
+
+    def save_user_profile(self):
+        try:
+            with open('profile.json', 'w', encoding='utf-8') as f:
+                json.dump(self.profile, f, indent=4)
+            self.logger.info("DATA", "Saved user profile.")
+        except Exception as e:
+            self.logger.error("DATA", f"Failed to save profile: {e}")
 
     def load_items(self):
         try:

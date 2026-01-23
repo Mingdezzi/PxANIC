@@ -63,9 +63,7 @@ class MinimapWidget(UIWidget):
     def draw(self, screen):
         # Normal HUD Minimap (Bottom Right)
         w, h = screen.get_size()
-        mm_size = max(220, int(min(w, h) * 0.25)) # 25% of smaller dim
-        mm_w, mm_h = mm_size, mm_size
-        
+        mm_w, mm_h = 220, 220
         x = w - mm_w - 20
         y = h - mm_h - 20 
         

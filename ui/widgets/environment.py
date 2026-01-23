@@ -5,9 +5,9 @@ from settings import DEFAULT_PHASE_DURATIONS
 class EnvironmentWidget(UIWidget):
     def __init__(self, game):
         super().__init__(game)
-        self.width = 300
-        self.height = 100
-        self.panel_bg = None
+        self.width = 240
+        self.height = 80
+        self.panel_bg = self.create_panel_bg(self.width, self.height)
         
         # [Optimization] Text Caching
         self.last_full_text = ""
@@ -17,12 +17,6 @@ class EnvironmentWidget(UIWidget):
 
     def draw(self, screen):
         w, h = screen.get_size()
-        self.width = max(240, int(w * 0.25))
-        self.height = max(80, int(h * 0.12))
-        
-        if not self.panel_bg or self.panel_bg.get_width() != self.width or self.panel_bg.get_height() != self.height:
-            self.panel_bg = self.create_panel_bg(self.width, self.height)
-
         x = w - self.width - 20
         y = 20
         

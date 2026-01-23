@@ -54,7 +54,6 @@ class InventoryLogic:
                 s_type = "CLICK"
 
         if used:
-            self.p.trigger_action_anim()
             self.p.inventory[item_key] -= 1
             return ("Used " + ITEMS[item_key]['name'], (s_type, self.p.rect.centerx, self.p.rect.centery, 4 * TILE_SIZE, self.p.role))
         return False

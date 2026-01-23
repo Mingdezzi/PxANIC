@@ -1,1 +1,22 @@
-{"name": "Mingdezzi", "custom": {"gender": "MALE", "face": {"type": 1, "color": 0, "pixels": {}, "skin": 0, "eye_type": 0, "mouth_type": 0}, "hair": {"type": 1, "color": 0, "pixels": {}}, "clothes": {"type": 4, "color": 5, "pixels": {}}, "shoes": {"type": 1, "color": 0, "pixels": {}}, "glasses": {"type": 2, "color": 0, "pixels": {}}}}
+{
+    "name": "Mingdezzi",
+    "custom": {
+        "clothes": {
+            "top": 1,
+            "top_color": 1
+        },
+        "eyes": {
+            "id": 2
+        },
+        "mouth": {
+            "id": 1
+        },
+        "hair": {
+            "id": 2,
+            "color": 1
+        },
+        "acc": {},
+        "body_type": 4,
+        "move_style": 8
+    }
+}

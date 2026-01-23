@@ -4,7 +4,6 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 TILE_SIZE = 32
 FPS = 60
-RENDER_SCALE = 1.25 # [Fix] DPI Awareness Scaling (1.0: Native, 1.25: 25% Larger UI/FOV)
 
 # [최적화] 전역 폰트 캐시 저장소 추가
 SHARED_FONTS = {}

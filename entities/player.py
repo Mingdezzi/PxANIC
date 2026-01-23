@@ -36,6 +36,7 @@ class Player(Character):
         self.doors_to_close = []; self.current_phase_ref = "MORNING"
         self.custom = {'skin': 0, 'clothes': 0, 'hat': 0}
         self.move_state = "WALK"; self.facing_dir = (0, 1); self.interaction_hold_timer = 0; self.e_key_pressed = False
+        self.is_crouching = False # [FEATURE] Crouch State
         
         # [Logic Components]
         self.logic_move = MovementLogic(self)
@@ -44,6 +45,13 @@ class Player(Character):
         self.logic_inventory = InventoryLogic(self)
 
         self.logger.info("PLAYER", f"Initialized at ({x}, {y}) Role: {self.role}")
+        
+        # [DATA] Load Customization from Profile
+        from managers.data_manager import DataManager
+        dm = DataManager.get_instance()
+        if 'custom' in dm.profile:
+            self.custom = dm.profile['custom']
+            self.logger.info("PLAYER", "Loaded Customization from Profile.")
 
     @property
     def is_dead(self): return not self.alive
@@ -122,6 +130,7 @@ class Player(Character):
         if self.minigame.active: self.minigame.update(); return []
         
         now = pygame.time.get_ticks()
+        self.anim_tick = now / 1000.0 # Drive Animation
         
         # Delegate to Logic Components
         self.calculate_emotions(phase, npcs, is_blackout)
@@ -138,6 +147,10 @@ class Player(Character):
 
         # Interaction Input
         keys = pygame.key.get_pressed()
+        
+        # [FEATURE] Crouch Input (Ctrl)
+        self.is_crouching = keys[pygame.K_LCTRL]
+        
         if keys[pygame.K_e]:
             if not self.e_key_pressed: 
                 self.e_key_pressed = True

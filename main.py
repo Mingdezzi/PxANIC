@@ -1,7 +1,6 @@
 import sys
 import os
 import subprocess
-import json
 from engine.core.game_engine import GameEngine
 
 # 현재 디렉토리를 경로에 추가

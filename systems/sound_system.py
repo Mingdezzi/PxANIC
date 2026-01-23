@@ -63,19 +63,12 @@ class SoundSystem:
             blink = False
             
             # --- [Listener-Speaker Importance Logic] ---
-            is_night = getattr(player, 'current_phase_ref', 'DAY') == 'NIGHT'
-            
             if my_role in ["CITIZEN", "DOCTOR"]:
                 if source_role == "MAFIA":
-                    if is_night:
-                        importance = 2.0
-                        final_color = (255, 50, 50) # Red (Danger)
-                        shake = True 
-                        if s_type in ["BANG!", "SLASH", "SCREAM", "GUNSHOT"]: importance = 2.5
-                    else:
-                        # Daytime: Mafia blends in
-                        importance = 1.0
-                        final_color = base_color
+                    importance = 2.0
+                    final_color = (255, 50, 50) # Red (Danger)
+                    shake = True 
+                    if s_type in ["BANG!", "SLASH", "SCREAM", "GUNSHOT"]: importance = 2.5
                 elif source_role == "POLICE":
                     importance = 1.5
                     final_color = (50, 150, 255) # Blue (Rescue)

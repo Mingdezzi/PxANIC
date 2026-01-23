@@ -28,7 +28,6 @@ class ActionLogic:
                     if cat in [5, 9] or d_val > 0 or func in [2, 3] or tid_check == 5321025: tid = tid_check; target_layer = layer; break
 
         if tid == 0: return None
-        self.p.trigger_action_anim() # Start animation for any successful interact start
         self.logger.info("PLAYER", f"Interact with {tid} at ({gx}, {gy}) Mode: {mode}")
 
         if tid == VENDING_MACHINE_TID: return "OPEN_SHOP" if mode == 'short' else None
@@ -145,13 +144,11 @@ class ActionLogic:
             res = target.take_damage(70)
             if res == "DIED" and hasattr(self.p.game, 'network') and self.p.game.network.connected:
                 self.p.game.network.send_death(target.uid, "a stabbing incident")
-            self.p.trigger_action_anim()
             self.logger.info("PLAYER", f"Attacked {target.name}")
             return ("STAB", (self.p.rect.centerx, self.p.rect.centery)), ("SLASH", self.p.rect.centerx, self.p.rect.centery, 5*TILE_SIZE, self.p.role)
-        
+            
         elif self.p.role == "POLICE" and self.p.try_spend_ap(attack_cost, allow_health_cost=False):
             if self.p.current_phase_ref in ['MORNING', 'DAY', 'VOTE', 'NOON', 'AFTERNOON'] or self.p.bullets_fired_today >= 1: return None
-            self.p.trigger_action_anim()
             self.p.bullets_fired_today += 1
             dx = target.rect.centerx - self.p.rect.centerx; dy = target.rect.centery - self.p.rect.centery; angle = math.atan2(dy, dx)
             self.p.bullets.append(Bullet(self.p.rect.centerx, self.p.rect.centery, angle, is_enemy=False))
@@ -163,7 +160,6 @@ class ActionLogic:
         if self.p.role != "DOCTOR" or not self.p.alive: return None
         if not self.p.try_spend_ap(10, allow_health_cost=False): return "Not enough AP!"
         if target and target.alive:
-            self.p.trigger_action_anim()
             target.hp = min(target.max_hp, target.hp + 50)
             self.logger.info("PLAYER", f"Doctor Healed {target.name}")
             return f"Healed {target.name}!", ("GULP", target.rect.centerx, target.rect.centery, 4*TILE_SIZE, self.p.role)
@@ -181,7 +177,6 @@ class ActionLogic:
             self.p.ability_used = True; return "USE_SABOTAGE"
         elif self.p.role == "POLICE":
             if not self.p.try_spend_ap(cost, allow_health_cost=False): return f"Not enough AP (Need {cost})!"
-            self.p.trigger_action_anim()
             self.p.ability_used = True; return "USE_SIREN"
         return "No Active Skill for this role."
 

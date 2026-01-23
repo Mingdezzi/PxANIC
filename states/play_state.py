@@ -6,6 +6,9 @@ from settings import *
 from engine.graphics.camera import Camera
 from systems.fov import FOV
 
+# ... (Previous imports kept by user, I will just target the specific lines)
+# Wait, replace_file_content replaces a block.
+# I will do Import Change independent of Instantiation change to be safe.
 from systems.effects import VisualSound, SoundDirectionIndicator
 from systems.renderer import CharacterRenderer, MapRenderer
 from systems.lighting import LightingManager
@@ -39,10 +42,11 @@ class PlayState(State):
         self.fov = None
         self.visible_tiles = set()
         self.tile_alphas = {} 
-        self.zoom_level = 3.0
+        self.zoom_level = 1.5
         self.effect_surf = pygame.Surface((self.game.screen_width, self.game.screen_height), pygame.SRCALPHA)
         self.ui = None
         self.chat_box = ChatBox(20, self.game.screen_height - 220, 350, 200)
+        self.is_chatting = False # [Fix] Initialize is_chatting
         self.show_vote_ui = False
         self.my_vote_target = None
         self.candidate_rects = []
@@ -81,8 +85,6 @@ class PlayState(State):
     def is_blackout(self): return self.world.is_blackout
     @property
     def is_mafia_frozen(self): return self.world.is_mafia_frozen
-    @property
-    def is_chatting(self): return self.chat_box.active
 
     def enter(self, params=None):
         self.logger.info("PLAY", "Entering PlayState...")
@@ -227,12 +229,7 @@ class PlayState(State):
                         zid = self.world.map_manager.zone_map[gy][gx]
                         if zid in ZONES and zid != 1: self.time_system.mafia_last_seen_zone = ZONES[zid]['name']
         for n in self.npcs:
-            if not n.is_stunned():
-                results = n.update(self.current_phase, self.player, self.npcs, self.world.is_mafia_frozen, self.world.noise_list, self.day_count, self.world.bloody_footsteps)
-                if results and isinstance(results, list):
-                    for res in results:
-                        if isinstance(res, str): self._handle_npc_action(res, n, 0)
-                        elif isinstance(res, tuple): self._process_sound_effect(res)
+            if not n.is_stunned(): self._handle_npc_action(n.update(self.current_phase, self.player, self.npcs, self.world.is_mafia_frozen, self.world.noise_list, self.day_count, self.world.bloody_footsteps), n, 0)
         if self.player.role == "SPECTATOR": self._update_spectator_camera()
         else: self.camera.update(self.player.rect.centerx, self.player.rect.centery)
 
@@ -517,8 +514,7 @@ class PlayState(State):
         if self.pause_menu.active:
             self.pause_menu.draw(screen)
             
-        # [NEW] Chat (Dynamic Position)
-        self.chat_box.rect.y = self.game.screen_height - 220
+        # [NEW] Chat
         self.chat_box.draw(screen)
 
     def handle_event(self, event):
@@ -614,7 +610,7 @@ class PlayState(State):
                         self.time_system.state_timer = 0
                     
                     # 4. Click Entity in World
-                    mx, my = event.pos # handle_event already scaled event.pos in GameEngine
+                    mx, my = event.pos
                     world_mx = mx / self.zoom_level + self.camera.x
                     world_my = my / self.zoom_level + self.camera.y
                     

@@ -59,41 +59,22 @@ class Character(Entity):
         }
 
         self.custom = {
-            'gender': random.choice(['MALE', 'FEMALE']),
-            'face': {
-                'skin': random.randint(0, len(CUSTOM_COLORS['SKIN'])-1),
-                'eye_type': random.randint(0, 4), 
-                'mouth_type': random.randint(0, 4),
-                'pixels': {} # (x, y): color_idx
-            },
-            'hair': {
-                'type': random.randint(0, 4), 
-                'color': random.randint(0, len(CUSTOM_COLORS['HAIR'])-1),
-                'pixels': {}
-            },
-            'clothes': {
-                'type': random.randint(0, 4), 
-                'color': random.randint(0, len(CUSTOM_COLORS['CLOTHES'])-1),
-                'pixels': {}
-            },
-            'shoes': {
-                'type': random.randint(0, 1),
-                'color': random.randint(0, len(CUSTOM_COLORS['SHOES'])-1),
-                'pixels': {}
-            },
-            'glasses': {
-                'type': random.randint(0, 4),
-                'color': random.randint(0, len(CUSTOM_COLORS['GLASSES'])-1),
-                'pixels': {}
-            }
+            'skin': random.randint(0, len(CUSTOM_COLORS['SKIN'])-1),
+            'clothes': random.randint(0, len(CUSTOM_COLORS['CLOTHES'])-1),
+            'hat': random.randint(0, len(CUSTOM_COLORS['HAT'])-1)
         }
+        self.anim_tick = 0.0 # Animation Timer
+        self.move_style = 5 # Default Normal (Index 5? No, check assets. 'Normal' is idx 5 in NEW list. Old 'Normal' was 0. New 'Normal' is 5.
+        # Wait, if I changed list order, existing saves might be wrong.
+        # But 'Normal' is idx 5 in new list?
+        # New List: Heroic(0), Stealthy(1), Limping(2), Cheerful(3), HipHop(4), Normal(5)...
+        # So default should be 5? Or 0?
+        # I'll set default to 5 (Normal).
+        
         self.stun_timer = 0
         self.device_on = False
         self.device_battery = 100.0
         self.powerbank_uses = 0
-
-        # [Animation]
-        self.action_anim_start_time = 0 # Marks when an interaction/skill starts
 
         self.popups = []
 
@@ -103,9 +84,6 @@ class Character(Entity):
             'color': color,
             'timer': pygame.time.get_ticks() + 1500
         })
-
-    def trigger_action_anim(self):
-        self.action_anim_start_time = pygame.time.get_ticks()
 
     def is_visible_villain(self, phase):
         # [Fix] Dawn is safe (Mafia changes back to citizen clothes)

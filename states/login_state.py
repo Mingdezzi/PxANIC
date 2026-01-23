@@ -10,12 +10,19 @@ class LoginState(State):
         self.sound = SoundManager.get_instance()
         self.player_name = self.game.shared_data.get('player_name', "Player")
         self.font = self.res.get_font('large')
-        self.font = self.res.get_font('large')
+        self.input_rect = pygame.Rect(440, 340, 400, 50)
         self.active = True
-        self.input_rect = pygame.Rect(0, 0, 0, 0) # Placeholder, updated in draw
 
     def enter(self, params=None):
         self.sound.play_music("TITLE_THEME")
+        
+        # [Fix] Sync from DataManager
+        from managers.data_manager import DataManager
+        dm = DataManager.get_instance()
+        if dm.profile:
+            self.player_name = dm.profile.get('name', self.player_name)
+            self.game.shared_data['custom'] = dm.profile.get('custom', {})
+            self.game.shared_data['player_name'] = self.player_name
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
@@ -39,30 +46,21 @@ class LoginState(State):
         w, h = screen.get_size()
         screen.fill((20, 20, 30))
         
-        # Dynamic Scaling
-        box_w = min(600, int(w * 0.5))
-        box_h = int(h * 0.08) # 8% Height
-        self.input_rect = pygame.Rect(w//2 - box_w//2, h//2, box_w, box_h)
-        
         # Draw Title
         title_font = self.res.get_font('title')
         title_img = title_font.render("PxANIC!", True, (255, 255, 255))
-        # Place title at 20% height
-        screen.blit(title_img, (w//2 - title_img.get_width()//2, h * 0.2))
+        screen.blit(title_img, (w//2 - title_img.get_width()//2, 150))
         
         # Draw Instruction
-        inst_font = self.res.get_font('large')
-        inst_img = inst_font.render("Enter Your Name:", True, (200, 200, 200))
-        # Place above input box
-        screen.blit(inst_img, (w//2 - inst_img.get_width()//2, self.input_rect.top - inst_img.get_height() - 20))
+        inst_img = self.font.render("Enter Your Name:", True, (200, 200, 200))
+        screen.blit(inst_img, (w//2 - inst_img.get_width()//2, 300))
         
         # Input Box
-        pygame.draw.rect(screen, (40, 40, 50), self.input_rect, border_radius=12)
-        pygame.draw.rect(screen, (100, 200, 255), self.input_rect, 3, border_radius=12)
+        pygame.draw.rect(screen, (40, 40, 50), self.input_rect, border_radius=8)
+        pygame.draw.rect(screen, (100, 200, 255), self.input_rect, 2, border_radius=8)
         
-        inp_font = self.res.get_font('large')
-        name_img = inp_font.render(self.player_name + ("|" if (pygame.time.get_ticks()//500)%2 == 0 else ""), True, (255, 255, 255))
-        screen.blit(name_img, (self.input_rect.centerx - name_img.get_width()//2, self.input_rect.centery - name_img.get_height()//2))
+        name_img = self.font.render(self.player_name + ("|" if (pygame.time.get_ticks()//500)%2 == 0 else ""), True, (255, 255, 255))
+        screen.blit(name_img, (self.input_rect.x + 15, self.input_rect.centery - name_img.get_height()//2))
         
         hint_img = self.res.get_font('default').render("Press ENTER to start", True, (100, 100, 120))
-        screen.blit(hint_img, (w//2 - hint_img.get_width()//2, self.input_rect.bottom + 20))
+        screen.blit(hint_img, (w//2 - hint_img.get_width()//2, 420))
